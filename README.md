@@ -1,4 +1,4 @@
-# My Blog
+# Fanggg's Blog
 
 以 [Astro](https://astro.build/) + [Firefly](https://github.com/CuteLeaf/Firefly) 主題建置的個人部落格，透過 GitHub Actions 自動部署到 GitHub Pages。
 
