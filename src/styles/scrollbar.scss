@@ -1,0 +1,61 @@
+// OverlayScrollbars 捲軸樣式（原以 Tailwind @apply 撰寫，改為等價的 SCSS）
+// 數值對應 Tailwind v4 預設值：spacing 1 = 0.25rem、transition 150ms
+
+$transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+$transition-duration: 150ms;
+$handle-radius: 9999px;
+
+.scrollbar-base.os-scrollbar {
+	pointer-events: unset;
+	transition-property: all;
+	transition-timing-function: $transition-ease;
+	transition-duration: $transition-duration;
+
+	&.os-scrollbar-horizontal {
+		height: 1rem;
+		padding: 0.25rem 0.5rem;
+
+		.os-scrollbar-track .os-scrollbar-handle {
+			height: 0.25rem;
+			border-radius: $handle-radius;
+		}
+
+		&:hover .os-scrollbar-track .os-scrollbar-handle {
+			height: 0.5rem;
+		}
+	}
+
+	&.os-scrollbar-vertical {
+		width: 1rem;
+		padding: 0.25rem;
+
+		.os-scrollbar-track .os-scrollbar-handle {
+			width: 0.25rem;
+			border-radius: $handle-radius;
+		}
+
+		&:hover .os-scrollbar-track .os-scrollbar-handle {
+			width: 0.5rem;
+		}
+	}
+}
+
+.os-scrollbar {
+	&.scrollbar-auto {
+		--os-handle-bg: var(--scrollbar-bg);
+		--os-handle-bg-hover: var(--scrollbar-bg-hover);
+		--os-handle-bg-active: var(--scrollbar-bg-active);
+	}
+
+	&.scrollbar-dark {
+		--os-handle-bg: var(--scrollbar-bg-dark);
+		--os-handle-bg-hover: var(--scrollbar-bg-hover-dark);
+		--os-handle-bg-active: var(--scrollbar-bg-active-dark);
+	}
+
+	&.scrollbar-light {
+		--os-handle-bg: var(--scrollbar-bg-light);
+		--os-handle-bg-hover: var(--scrollbar-bg-hover-light);
+		--os-handle-bg-active: var(--scrollbar-bg-active-light);
+	}
+}

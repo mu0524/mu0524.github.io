@@ -1,0 +1,12 @@
+.expressive-code {
+	.frame {
+		// 原 Tailwind：@apply shadow-none!
+		box-shadow: none !important;
+	}
+
+	.title {
+		font-family:
+			"JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco,
+			Consolas, "Liberation Mono", "Courier New", monospace;
+	}
+}

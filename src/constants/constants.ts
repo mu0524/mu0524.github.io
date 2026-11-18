@@ -1,15 +1,14 @@
+import type { LIGHT_DARK_MODE, SupportedLang } from "@/types/config";
+import { siteConfig } from "../config";
+
 export const PAGE_SIZE = 8;
 
-export const LIGHT_MODE = "light",
-	DARK_MODE = "dark",
-	SYSTEM_MODE = "system";
-export const DEFAULT_THEME: typeof LIGHT_MODE = LIGHT_MODE; // 仅作为向后兼容的默认值，实际使用 siteConfig.themeColor.defaultMode
+export const LIGHT_MODE = "light";
+export const DARK_MODE = "dark";
+export const DEFAULT_MODE: LIGHT_DARK_MODE =
+	siteConfig.theme.mode === "light" ? LIGHT_MODE : DARK_MODE;
 
-// Wallpaper modes
-export const WALLPAPER_BANNER = "banner",
-	WALLPAPER_FULLSCREEN = "fullscreen",
-	WALLPAPER_OVERLAY = "overlay",
-	WALLPAPER_NONE = "none";
+export const DEFAULT_HUE = siteConfig.theme.hue;
 
 // Banner height unit: vh
 export const BANNER_HEIGHT = 35;
@@ -19,16 +18,42 @@ export const BANNER_HEIGHT_HOME: number = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
 // The height the main panel overlaps the banner, unit: rem
 export const MAIN_PANEL_OVERLAPS_BANNER_HEIGHT = 3.5;
 
-// Non-home banner height (unit: vh) — banner mode, desktop only.
-// Lift = BANNER_HEIGHT_HOME(65) - BANNER_HEIGHT_NON_HOME: 45=20vh, 50=15vh, 35=fuwari 30vh.
-export const BANNER_HEIGHT_NON_HOME = 45;
-// Pixel floor for the non-home banner (unit: px) — cushions short (laptop) screens,
-// so the vh value resolving to too few absolute pixels doesn't cramp the title/description.
-// Combined as `max(...vh, ...px)` in Layout.astro.
-export const BANNER_HEIGHT_NON_HOME_MIN = 380;
-
 // Page width: rem
-export const PAGE_WIDTH = 100;
+export const PAGE_WIDTH = 75;
 
-// Category constants
-export const UNCATEGORIZED = "uncategorized";
+export const ALL_LANGUAGES = [
+	"en",
+	"es",
+	"fa",
+	"fr",
+	"id",
+	"ja",
+	"ko",
+	"th",
+	"tr",
+	"vi",
+	"zh-CN",
+	"zh-TW",
+] as const;
+
+// 統一成連字號格式（zh_TW → zh-TW），與 SUPPORTED_LANG 一致；
+// 否則預設語系含底線時，路由比對失敗，所有頁面都會多一層 /zh-TW/ 前綴
+export const DEFAULT_LANG: SupportedLang = siteConfig.lang.replace(
+	"_",
+	"-",
+) as SupportedLang;
+
+const baseLangs =
+	siteConfig.supportedLangs && siteConfig.supportedLangs.length > 0
+		? siteConfig.supportedLangs.map(
+				(lang) => lang.replace("_", "-") as SupportedLang,
+			)
+		: [];
+
+const activeConfigLang = siteConfig.lang.replace("_", "-") as SupportedLang;
+
+export const SUPPORTED_LANG: readonly SupportedLang[] = baseLangs.includes(
+	activeConfigLang,
+)
+	? baseLangs
+	: [activeConfigLang, ...baseLangs];

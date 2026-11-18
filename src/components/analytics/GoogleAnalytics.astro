@@ -1,19 +1,27 @@
 ---
-interface Props {
-	analyticsId: string;
-}
+import { analyticsConfig } from "@/config";
 
-const { analyticsId } = Astro.props;
+const showGoogleAnalytics =
+	analyticsConfig.enabled && analyticsConfig.google?.id;
 ---
 
-<!-- Google tag (gtag.js) -->
-<script is:inline data-swup-ignore-script async src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}></script>
-<script is:inline data-swup-ignore-script define:vars={{analyticsId}}>window.dataLayer = window.dataLayer || [];
+{showGoogleAnalytics && (
+  <>
+    <script
+      is:inline
+      type="text/partytown"
+      src={`https://www.googletagmanager.com/gtag/js?id=${analyticsConfig.google?.id}`}
+    ></script>
 
-function gtag() {
-    dataLayer.push(arguments);
-}
-
-gtag('js', new Date());
-gtag('config', analyticsId);
-</script>
+    <script 
+      is:inline
+      type="text/partytown" 
+      set:html={`
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '${analyticsConfig.google?.id}');
+      `}
+    />
+  </>
+)}

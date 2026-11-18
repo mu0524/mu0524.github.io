@@ -1,31 +1,27 @@
 ---
-import ButtonLink from "@/components/common/ButtonLink.astro";
-import WidgetLayout from "@/components/common/WidgetLayout.astro";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
-import type { WidgetComponentConfig } from "@/types/config";
-import { getCategoryList } from "@/utils/content-utils";
-
-const categories = await getCategoryList();
-
-const COLLAPSED_HEIGHT = "7.5rem";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+import { getCategoryList } from "../../utils/content-utils";
+import ButtonLink from "../control/ButtonLink.astro";
+import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
 	class?: string;
 	style?: string;
-	widgetConfig?: WidgetComponentConfig;
+	lang?: string;
 }
-const { class: className, style, widgetConfig } = Astro.props;
 
-const collapseThreshold = widgetConfig?.specificConfig?.collapseThreshold;
-const showTitle = widgetConfig?.showTitle !== false;
-const isCollapsed = collapseThreshold
-	? categories.length > collapseThreshold
-	: false;
+const { class: className, style, lang } = Astro.props;
+const categories = await getCategoryList(lang);
+
+const COLLAPSED_HEIGHT = "7.5rem";
+const COLLAPSE_THRESHOLD = 5;
+
+const isCollapsed = categories.length >= COLLAPSE_THRESHOLD;
 ---
 
-<WidgetLayout name={i18n(I18nKey.categories)} showTitle={showTitle} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
-                class={className} style={style}
+<WidgetLayout name={i18n(I18nKey.categories, lang)} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
+                class={className} style={style} lang={lang}
 >
     {categories.map((c) =>
         <ButtonLink
