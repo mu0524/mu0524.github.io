@@ -26,36 +26,23 @@ const removeTailingHash = (text: string) => {
 	return text.substring(0, lastIndexOfHash);
 };
 
-let heading1Count = 1;
+// 目錄只留文字，拿掉標題開頭的 emoji
+const removeLeadingEmoji = (text: string) =>
+	text.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u, "");
 
 const maxLevel = siteConfig.toc.depth;
 ---
 {isPostsRoute &&
-<table-of-contents class:list={[className, "group"]}>
+<table-of-contents class:list={[className, "tocList"]}>
     {headings.filter((heading) => heading.depth < minDepth + maxLevel).map((heading) =>
-            <a href={`#${heading.slug}`} class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl
-        hover:bg-(--toc-btn-hover) active:bg-(--toc-btn-active) py-2
-    ">
-                <div class:list={["transition w-5 h-5 shrink-0 rounded-lg text-xs flex items-center justify-center font-bold",
-                    {
-                        "bg-(--toc-badge-bg) text-(--btn-content)": heading.depth == minDepth,
-                        "ml-4": heading.depth == minDepth + 1,
-                        "ml-8": heading.depth == minDepth + 2,
-                    }
-                ]}
-                >
-                    {heading.depth == minDepth && heading1Count++}
-                    {heading.depth == minDepth + 1 && <div class="transition w-2 h-2 rounded-[0.1875rem] bg-(--toc-badge-bg)"></div>}
-                    {heading.depth == minDepth + 2 && <div class="transition w-1.5 h-1.5 rounded-sm bg-black/5 dark:bg-white/10"></div>}
-                </div>
-                <div class:list={["transition text-sm", {
-                    "text-50": heading.depth == minDepth || heading.depth == minDepth + 1,
-                    "text-30": heading.depth == minDepth + 2,
-                }]}>{removeTailingHash(heading.text)}</div>
-            </a>
+        <a href={`#${heading.slug}`} class:list={["tocItem", {
+            "sub": heading.depth == minDepth + 1,
+            "subSub": heading.depth == minDepth + 2,
+        }]}>
+            {removeLeadingEmoji(removeTailingHash(heading.text))}
+        </a>
     )}
-    <div id="active-indicator" style="opacity: 0" class:list={[{'hidden': headings.length == 0}, "-z-10 absolute bg-(--toc-btn-hover) left-0 right-0 rounded-xl transition-all " +
-        "group-hover:bg-transparent border-2 border-(--toc-btn-hover) group-hover:border-(--toc-btn-active) border-dashed"]}></div>
+    <div id="active-indicator" style="opacity: 0" class:list={["activeBar", {"hidden": headings.length == 0}]}></div>
 </table-of-contents>}
 
 <script>
@@ -265,3 +252,44 @@ if (!customElements.get("table-of-contents")) {
     customElements.define("table-of-contents", TableOfContents);
 }
 </script>
+
+<style lang="scss">
+@import '../../styles/setting';
+
+.tocList {
+	@include flex();
+	flex-direction: column;
+	@include font($fs: 14px, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
+	border-left: 1px solid $borderColor;
+}
+
+.tocItem {
+	padding: .375em 0 .375em 1.25em;
+	@extend %ts;
+
+	@include hover {
+		color: $mainColor;
+	}
+
+	&.sub {
+		padding-left: 2.25em;
+	}
+
+	&.subSub {
+		font-size: 13px;
+		padding-left: 3.25em;
+	}
+
+	&:global(.visible) {
+		color: $textColor;
+	}
+}
+
+.activeBar {
+	position: absolute;
+	left: -1px;
+	width: 2px;
+	background-color: $mainColor;
+	transition: top .3s, height .3s, opacity .3s;
+}
+</style>

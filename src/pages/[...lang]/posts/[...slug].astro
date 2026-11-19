@@ -53,8 +53,6 @@ export const getStaticPaths = (async () => {
 const { entry, lang } = Astro.props;
 const { Content, headings } = await render(entry);
 
-const { remarkPluginFrontmatter } = await render(entry);
-
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "BlogPosting",
@@ -101,19 +99,13 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
             </h1>
         </div>
 
-        <div class="infoBox onload-animation">
-            <p class="count">
-                <span>{remarkPluginFrontmatter.words} {i18n(I18nKey.wordsCount, lang)}</span>
-                <span>{remarkPluginFrontmatter.minutes} {i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}</span>
-            </p>
-            {tags.length > 0 && (
-                <div class="tagBox">
-                    {tags.map((tag) => (
-                        <a href={getTagUrl(tag, lang)}># {tag}</a>
-                    ))}
-                </div>
-            )}
-        </div>
+        {tags.length > 0 && (
+            <div class="tagBox onload-animation">
+                {tags.map((tag) => (
+                    <a href={getTagUrl(tag, lang)}># {tag}</a>
+                ))}
+            </div>
+        )}
 
         {entry.data.image && (
             <figure class="Img onload-animation">
@@ -241,29 +233,17 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 	}
 }
 
-.infoBox {
-	@include flex(wrap, space-between, center);
-	gap: .5em 1.5em;
+.tagBox {
+	@include flex(wrap, flex-end);
+	gap: .625em;
 
-	.count {
-		@include flex(wrap);
-		gap: 1em;
-		font-size: .875em;
-		color: var(--text-muted);
-	}
+	a {
+		color: $mainColor;
+		@include textTrim();
+		@extend %ts;
 
-	.tagBox {
-		@include flex(wrap, flex-end);
-		gap: .625em;
-
-		a {
-			color: $mainColor;
-			@include textTrim();
-			@extend %ts;
-
-			@include hover {
-				color: $textColor;
-			}
+		@include hover {
+			color: $textColor;
 		}
 	}
 }
