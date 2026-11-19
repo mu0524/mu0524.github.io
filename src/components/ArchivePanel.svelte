@@ -64,8 +64,7 @@ onMount(async () => {
 	if (subcategories.length > 0) {
 		filteredPosts = filteredPosts.filter(
 			(post) =>
-				post.data.subcategory &&
-				subcategories.includes(post.data.subcategory),
+				post.data.subcategory && subcategories.includes(post.data.subcategory),
 		);
 	}
 
