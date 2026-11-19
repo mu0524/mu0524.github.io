@@ -1,11 +1,9 @@
 ---
 import { type CollectionEntry, render } from "astro:content";
 import path from "node:path";
-import { Icon } from "astro-icon/components";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
+import { formatDateToYYYYMMMD } from "../utils/date-utils";
+import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
-import PostMetadata from "./PostMeta.astro";
 
 interface Props {
 	class?: string;
@@ -16,6 +14,7 @@ interface Props {
 	updated?: Date;
 	tags: string[];
 	category: string | null;
+	subcategory?: string | null;
 	image: string;
 	description: string;
 	draft: boolean;
@@ -27,9 +26,9 @@ const {
 	title,
 	url,
 	published,
-	updated,
 	tags,
 	category,
+	subcategory,
 	image,
 	description,
 	style,
@@ -39,73 +38,177 @@ const className = Astro.props.class;
 
 const hasCover = image !== undefined && image !== null && image !== "";
 
-const coverWidth = "28%";
-
 const { remarkPluginFrontmatter } = await render(entry);
 ---
-<div class:list={["card-base flex flex-col-reverse md:flex-col w-full rounded-(--radius-large) overflow-hidden relative", className]} style={style}>
-    <div class:list={["pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 relative", {"w-full md:w-[calc(100%-52px-12px)]": !hasCover, "w-full md:w-[calc(100%-var(--coverWidth)-12px)]": hasCover}]}>
-        <a href={url}
-           class="transition group w-full block font-bold mb-3 text-3xl text-90
-        hover:text-(--primary) dark:hover:text-(--primary)
-        active:text-(--title-active) dark:active:text-(--title-active)
-        before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
-        before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block
-        ">
-            {title}
-            <Icon class="inline text-[2rem] text-(--primary) md:hidden translate-y-0.5 absolute" name="material-symbols:chevron-right-rounded" ></Icon>
-            <Icon class="text-(--primary) text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" name="material-symbols:chevron-right-rounded"></Icon>
-        </a>
-
-        <!-- metadata -->
-        <PostMetadata published={published} updated={updated} tags={tags} category={category} hideTagsForMobile={true} hideUpdateDate={true} class="mb-4"></PostMetadata>
-
-        <!-- description -->
-        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 md:line-clamp-1": !description}]}>
-            { description || remarkPluginFrontmatter.excerpt }
+<article class:list={["postItem", className]} style={style}>
+    <div class="item">
+        <div class="metaBox">
+            <span class="tag">{formatDateToYYYYMMMD(published)}</span>
+            {category && (
+                <a href={getCategoryUrl(category, lang)} class="tag">
+                    {category}{subcategory && ` / ${subcategory}`}
+                </a>
+            )}
         </div>
 
-        <!-- word count and read time  -->
-        <div class="text-sm text-black/30 dark:text-white/30 flex gap-4 transition">
-            <div>
-                {remarkPluginFrontmatter.words} {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount, lang)}
-            </div>
-            <div>|</div>
-            <div>
-                {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}
-            </div>
+        <div class="titleBox">
+            <h2 class="title">{title}</h2>
         </div>
 
+        <div class="contentBox">
+            {hasCover && (
+                <figure class="Img">
+                    <ImageWrapper src={image} basePath={path.join("content/posts/", entry.id)} alt={title} class="w-full h-full" />
+                </figure>
+            )}
+
+            <p class="text">{description || remarkPluginFrontmatter.excerpt}</p>
+
+            {tags.length > 0 && (
+                <div class="tagBox">
+                    {tags.map((tag) => (
+                        <a href={getTagUrl(tag, lang)}># {tag}</a>
+                    ))}
+                </div>
+            )}
+        </div>
+
+        <a href={url} class="linkWrap" aria-label={title}></a>
     </div>
+</article>
 
-    {hasCover && <a href={url} aria-label={title}
-                    class:list={["group",
-                        "max-h-[20vh] md:max-h-none mx-4 mt-4 -mb-2 md:mb-0 md:mx-0 md:mt-0",
-                        "md:w-(--coverWidth) relative md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl overflow-hidden active:scale-95"
-                    ]} >
-        <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition"></div>
-        <div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
-            <Icon name="material-symbols:chevron-right-rounded"
-                  class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl">
-            </Icon>
-        </div>
-        <ImageWrapper src={image} basePath={path.join("content/posts/", entry.id)} alt="Cover Image of the Post"
-                  class="w-full h-full">
-        </ImageWrapper>
-    </a>}
+<style lang="scss">
+@import '../styles/setting';
 
-    {!hasCover &&
-        <a href={url} aria-label={title} class="hidden! md:flex! btn-regular w-[3.25rem]
-         absolute right-3 top-3 bottom-3 rounded-xl bg-(--enter-btn-bg)
-         hover:bg-(--enter-btn-bg-hover) active:bg-(--enter-btn-bg-active) active:scale-95
-        ">
-            <Icon name="material-symbols:chevron-right-rounded"
-                  class="transition text-(--primary) text-4xl mx-auto">
-            </Icon>
-        </a>
-    }
-</div>
-<div class="transition border-t border-dashed mx-6 border-black/10 dark:border-white/15 last:border-t-0 md:hidden"></div>
+.postItem {
+	position: relative;
+	min-width: 0;
+}
 
-<style define:vars={{coverWidth}}>
+.item {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	gap: 1.25em;
+	height: 100%;
+	@include font($ls: .08em, $lh: 1.8);
+	background-color: $grayColor;
+	padding: 2.25em 1.25em 1.5em;
+
+	@include media(1366) {
+		font-size: $textSizeMedium;
+	}
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+	}
+
+	@include hover {
+		.title {
+			color: $mainColor;
+		}
+
+		.Img {
+			:global(img) {
+				scale: 1.05;
+			}
+		}
+	}
+}
+
+.metaBox {
+	@include positionALTRB($t: -1.25em, $l: 1.25em);
+	z-index: 3;
+	@include flex(wrap);
+	gap: 1em;
+	max-width: calc(100% - 2.5em);
+
+	.tag {
+		white-space: nowrap;
+		color: $textColor;
+		background-color: var(--surface-tag);
+		padding: .375em 1em;
+		@extend %ts;
+	}
+
+	a {
+		@include hover {
+			color: $mainColor;
+		}
+	}
+}
+
+.titleBox {
+	@include flex(nowrap, center, center);
+	gap: .625em;
+	border-bottom: 2px dashed $borderColor;
+	padding-bottom: .5em;
+
+	@include pseudoBefore($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	@include pseudoAfter($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	.title {
+		flex: 1 1 0;
+		min-width: 0;
+		font-size: 1.25em;
+		font-weight: $fwRegular;
+		line-height: 1.5;
+		color: $textColor;
+		text-align: center;
+		@include ellipsis(2);
+		@extend %ts;
+	}
+}
+
+.contentBox {
+	@include flex();
+	flex-direction: column;
+	flex: 1 1 auto;
+	gap: 1em;
+
+	.Img {
+		aspect-ratio: 16 / 9;
+		overflow: clip;
+
+		:global(img) {
+			will-change: scale;
+			@extend %ts;
+		}
+	}
+
+	.text {
+		color: $introColor;
+		@include ellipsis(3);
+		min-height: 5.4em;
+	}
+
+	.tagBox {
+		position: relative;
+		z-index: 3;
+		@include flex(wrap, flex-end);
+		gap: .625em;
+		margin-top: auto;
+
+		a {
+			color: $mainColor;
+			@include textTrim();
+			@extend %ts;
+
+			@include hover {
+				color: $textColor;
+			}
+		}
+	}
+}
+
+.linkWrap {
+	@include cover;
+	z-index: 2;
+}
 </style>

@@ -5,6 +5,7 @@ description: 漸層動畫的顏色總是混濁、過渡不順？原因出在 RGB
 image: ./cover.png
 tags: [CSS, 色彩, 漸層, Figma]
 category: 前端開發
+subcategory: CSS
 draft: false
 ---
 

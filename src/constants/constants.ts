@@ -1,7 +1,7 @@
 import type { LIGHT_DARK_MODE, SupportedLang } from "@/types/config";
 import { siteConfig } from "../config";
 
-export const PAGE_SIZE = 8;
+export const PAGE_SIZE = 6;
 
 export const LIGHT_MODE = "light";
 export const DARK_MODE = "dark";
@@ -19,7 +19,7 @@ export const BANNER_HEIGHT_HOME: number = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
 export const MAIN_PANEL_OVERLAPS_BANNER_HEIGHT = 3.5;
 
 // Page width: rem
-export const PAGE_WIDTH = 95;
+export const PAGE_WIDTH = 80;
 
 export const ALL_LANGUAGES = [
 	"en",

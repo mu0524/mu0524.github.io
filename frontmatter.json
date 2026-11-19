@@ -52,6 +52,11 @@
 					"type": "string"
 				},
 				{
+					"title": "subcategory",
+					"name": "subcategory",
+					"type": "string"
+				},
+				{
 					"title": "draft",
 					"name": "draft",
 					"type": "boolean"

@@ -41,6 +41,7 @@ published: 2026-11-19
 description: 一兩句摘要，會顯示在列表與 SEO description
 tags: [CSS, 動畫]
 category: 前端開發
+subcategory: CSS
 draft: false
 ---
 ```
