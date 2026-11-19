@@ -80,7 +80,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 <MainGridLayout banner={ogImage} title={entry.data.title} description={entry.data.description} lang={lang} setOGTypeArticle={true} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 
-    <article id="post-container" class="postArea">
+    <article id="post-container" class="postArea" data-category={category?.trim() || i18n(I18nKey.uncategorized, lang)} data-subcategory={subcategory?.trim()}>
         <div class="metaBox onload-animation">
             <span class="tag">{formatDateToYYYYMMMD(published)}</span>
             {isUpdated && updated && (
@@ -192,7 +192,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 		color: $textColor;
 		background-color: var(--surface-tag);
 		padding: .375em 1em;
-		@extend %ts;
+		@extend %tsEaseInOut;
 	}
 
 	a {
@@ -240,7 +240,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 	a {
 		color: $mainColor;
 		@include textTrim();
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		@include hover {
 			color: $textColor;
@@ -267,7 +267,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 		@include font($ls: .08em, $lh: 1.5);
 		background-color: $grayColor;
 		padding: 0 20px;
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		@include hover {
 			color: $mainColor;

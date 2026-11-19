@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 import footerBear from "@assets/images/theme/footer-bear.png";
-import iconPlus from "@assets/images/theme/icon-plus.svg?url";
 import { profileConfig } from "../config";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
@@ -44,22 +43,20 @@ const lastActivity = stats.lastActivity
             </div>
             <ul class="categoryList">
                 {categories.map((c) => (
-                    <li class="categoryItem">
+                    <li class:list={["categoryItem", { close: c.children.length > 0 }]} data-category={c.name}>
                         <div class="name">
                             <a href={c.url}>
                                 <span>{c.name}</span>
                                 {c.children.length === 0 && <span class="count">({c.count})</span>}
                             </a>
                             {c.children.length > 0 && (
-                                <button class="toggle" type="button" aria-expanded="true" aria-label={`收合${c.name}`}>
-                                    <img src={iconPlus} alt="" width="20" height="20" />
-                                </button>
+                                <button class="toggle" type="button" aria-expanded="false" aria-label={`展開${c.name}`} data-name={c.name}></button>
                             )}
                         </div>
                         {c.children.length > 0 && (
                             <ul class="subList">
                                 {c.children.map((s) => (
-                                    <li>
+                                    <li class="subItem" data-subcategory={s.name}>
                                         <a href={s.url}>
                                             <span>{s.name}</span>
                                             <span class="count">({s.count})</span>
@@ -135,18 +132,51 @@ function updateRunningDays() {
     el.textContent = `${days}天`;
 }
 
+function setCategoryOpen(item: Element, isOpen: boolean) {
+    const btn = item.querySelector<HTMLButtonElement>(".toggle");
+    if (!btn) return;
+    item.classList.toggle("close", !isOpen);
+    btn.setAttribute("aria-expanded", String(isOpen));
+    btn.setAttribute("aria-label", `${isOpen ? "收合" : "展開"}${btn.dataset.name ?? ""}`);
+}
+
 function bindCategoryToggle() {
     document.querySelectorAll<HTMLButtonElement>(".footerArea .toggle").forEach((btn) => {
         btn.addEventListener("click", () => {
             const item = btn.closest(".categoryItem");
-            const isOpen = !item?.classList.toggle("close");
-            btn.setAttribute("aria-expanded", String(isOpen));
+            if (item) setCategoryOpen(item, item.classList.contains("close"));
+        });
+    });
+}
+
+// 頁尾不在 swup 替換範圍內，每次換頁都要依目前文章重新展開分類、標記 current
+function syncCurrentCategory() {
+    const post = document.getElementById("post-container");
+    const category = post?.dataset.category;
+    const subcategory = post?.dataset.subcategory;
+
+    document.querySelectorAll(".footerArea .categoryItem").forEach((item) => {
+        const isCurrent = !!category && item.getAttribute("data-category") === category;
+        item.classList.toggle("current", isCurrent);
+        setCategoryOpen(item, isCurrent);
+
+        item.querySelectorAll(".subItem").forEach((sub) => {
+            sub.classList.toggle("current", isCurrent && !!subcategory && sub.getAttribute("data-subcategory") === subcategory);
         });
     });
 }
 
 updateRunningDays();
 bindCategoryToggle();
+syncCurrentCategory();
+
+if (window.swup) {
+    window.swup.hooks.on("page:view", syncCurrentCategory);
+} else {
+    document.addEventListener("swup:enable", () => {
+        window.swup.hooks.on("page:view", syncCurrentCategory);
+    });
+}
 </script>
 
 <style lang="scss">
@@ -180,7 +210,7 @@ bindCategoryToggle();
 
 		a {
 			text-decoration: underline;
-			@extend %ts;
+			@extend %tsEaseInOut;
 
 			@include hover {
 				color: $mainColor;
@@ -265,7 +295,7 @@ bindCategoryToggle();
 	a {
 		@include flex(nowrap, flex-start, center);
 		gap: 9px;
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		@include hover {
 			color: $mainColor;
@@ -281,16 +311,33 @@ bindCategoryToggle();
 		color: $introColor;
 	}
 
+	.current {
+		> .name a,
+		> a {
+			color: $mainColor;
+		}
+	}
+
 	.toggle {
+		position: relative;
 		flex-shrink: 0;
 		width: 20px;
 		height: 20px;
-		@extend %ts;
 
-		img {
-			display: block;
-			width: 20px;
-			height: 20px;
+		// 橫線＋直線組成「+」，展開時直線轉平疊在橫線上變成「−」
+		@include pseudoBefore {
+			@include pseudoShape(10px, 1.5px, $mainColor);
+			top: calc(50% - .75px);
+			left: 5px;
+			border-radius: 1px;
+		}
+
+		@include pseudoAfter {
+			@include pseudoShape(10px, 1.5px, $mainColor);
+			top: calc(50% - .75px);
+			left: 5px;
+			border-radius: 1px;
+			@extend %tsEaseInOut;
 		}
 	}
 
@@ -303,7 +350,7 @@ bindCategoryToggle();
 	}
 
 	.close {
-		.toggle {
+		.toggle::after {
 			rotate: 90deg;
 		}
 
@@ -326,7 +373,7 @@ bindCategoryToggle();
 		border: 1px solid $borderColor;
 		border-radius: 10px;
 		padding: 4px 16px;
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		@include hover {
 			color: $mainColor;

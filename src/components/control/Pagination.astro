@@ -75,7 +75,7 @@ const getPageUrl = (p: number) => {
 
 	.num {
 		@include font($fs: 20px, $ls: .08em, $lh: 1.5, $color: var(--text-muted));
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		&.current {
 			color: $textColor;
@@ -92,7 +92,7 @@ const getPageUrl = (p: number) => {
 		@include flex(nowrap, center, center);
 		width: 16px;
 		height: 16px;
-		@extend %ts;
+		@extend %tsEaseInOut;
 
 		&.disabled {
 			opacity: .4;
