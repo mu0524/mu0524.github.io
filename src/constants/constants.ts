@@ -1,7 +1,7 @@
 import type { LIGHT_DARK_MODE, SupportedLang } from "@/types/config";
 import { siteConfig } from "../config";
 
-export const PAGE_SIZE = 6;
+export const PAGE_SIZE = 4;
 
 export const LIGHT_MODE = "light";
 export const DARK_MODE = "dark";
