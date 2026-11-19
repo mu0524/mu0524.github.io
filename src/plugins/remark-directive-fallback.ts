@@ -1,5 +1,4 @@
-import { visit } from "unist-util-visit";
-import type { MdNode, MdRoot } from "./types";
+import { type MdNode, type MdRoot, walk } from "./types";
 
 // remark-directive 會把內文的「:文字」當成指令吃掉（例如 a:hover）
 // 沒有外掛處理的指令，在這裡還原成原本的文字
@@ -14,8 +13,7 @@ const text = (value: string): MdNode => ({ type: "text", value });
 
 export function remarkDirectiveFallback() {
 	return (tree: MdRoot) => {
-		visit(tree, (node: MdNode, index, parent) => {
-			if (!parent?.children || index === undefined) return;
+		walk(tree, (node, index, parent) => {
 			const children = node.children ?? [];
 			const attrs = attrsToText(node);
 

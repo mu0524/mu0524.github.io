@@ -2,7 +2,7 @@
 
 文章裡用 `:::codepen` 容器包住程式碼區塊，建置時會轉成 CodePen 的 [Prefill Embed](https://blog.codepen.io/documentation/prefill-embeds/)，讀者可以直接操作結果。不需要先在 CodePen 建立 Pen，也不需要登入。
 
-實作在 `src/plugins/remark-codepen.mjs`，樣式在 `src/styles/markdown-extend.scss` 的 `.codepen-embed`。
+實作在 `src/plugins/remark-codepen.ts`（轉成嵌入區塊）與 `src/scripts/codepen.ts`（載入 CodePen 嵌入腳本），樣式在 `src/components/Markdown.astro` 的 `.codepenBox`。
 
 ## 寫法
 

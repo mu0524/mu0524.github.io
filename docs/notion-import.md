@@ -123,8 +123,8 @@ curl -s https://registry.npmjs.org/leader-line-new | python -c "import json,sys;
 ### 13. `> [!CAUTION]` 不會變成提示框
 
 - 狀況：`[!NOTE]`、`[!TIP]` 等都正常，只有 `[!CAUTION]` 變成沒有樣式的 `<danger>` 標籤
-- 原因：`remark-github-admonitions-to-directives` 把 CAUTION 轉成 `:::danger`，但主題在 `astro.config.mjs` 只註冊了 `caution`
-- 處理：已在 `astro.config.mjs` 的 `rehypeComponents` 補上 `danger` 對應到 caution 樣式（2026-11-19）
+- 原因：舊主題用 `remark-github-admonitions-to-directives` 把 CAUTION 轉成 `:::danger`，但只註冊了 `caution`
+- 處理：重寫後改用 `src/plugins/remark-admonition.ts` 直接處理 NOTE、TIP、IMPORTANT、WARNING、CAUTION 五種提示框，不會再出現這個問題
 
 ### 14. 改了 Markdown 設定，建置結果卻沒變
 
@@ -138,8 +138,7 @@ rm -rf node_modules/.astro .astro/data-store.json && pnpm build
 
 ### 15. 封面圖不要用 SVG
 
-- 狀況：文章頁本來會把 frontmatter 的 `image` 當成社群分享預覽圖（OG image），而 Facebook、LINE 等平台不支援 SVG
-- 注意：目前 `src/layouts/Layout.astro` 有一段 TODO 把預覽圖固定成網站橫幅，所以封面暫時不會出現在分享預覽上；之後拿掉這段時，SVG 封面就會出問題
+- 狀況：文章頁會把 frontmatter 的 `image` 轉成 1200px 寬的 JPEG 當社群分享預覽圖（OG image，見 `src/components/Seo.astro`），Facebook、LINE 等平台不支援 SVG
 - 處理：插圖可以用 SVG，封面另外輸出成 PNG。文章用資料夾形式（`posts/{slug}/index.md`）時，圖片放在同一個資料夾，寫 `image: ./cover.png` 即可
 
 ## 檢查指令

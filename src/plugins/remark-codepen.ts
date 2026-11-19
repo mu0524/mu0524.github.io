@@ -1,5 +1,4 @@
-import { visit } from "unist-util-visit";
-import { escapeAttr, escapeHtml, type MdNode, type MdRoot } from "./types";
+import { escapeAttr, escapeHtml, type MdRoot, walk } from "./types";
 
 /**
  * 把 :::codepen 容器轉成 CodePen Prefill Embed，不需要先在 CodePen 建立 Pen
@@ -39,9 +38,8 @@ const splitList = (value?: string | null) =>
 
 export function remarkCodepen() {
 	return (tree: MdRoot) => {
-		visit(tree, "containerDirective", (node: MdNode, index, parent) => {
-			if (node.name !== "codepen" || !parent?.children || index === undefined)
-				return;
+		walk(tree, (node, index, parent) => {
+			if (node.type !== "containerDirective" || node.name !== "codepen") return;
 
 			const attrs = node.attributes ?? {};
 			const blocks = (node.children ?? [])

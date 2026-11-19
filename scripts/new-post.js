@@ -1,59 +1,40 @@
-/* This is a script to create a new post markdown file with front-matter */
+// 建立新文章：pnpm new-post <slug>
+// 產生 src/content/posts/<slug>/index.md，圖片放在同一個資料夾，用 ./cover.png 這種相對路徑引用
 
 import fs from "node:fs";
 import path from "node:path";
 
-function getDate() {
-	const today = new Date();
-	const year = today.getFullYear();
-	const month = String(today.getMonth() + 1).padStart(2, "0");
-	const day = String(today.getDate()).padStart(2, "0");
+const slug = process.argv[2]?.trim();
 
-	return `${year}-${month}-${day}`;
-}
-
-const args = process.argv.slice(2);
-
-if (args.length === 0) {
-	console.error(`Error: No filename argument provided
-Usage: npm run new-post -- <filename>`);
-	process.exit(1); // Terminate the script and return error code 1
-}
-
-let fileName = args[0];
-
-// Add .md extension if not present
-const fileExtensionRegex = /\.(md|mdx)$/i;
-if (!fileExtensionRegex.test(fileName)) {
-	fileName += ".md";
-}
-
-const targetDir = "./src/content/posts/";
-const fullPath = path.join(targetDir, fileName);
-
-if (fs.existsSync(fullPath)) {
-	console.error(`Error: File ${fullPath} already exists `);
+if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+	console.error("請提供文章網址代稱（小寫英數字與連字號），例如：pnpm new-post css-grid-notes");
 	process.exit(1);
 }
 
-// recursive mode creates multi-level directories
-const dirPath = path.dirname(fullPath);
-if (!fs.existsSync(dirPath)) {
-	fs.mkdirSync(dirPath, { recursive: true });
+const dir = path.join("src", "content", "posts", slug);
+const file = path.join(dir, "index.md");
+
+if (fs.existsSync(file)) {
+	console.error(`已經有這篇文章：${file}`);
+	process.exit(1);
 }
 
-const content = `---
-title: ${args[0]}
-published: ${getDate()}
+const today = new Date();
+const pad = (n) => String(n).padStart(2, "0");
+const date = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+
+const frontmatter = `---
+title: ${slug}
+published: ${date}
 description: ''
 image: ''
 tags: []
 category: ''
 subcategory: ''
-draft: false 
+draft: true
 ---
 `;
 
-fs.writeFileSync(path.join(targetDir, fileName), content);
-
-console.log(`Post ${fullPath} created`);
+fs.mkdirSync(dir, { recursive: true });
+fs.writeFileSync(file, frontmatter);
+console.log(`已建立 ${file}（draft: true，寫完記得改成 false）`);

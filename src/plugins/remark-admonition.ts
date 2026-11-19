@@ -1,5 +1,4 @@
-import { visit } from "unist-util-visit";
-import type { MdNode, MdRoot } from "./types";
+import { type MdRoot, walk } from "./types";
 
 // 把 GitHub 提示框語法轉成 <aside class="admonition note">
 // > [!NOTE]
@@ -16,7 +15,8 @@ const MARKER = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*\r?\n?/i;
 
 export function remarkAdmonition() {
 	return (tree: MdRoot) => {
-		visit(tree, "blockquote", (node: MdNode) => {
+		walk(tree, (node) => {
+			if (node.type !== "blockquote") return;
 			const first = node.children?.[0];
 			const text =
 				first?.type === "paragraph" ? first.children?.[0] : undefined;
