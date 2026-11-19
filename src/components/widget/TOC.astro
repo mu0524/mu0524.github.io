@@ -28,7 +28,7 @@ const removeTailingHash = (text: string) => {
 
 // 目錄只留文字，拿掉標題開頭的 emoji
 const removeLeadingEmoji = (text: string) =>
-	text.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u, "");
+	text.replace(/^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u, "");
 
 const maxLevel = siteConfig.toc.depth;
 ---
