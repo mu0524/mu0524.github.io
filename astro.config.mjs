@@ -1,183 +1,114 @@
 import { unified } from "@astrojs/markdown-remark";
-import partytown from "@astrojs/partytown";
 import sitemap from "@astrojs/sitemap";
-import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, memoryCache } from "astro/config";
+import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeComponents from "rehype-components"; /* Render the custom directive content */
-import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
-import remarkDirective from "remark-directive"; /* Handle directives */
-import remarkGithubAdmonitionsToDirectives from "remark-github-admonitions-to-directives";
-import remarkMath from "remark-math";
-import remarkSectionize from "remark-sectionize";
-import { deployConfig, expressiveCodeConfig } from "./src/config.ts";
-import I18nKey from "./src/i18n/i18nKey.ts";
-import { i18n } from "./src/i18n/translation.ts";
-import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
-import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
-import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
-import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
-import { rehypeLazyLoadImage } from "./src/plugins/rehype-lazy-load-image.mjs";
-import { rehypeMermaidConfig } from "./src/plugins/rehype-mermaid.mjs";
-import { remarkCodepen } from "./src/plugins/remark-codepen.mjs";
-import { remarkDirection } from "./src/plugins/remark-direction.mjs";
-import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
-import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
-import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
-import { remarkRuby } from "./src/plugins/remark-ruby.mjs";
+import remarkDirective from "remark-directive";
+import { remarkAdmonition } from "./src/plugins/remark-admonition.ts";
+import { remarkCodepen } from "./src/plugins/remark-codepen.ts";
+import { remarkDirectiveFallback } from "./src/plugins/remark-directive-fallback.ts";
+import { remarkGithubCard } from "./src/plugins/remark-github-card.ts";
+import { remarkWordCount } from "./src/plugins/remark-word-count.ts";
+import { SITE } from "./src/site.config.ts";
 
-// https://astro.build/config
+const CODE_FONT =
+	"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+
 export default defineConfig({
-	site: deployConfig.siteUrl,
-	base: deployConfig.baseUrl,
+	site: SITE.url,
+	base: "/",
+	trailingSlash: "ignore",
 	integrations: [
+		// 換頁時只替換 #swup 區塊，導覽區與頁尾保留不重新渲染
 		swup({
 			theme: false,
-			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
-			// the default value `transition-` cause transition delay
-			// when the Tailwind class `transition-all` is used
-			containers: ["main", "#toc"],
+			animationClass: "transition-swup-",
+			containers: ["#swup"],
 			smoothScrolling: true,
 			cache: true,
 			preload: true,
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: false,
+			reloadScripts: true,
 			globalInstance: true,
 		}),
 		icon({
 			include: {
-				"preprocess: vitePreprocess(),": ["*"],
-				"fa6-brands": ["*"],
-				"fa6-regular": ["*"],
-				"fa6-solid": ["*"],
+				"material-symbols": ["*"],
 			},
 		}),
 		expressiveCode({
-			themes: [expressiveCodeConfig.theme],
-			plugins: [
-				pluginCollapsibleSections(),
-				pluginLineNumbers(),
-				pluginLanguageBadge(),
-				pluginCustomCopyButton(),
-			],
+			themes: ["github-dark"],
+			plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
 			defaultProps: {
 				wrap: true,
 				overridesByLang: {
-					shellsession: {
-						showLineNumbers: false,
-					},
+					shellsession: { showLineNumbers: false },
 				},
 			},
 			styleOverrides: {
+				borderRadius: "0",
+				borderColor: "transparent",
 				codeBackground: "var(--codeblock-bg)",
-				borderRadius: "0.75rem",
-				borderColor: "none",
+				codeFontFamily: CODE_FONT,
 				codeFontSize: "0.875rem",
-				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-				codeLineHeight: "1.5rem",
+				codeLineHeight: "1.6",
+				uiFontFamily: "inherit",
 				frames: {
 					editorBackground: "var(--codeblock-bg)",
 					terminalBackground: "var(--codeblock-bg)",
-					terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
 					editorTabBarBackground: "var(--codeblock-topbar-bg)",
-					editorActiveTabBackground: "none",
-					editorActiveTabIndicatorBottomColor: "var(--primary)",
-					editorActiveTabIndicatorTopColor: "none",
+					terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
+					editorActiveTabBackground: "transparent",
+					editorActiveTabIndicatorTopColor: "transparent",
+					editorActiveTabIndicatorBottomColor: "var(--accent-rose)",
 					editorTabBarBorderBottomColor: "var(--codeblock-topbar-bg)",
-					terminalTitlebarBorderBottomColor: "none",
+					terminalTitlebarBorderBottomColor: "transparent",
+					frameBoxShadowCssValue: "none",
 				},
-				textMarkers: {
-					delHue: 0,
-					insHue: 180,
-					markHue: 250,
-				},
-			},
-			frames: {
-				showCopyToClipboardButton: false,
 			},
 		}),
-		svelte(),
 		sitemap(),
-		partytown({
-			config: {
-				forward: ["dataLayer.push"],
-			},
-		}),
 	],
 	markdown: {
 		processor: unified({
 			remarkRehype: {
-				footnoteLabel: i18n(I18nKey.footnotes),
+				footnoteLabel: "腳註",
+				footnoteBackLabel: "回到內文",
 			},
 			remarkPlugins: [
-				remarkMath,
-				remarkReadingTime,
-				remarkExcerpt,
-				remarkRuby,
-				remarkDirection,
-				remarkGithubAdmonitionsToDirectives,
+				remarkWordCount,
+				remarkAdmonition,
 				remarkDirective,
 				remarkCodepen,
-				remarkSectionize,
-				parseDirectiveNode,
+				remarkGithubCard,
+				remarkDirectiveFallback,
 			],
 			rehypePlugins: [
-				rehypeKatex,
 				rehypeSlug,
-				rehypeLazyLoadImage,
-				rehypeMermaidConfig,
-				[
-					rehypeComponents,
-					{
-						components: {
-							github: GithubCardComponent,
-							note: (x, y) => AdmonitionComponent(x, y, "note"),
-							tip: (x, y) => AdmonitionComponent(x, y, "tip"),
-							important: (x, y) => AdmonitionComponent(x, y, "important"),
-							caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-							// remark-github-admonitions-to-directives 會把 > [!CAUTION] 轉成 :::danger
-							danger: (x, y) => AdmonitionComponent(x, y, "caution"),
-							warning: (x, y) => AdmonitionComponent(x, y, "warning"),
-						},
-					},
-				],
 				[
 					rehypeAutolinkHeadings,
 					{
 						behavior: "append",
 						properties: {
 							className: ["anchor"],
+							ariaHidden: "true",
+							tabIndex: -1,
+							"data-pagefind-ignore": true,
 						},
-						content: {
-							type: "element",
-							tagName: "span",
-							properties: {
-								className: ["anchor-icon"],
-								"data-pagefind-ignore": true,
-							},
-							children: [
-								{
-									type: "text",
-									value: "#",
-								},
-							],
-						},
+						content: { type: "text", value: "#" },
 					},
 				],
 			],
 		}),
 	},
 	vite: {
-		plugins: [tailwindcss()],
 		css: {
 			preprocessorOptions: {
 				scss: {
@@ -191,22 +122,5 @@ export default defineConfig({
 				},
 			},
 		},
-		build: {
-			rollupOptions: {
-				onwarn(warning, warn) {
-					// temporarily suppress this warning
-					if (
-						warning.message.includes("is dynamically imported by") &&
-						warning.message.includes("but also statically imported by")
-					) {
-						return;
-					}
-					warn(warning);
-				},
-			},
-		},
-	},
-	cache: {
-		provider: memoryCache(),
 	},
 });

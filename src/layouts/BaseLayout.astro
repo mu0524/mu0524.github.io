@@ -1,0 +1,47 @@
+---
+import "@fontsource/jaldi/400.css";
+import "@fontsource/jaldi/700.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/700.css";
+import "@fontsource-variable/jetbrains-mono";
+import "@styles/global.scss";
+
+import Seo, { type SeoProps } from "@components/Seo.astro";
+import { withBase } from "@lib/url";
+import { SITE } from "@/site.config";
+
+type Props = SeoProps;
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<Seo {...props} />
+		<link rel="icon" href={withBase("/favicon/favicon.ico")} />
+		<link rel="alternate" type="application/rss+xml" title={SITE.title} href={new URL(withBase("/rss.xml"), Astro.site)} />
+
+		<!-- 在畫面繪製前套用深色模式，避免閃一下淺色 -->
+		<script is:inline>
+			(() => {
+				let theme = null;
+				try {
+					theme = localStorage.getItem("theme");
+				} catch {}
+				const dark =
+					theme === "dark" ||
+					(theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+				document.documentElement.classList.toggle("dark", dark);
+			})();
+		</script>
+
+		<slot name="head" />
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>

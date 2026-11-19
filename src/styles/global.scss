@@ -1,0 +1,146 @@
+// 全站共用：色票、基本 reset、換頁動畫
+// 各元件樣式寫在元件自己的 <style lang="scss">
+@use "variables";
+@import "setting";
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0 solid;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+	scrollbar-gutter: stable;
+	background-color: var(--page-bg);
+}
+
+body {
+	min-height: 100vh;
+	font-family: $mainFont;
+	@include font();
+	background-color: var(--page-bg);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transition: background-color .3s, color .3s;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+	display: block;
+	max-width: 100%;
+}
+
+img,
+video {
+	height: auto;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+ul,
+ol {
+	list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+	letter-spacing: inherit;
+	color: inherit;
+	background-color: transparent;
+}
+
+button {
+	cursor: pointer;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+code,
+kbd,
+pre,
+samp {
+	font-family: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+::selection {
+	background-color: var(--selection-bg);
+}
+
+[hidden] {
+	display: none !important;
+}
+
+// 只給螢幕閱讀器讀的文字
+.srOnly {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+// 首次載入的淡入
+.onloadAnimation {
+	opacity: 0;
+	animation: fadeInUp .3s ease-out .1s forwards;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		translate: 0 1.5rem;
+	}
+
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
+
+// swup 換頁淡入淡出
+html.is-changing .transition-swup-fade {
+	transition: opacity .2s ease-in-out;
+}
+
+html.is-animating .transition-swup-fade {
+	opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0s !important;
+		animation-delay: 0s !important;
+		transition-duration: 0s !important;
+		scroll-behavior: auto !important;
+	}
+}

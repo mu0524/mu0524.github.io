@@ -1,244 +1,42 @@
+// 色票：淺色值對應 Figma 設計稿，深色值依淺色版推算
+// 深色模式在 <html> 加上 .dark，由 BaseLayout 的 script 依使用者設定切換
 @use "sass:list";
 
-/* utils */
-@function white($a) {
-	@return rgba(255, 255, 255, $a);
-}
-
-@function black($a) {
-	@return rgba(0, 0, 0, $a);
-}
-
-$rainbow-light: linear-gradient(
-	to right,
-	oklch(0.8 0.1 0),
-	oklch(0.8 0.1 30),
-	oklch(0.8 0.1 60),
-	oklch(0.8 0.1 90),
-	oklch(0.8 0.1 120),
-	oklch(0.8 0.1 150),
-	oklch(0.8 0.1 180),
-	oklch(0.8 0.1 210),
-	oklch(0.8 0.1 240),
-	oklch(0.8 0.1 270),
-	oklch(0.8 0.1 300),
-	oklch(0.8 0.1 330),
-	oklch(0.8 0.1 360)
-);
-$rainbow-dark: linear-gradient(
-	to right,
-	oklch(0.7 0.1 0),
-	oklch(0.7 0.1 30),
-	oklch(0.7 0.1 60),
-	oklch(0.7 0.1 90),
-	oklch(0.7 0.1 120),
-	oklch(0.7 0.1 150),
-	oklch(0.7 0.1 180),
-	oklch(0.7 0.1 210),
-	oklch(0.7 0.1 240),
-	oklch(0.7 0.1 270),
-	oklch(0.7 0.1 300),
-	oklch(0.7 0.1 330),
-	oklch(0.7 0.1 360)
+$tokens: (
+	"--text-primary": (#53514e, #e2e0dd),
+	"--text-secondary": (#7b7b7b, #aaa7a3),
+	"--text-muted": (#aaa7a3, #7d7a76),
+	"--text-faint": (#dcdbd9, #5c5a57),
+	"--accent-rose": (#b9a5a5, #c9b5b5),
+	"--border-default": (#dcdbd9, #3a3937),
+	"--surface-default": (#f6f6f6, #262524),
+	"--surface-btn": (#ffffff, #33312f),
+	"--surface-tag": (#e2e2e2, #3a3937),
+	"--page-bg": (#ffffff, #1c1b1a),
+	"--selection-bg": (#ebdfdd, #4d4342),
+	"--inline-code-bg": (#ece9e8, #33312f),
+	"--codeblock-bg": (#1f1c1b, #161413),
+	"--codeblock-topbar-bg": (#34302f, #0f0d0d),
+	"--admonition-note": (#7f9cc0, #93add0),
+	"--admonition-tip": (#7fae9d, #90bfae),
+	"--admonition-important": (#a58fbf, #b6a1cf),
+	"--admonition-warning": (#c7a46c, #d4b47e),
+	"--admonition-caution": (#c27f7a, #d4928d),
 );
 
 :root {
 	color-scheme: light;
-	--radius-large: 1rem;
-	--content-delay: 150ms;
+	--page-width: 80rem;
+
+	@each $name, $value in $tokens {
+		#{$name}: list.nth($value, 1);
+	}
 }
 
 :root.dark {
 	color-scheme: dark;
-}
 
-/* An util to define variables that vary with light and dark mode */
-/* --text-* / --accent-rose / --border-default / --surface-* 對應 Figma 設計稿色票，深色值依淺色版推算 */
-@mixin define($vars) {
-	:root {
-		@each $key, $value in $vars {
-			#{$key}: list.nth($value, 1);
-		}
-	}
-	:root.dark {
-		@each $key, $value in $vars {
-			@if list.length($value) > 1 {
-				#{$key}: list.nth($value, 2);
-			}
-		}
+	@each $name, $value in $tokens {
+		#{$name}: list.nth($value, 2);
 	}
 }
-
-@include define(
-	(
-		"--primary": (
-			oklch(0.6 0.045 var(--hue)), oklch(0.78 0.04 var(--hue))
-		),
-		"--text-primary": (
-			#53514e, #e2e0dd
-		),
-		"--text-secondary": (
-			#7b7b7b, #aaa7a3
-		),
-		"--accent-rose": (
-			#b9a5a5, #c9b5b5
-		),
-		"--text-muted": (
-			#aaa7a3, #7d7a76
-		),
-		"--text-faint": (
-			#dcdbd9, #5c5a57
-		),
-		"--border-default": (
-			#dcdbd9, #3a3937
-		),
-		"--surface-default": (
-			#f6f6f6, #262524
-		),
-		"--surface-btn": (
-			#ffffff, #33312f
-		),
-		"--surface-tag": (
-			#e2e2e2, #3a3937
-		),
-
-		"--page-bg": (
-			#ffffff, #1c1b1a
-		),
-		"--card-bg": var(--surface-default),
-		"--btn-content": (
-			oklch(0.55 0.04 var(--hue)), oklch(0.78 0.035 var(--hue))
-		),
-
-		"--btn-regular-bg": (
-			oklch(0.95 0.01 var(--hue)), oklch(0.33 0.012 var(--hue))
-		),
-		"--btn-regular-bg-hover": (
-			oklch(0.91 0.016 var(--hue)), oklch(0.38 0.016 var(--hue))
-		),
-		"--btn-regular-bg-active": (
-			oklch(0.87 0.022 var(--hue)), oklch(0.43 0.02 var(--hue))
-		),
-
-		"--btn-plain-bg-hover": (
-			oklch(0.95 0.01 var(--hue)), oklch(0.3 0.012 var(--hue))
-		),
-		"--btn-plain-bg-active": (
-			oklch(0.98 0.004 var(--hue)), oklch(0.27 0.01 var(--hue))
-		),
-
-		"--btn-card-bg-hover": (
-			oklch(0.98 0.003 var(--hue)), oklch(0.3 0.012 var(--hue))
-		),
-		"--btn-card-bg-active": (
-			oklch(0.9 0.012 var(--hue)), oklch(0.35 0.014 var(--hue))
-		),
-
-		"--enter-btn-bg": var(--btn-regular-bg),
-		"--enter-btn-bg-hover": var(--btn-regular-bg-hover),
-		"--enter-btn-bg-active": var(--btn-regular-bg-active),
-
-		"--deep-text": oklch(0.25 0.02 var(--hue)),
-
-		"--title-active": oklch(0.5 0.045 var(--hue)),
-
-		"--line-divider": (
-			black(0.08), white(0.08)
-		),
-
-		"--line-color": (
-			black(0.1), white(0.1)
-		),
-		"--meta-divider": (
-			black(0.2), white(0.2)
-		),
-
-		"--inline-code-bg": var(--btn-regular-bg),
-		"--inline-code-color": var(--btn-content),
-		"--selection-bg": (
-			oklch(0.9 0.02 var(--hue)), oklch(0.4 0.03 var(--hue))
-		),
-		"--codeblock-selection": oklch(0.4 0.03 var(--hue)),
-		"--codeblock-bg": (
-			oklch(0.2 0.005 var(--hue)), oklch(0.2 0.005 var(--hue))
-		),
-		"--codeblock-topbar-bg": (
-			oklch(0.3 0.006 var(--hue)), oklch(0.14 0.005 var(--hue))
-		),
-
-		"--license-block-bg": var(--surface-btn),
-
-		"--link-underline": (
-			oklch(0.85 0.025 var(--hue)), oklch(0.45 0.03 var(--hue))
-		),
-		"--link-hover": (
-			oklch(0.95 0.01 var(--hue)), oklch(0.4 0.03 var(--hue))
-		),
-		"--link-active": (
-			oklch(0.9 0.02 var(--hue)), oklch(0.35 0.025 var(--hue))
-		),
-
-		"--float-panel-bg": (
-			white, oklch(0.19 0.015 var(--hue))
-		),
-
-		"--scrollbar-bg-light": black(0.4),
-		"--scrollbar-bg-hover-light": black(0.5),
-		"--scrollbar-bg-active-light": black(0.6),
-
-		"--scrollbar-bg-dark": white(0.4),
-		"--scrollbar-bg-hover-dark": white(0.5),
-		"--scrollbar-bg-active-dark": white(0.6),
-
-		"--scrollbar-bg": (
-			var(--scrollbar-bg-light), var(--scrollbar-bg-dark)
-		),
-		"--scrollbar-bg-hover": (
-			var(--scrollbar-bg-hover-light), var(--scrollbar-bg-hover-dark)
-		),
-		"--scrollbar-bg-active": (
-			var(--scrollbar-bg-active-light), var(--scrollbar-bg-active-dark)
-		),
-
-		"--color-selection-bar": (
-			$rainbow-light, $rainbow-dark
-		),
-
-		"--display-light-icon": (
-			1, 0
-		),
-		"--display-dark-icon": (
-			0, 1
-		),
-
-		"--admonitions-color-tip": (
-			oklch(0.7 0.14 180), oklch(0.75 0.14 180)
-		),
-		"--admonitions-color-note": (
-			oklch(0.7 0.14 250), oklch(0.75 0.14 250)
-		),
-		"--admonitions-color-important": (
-			oklch(0.7 0.14 310), oklch(0.75 0.14 310)
-		),
-		"--admonitions-color-warning": (
-			oklch(0.7 0.14 60), oklch(0.75 0.14 60)
-		),
-		"--admonitions-color-caution": (
-			oklch(0.6 0.2 25), oklch(0.65 0.2 25)
-		),
-
-		"--toc-badge-bg": (
-			oklch(0.9 0.02 var(--hue)), var(--btn-regular-bg)
-		),
-		"--toc-btn-hover": (
-			oklch(0.926 0.015 var(--hue)), oklch(0.22 0.02 var(--hue))
-		),
-		"--toc-btn-active": (
-			oklch(0.9 0.015 var(--hue)), oklch(0.25 0.02 var(--hue))
-		),
-		"--toc-width": calc((100vw - var(--page-width)) / 2 - 1rem),
-		"--toc-item-active": (
-			oklch(0.62 0.045 var(--hue)), oklch(0.45 0.03 var(--hue))
-		),
-	)
-);

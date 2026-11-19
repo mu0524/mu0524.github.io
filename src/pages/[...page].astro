@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getPosts } from "@lib/posts";
+import { postUrl } from "@lib/url";
+import type { GetStaticPaths } from "astro";
+import { SITE } from "@/site.config";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const posts = await getPosts();
+	return paginate(posts, { pageSize: SITE.pageSize });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<BaseLayout>
+	<ul>
+		{page.data.map((post) => (
+			<li><a href={postUrl(post.id)}>{post.data.title}</a></li>
+		))}
+	</ul>
+</BaseLayout>
