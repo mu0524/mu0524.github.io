@@ -48,6 +48,17 @@ export function getCategoryUrl(category: string | null, lang?: string): string {
 	return url(`/archive/?category=${encodeURIComponent(category.trim())}`, lang);
 }
 
+export function getSubcategoryUrl(
+	category: string,
+	subcategory: string,
+	lang?: string,
+): string {
+	return url(
+		`/archive/?category=${encodeURIComponent(category.trim())}&subcategory=${encodeURIComponent(subcategory.trim())}`,
+		lang,
+	);
+}
+
 export function getDir(path: string): string {
 	const normalizedPath = path.replace(/\\/g, "/");
 	const lastSlashIndex = normalizedPath.lastIndexOf("/");

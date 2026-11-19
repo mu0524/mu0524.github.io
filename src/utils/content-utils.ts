@@ -1,8 +1,8 @@
-import { type CollectionEntry, getCollection } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import { DEFAULT_LANG, SUPPORTED_LANG } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { getTranslation } from "@i18n/translation";
-import { getCategoryUrl } from "@utils/url-utils.ts";
+import { getCategoryUrl, getSubcategoryUrl } from "@utils/url-utils.ts";
 import { siteConfig } from "@/config";
 import type { GetSortedPosts } from "@/types/config";
 
@@ -225,4 +225,88 @@ export async function getCategoryList(lang?: string): Promise<Category[]> {
 		});
 	}
 	return ret;
+}
+
+export type CategoryNode = Category & {
+	children: Category[];
+};
+
+// 主分類底下掛子分類（frontmatter 的 subcategory），給頁尾分類列表用
+export async function getCategoryTree(lang?: string): Promise<CategoryNode[]> {
+	const postForLang = await getResolvedPostsForLang(lang);
+	const activeLang = lang || CONFIG_BASE_LANG;
+	const uncategorized = getTranslation(activeLang)[I18nKey.uncategorized];
+
+	const tree = new Map<string, { count: number; subs: Map<string, number> }>();
+
+	postForLang.forEach((post) => {
+		const name = post.data.category?.trim() || uncategorized;
+		const node = tree.get(name) ?? { count: 0, subs: new Map() };
+		node.count++;
+		const sub = post.data.subcategory?.trim();
+		if (sub) {
+			node.subs.set(sub, (node.subs.get(sub) ?? 0) + 1);
+		}
+		tree.set(name, node);
+	});
+
+	const byName = (a: string, b: string) =>
+		a.toLowerCase().localeCompare(b.toLowerCase());
+
+	return [...tree.keys()].sort(byName).map((name) => {
+		const node = tree.get(name);
+		const isUncategorized = name === uncategorized;
+		return {
+			name,
+			count: node?.count ?? 0,
+			url: getCategoryUrl(isUncategorized ? null : name, lang),
+			children: [...(node?.subs.keys() ?? [])].sort(byName).map((sub) => ({
+				name: sub,
+				count: node?.subs.get(sub) ?? 0,
+				url: getSubcategoryUrl(name, sub, lang),
+			})),
+		};
+	});
+}
+
+export type SiteStats = {
+	postCount: number;
+	categoryCount: number;
+	tagCount: number;
+	wordCount: number;
+	firstPublished: Date | null;
+	lastActivity: Date | null;
+};
+
+export async function getSiteStats(lang?: string): Promise<SiteStats> {
+	const posts = await getResolvedPostsForLang(lang);
+	const categories = await getCategoryList(lang);
+	const tags = await getTagList(lang);
+
+	let wordCount = 0;
+	let firstPublished: Date | null = null;
+	let lastActivity: Date | null = null;
+
+	for (const post of posts) {
+		const { remarkPluginFrontmatter } = await render(post);
+		wordCount += Number(remarkPluginFrontmatter.words) || 0;
+
+		const published = new Date(post.data.published);
+		const active = post.data.updated ? new Date(post.data.updated) : published;
+		if (!firstPublished || published < firstPublished) {
+			firstPublished = published;
+		}
+		if (!lastActivity || active > lastActivity) {
+			lastActivity = active;
+		}
+	}
+
+	return {
+		postCount: posts.length,
+		categoryCount: categories.length,
+		tagCount: tags.length,
+		wordCount,
+		firstPublished,
+		lastActivity,
+	};
 }

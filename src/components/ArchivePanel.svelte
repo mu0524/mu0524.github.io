@@ -14,6 +14,7 @@ const params = new URLSearchParams(window.location.search);
 tags = params.has("tag") ? params.getAll("tag") : [];
 categories = params.has("category") ? params.getAll("category") : [];
 const uncategorized = params.get("uncategorized");
+const subcategories = params.getAll("subcategory");
 
 interface Post {
 	slug: string;
@@ -21,6 +22,7 @@ interface Post {
 		title: string;
 		tags: string[];
 		category?: string;
+		subcategory?: string | null;
 		published: Date;
 	};
 }
@@ -56,6 +58,14 @@ onMount(async () => {
 	if (categories.length > 0) {
 		filteredPosts = filteredPosts.filter(
 			(post) => post.data.category && categories.includes(post.data.category),
+		);
+	}
+
+	if (subcategories.length > 0) {
+		filteredPosts = filteredPosts.filter(
+			(post) =>
+				post.data.subcategory &&
+				subcategories.includes(post.data.subcategory),
 		);
 	}
 
