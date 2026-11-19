@@ -10,7 +10,6 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!**/src/**/*.css",
 			"!**/src/**/*.scss",
 			"!!**/src/public",
 			"!!**/dist",
@@ -51,14 +50,9 @@
 			"quoteStyle": "double"
 		}
 	},
-	"css": {
-		"parser": {
-			"tailwindDirectives": true
-		}
-	},
 	"overrides": [
 		{
-			"includes": ["**/*.svelte", "**/*.astro"],
+			"includes": ["**/*.astro"],
 			"linter": {
 				"rules": {
 					"style": {
