@@ -35,7 +35,8 @@ export default defineConfig({
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: false,
-			reloadScripts: true,
+			// 不重新執行換頁後的 script，各頁互動統一由 scripts/main.ts 的 onPageLoad 處理
+			reloadScripts: false,
 			globalInstance: true,
 		}),
 		icon({

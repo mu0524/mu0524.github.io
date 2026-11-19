@@ -17,9 +17,9 @@ import { escapeAttr, escapeHtml, type MdNode, type MdRoot } from "./types";
  * - scripts / stylesheets：外部資源網址，多個用逗號分隔
  *
  * https://blog.codepen.io/documentation/prefill-embeds/
+ *
+ * 嵌入腳本由 src/scripts/codepen.ts 在頁面載入與換頁後載入
  */
-
-const EMBED_SCRIPT = "https://public.codepenassets.com/embed/index.js";
 
 const LANG_ALIAS: Record<string, string> = {
 	html: "html",
@@ -37,25 +37,8 @@ const splitList = (value?: string | null) =>
 		.map((s) => s.trim())
 		.filter(Boolean);
 
-// 依網站目前的深淺色設定 CodePen 主題，再載入嵌入腳本
-// 換頁後這段會重新執行，所以每次都插入新的 script 讓 CodePen 重新掃描
-const LOADER_SCRIPT = `(() => {
-  const dark = document.documentElement.classList.contains("dark");
-  document.querySelectorAll(".codepen[data-prefill]").forEach((el) => {
-    el.dataset.themeId = dark ? "dark" : "light";
-  });
-  document.getElementById("codepen-embed-script")?.remove();
-  const s = document.createElement("script");
-  s.id = "codepen-embed-script";
-  s.src = "${EMBED_SCRIPT}";
-  s.async = true;
-  document.body.appendChild(s);
-})();`;
-
 export function remarkCodepen() {
 	return (tree: MdRoot) => {
-		let found = false;
-
 		visit(tree, "containerDirective", (node: MdNode, index, parent) => {
 			if (node.name !== "codepen" || !parent?.children || index === undefined)
 				return;
@@ -70,7 +53,6 @@ export function remarkCodepen() {
 				.filter((block) => block.lang);
 
 			if (blocks.length === 0) return;
-			found = true;
 
 			const prefill = {
 				title: attrs.title || "Demo",
@@ -92,12 +74,5 @@ export function remarkCodepen() {
 			parent.children.splice(index, 1, { type: "html", value: html });
 			return index + 1;
 		});
-
-		if (found) {
-			tree.children.push({
-				type: "html",
-				value: `<script>${LOADER_SCRIPT}</script>`,
-			});
-		}
 	};
 }
