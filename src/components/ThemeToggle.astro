@@ -1,0 +1,47 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button type="button" id="theme-toggle" class="btn themeBtn" aria-label="切換深色模式">
+	<Icon name="material-symbols:light-mode-outline-rounded" class="light" />
+	<Icon name="material-symbols:dark-mode-outline-rounded" class="dark" />
+</button>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.themeBtn {
+	:global(.dark) {
+		display: none;
+	}
+}
+
+:global(html.dark) {
+	.themeBtn {
+		:global(.light) {
+			display: none;
+		}
+
+		:global(.dark) {
+			display: block;
+		}
+	}
+}
+</style>
+
+<script>
+const root = document.documentElement;
+
+function setTheme(dark: boolean) {
+	root.classList.toggle("dark", dark);
+	try {
+		localStorage.setItem("theme", dark ? "dark" : "light");
+	} catch {}
+	// 通知 CodePen 等嵌入內容跟著切換
+	document.dispatchEvent(new CustomEvent("themechange", { detail: { dark } }));
+}
+
+document.getElementById("theme-toggle")?.addEventListener("click", () => {
+	setTheme(!root.classList.contains("dark"));
+});
+</script>

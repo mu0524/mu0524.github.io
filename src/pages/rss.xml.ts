@@ -1,42 +1,32 @@
 import rss from "@astrojs/rss";
-import { getSortedPosts } from "@utils/content-utils";
-import { getPostUrlBySlug, siteUrl } from "@utils/url-utils";
+import { getPosts } from "@lib/posts";
+import { postUrl } from "@lib/url";
 import type { APIContext } from "astro";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
-import { siteConfig } from "@/config";
+import { SITE } from "@/site.config";
 
 const parser = new MarkdownIt();
 
-function stripInvalidXmlChars(str: string): string {
-	return str.replace(
-		// biome-ignore lint/suspicious/noControlCharactersInRegex: https://www.w3.org/TR/xml/#charsets
-		/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFDD0-\uFDEF\uFFFE\uFFFF]/g,
-		"",
-	);
-}
-
-export async function GET(context: APIContext): Promise<Response> {
-	const blog = await getSortedPosts();
+// 全文輸出：Markdown 轉 HTML 後過濾不安全的標籤；文章內的 CodePen 等指令語法會保留原文
+export async function GET(context: APIContext) {
+	const posts = await getPosts();
+	const site = context.site ?? SITE.url;
 
 	return rss({
-		title: siteConfig.title,
-		description: siteConfig.subtitle || "No description",
-		site: context.site ?? siteUrl(),
-		items: blog.map((post) => {
-			const content =
-				typeof post.body === "string" ? post.body : String(post.body || "");
-			const cleanedContent = stripInvalidXmlChars(content);
-			return {
-				title: post.data.title,
-				pubDate: post.data.published,
-				description: post.data.description || "",
-				link: getPostUrlBySlug(post.id),
-				content: sanitizeHtml(parser.render(cleanedContent), {
-					allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-				}),
-			};
-		}),
-		customData: `<language>${siteConfig.lang}</language>`,
+		title: SITE.title,
+		description: SITE.subtitle,
+		site,
+		customData: `<language>${SITE.lang}</language>`,
+		items: posts.map((post) => ({
+			title: post.data.title,
+			pubDate: post.data.published,
+			description: post.data.description,
+			link: postUrl(post.id),
+			categories: post.data.tags,
+			content: sanitizeHtml(parser.render(post.body ?? ""), {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+			}),
+		})),
 	});
 }

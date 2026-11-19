@@ -1,182 +1,167 @@
 ---
 import { Image } from "astro:assets";
 import footerBear from "@assets/images/theme/footer-bear.png";
-import { profileConfig } from "../config";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
-import {
-	getCategoryTree,
-	getSiteStats,
-	getTagList,
-} from "../utils/content-utils";
-import { formatDateToYYYYMMDD } from "../utils/date-utils";
-import { getTagUrl, url } from "../utils/url-utils";
+import { DAY_MS, formatIsoDate } from "@lib/date";
+import { getCategoryTree, getPosts, getSiteStats, getTags } from "@lib/posts";
+import { withBase } from "@lib/url";
+import { SITE } from "@/site.config";
 
-interface Props {
-	lang?: string;
-}
-
-const { lang } = Astro.props;
+const posts = await getPosts();
+const categories = getCategoryTree(posts);
+const tags = getTags(posts);
+const stats = await getSiteStats(posts);
 
 const currentYear = new Date().getFullYear();
-const categories = await getCategoryTree(lang);
-const tags = await getTagList(lang);
-const stats = await getSiteStats(lang);
-
-const DAY = 24 * 60 * 60 * 1000;
 const startTime = stats.firstPublished?.getTime() ?? Date.now();
-const runningDays = Math.floor((Date.now() - startTime) / DAY) + 1;
+const runningDays = Math.floor((Date.now() - startTime) / DAY_MS) + 1;
 const lastActivity = stats.lastActivity
-	? formatDateToYYYYMMDD(stats.lastActivity).replaceAll("-", "/")
+	? formatIsoDate(stats.lastActivity).replaceAll("-", "/")
 	: "-";
 ---
 
 <footer class="footerArea">
-    <div class="otherBox">
-        <div class="Img" aria-hidden="true">
-            <Image src={footerBear} alt="" width={370} height={370} />
-        </div>
+	<div class="otherBox">
+		<div class="Img" aria-hidden="true">
+			<Image src={footerBear} alt="" width={370} height={370} />
+		</div>
 
-        <div class="otherItem">
-            <div class="titleBox">
-                <p class="title">{i18n(I18nKey.categories, lang)}</p>
-            </div>
-            <ul class="categoryList">
-                {categories.map((c) => (
-                    <li class:list={["categoryItem", { close: c.children.length > 0 }]} data-category={c.name}>
-                        <div class="name">
-                            <a href={c.url}>
-                                <span>{c.name}</span>
-                                {c.children.length === 0 && <span class="count">({c.count})</span>}
-                            </a>
-                            {c.children.length > 0 && (
-                                <button class="toggle" type="button" aria-expanded="false" aria-label={`展開${c.name}`} data-name={c.name}></button>
-                            )}
-                        </div>
-                        {c.children.length > 0 && (
-                            <ul class="subList">
-                                {c.children.map((s) => (
-                                    <li class="subItem" data-subcategory={s.name}>
-                                        <a href={s.url}>
-                                            <span>{s.name}</span>
-                                            <span class="count">({s.count})</span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">分類</p>
+			</div>
+			<ul class="categoryList">
+				{categories.map((c) => (
+					<li class:list={["categoryItem", { close: c.children.length > 0 }]} data-category={c.name}>
+						<div class="name">
+							<a href={c.url}>
+								<span>{c.name}</span>
+								{c.children.length === 0 && <span class="count">({c.count})</span>}
+							</a>
+							{c.children.length > 0 && (
+								<button class="toggle" type="button" aria-expanded="false" aria-label={`展開${c.name}`} data-name={c.name}></button>
+							)}
+						</div>
+						{c.children.length > 0 && (
+							<ul class="subList">
+								{c.children.map((s) => (
+									<li class="subItem" data-subcategory={s.name}>
+										<a href={s.url}>
+											<span>{s.name}</span>
+											<span class="count">({s.count})</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						)}
+					</li>
+				))}
+			</ul>
+		</div>
 
-        <div class="otherItem">
-            <div class="titleBox">
-                <p class="title">{i18n(I18nKey.tags, lang)}</p>
-            </div>
-            <div class="tagList">
-                {tags.map((t) => (
-                    <a href={getTagUrl(t.name, lang)}>{t.name}</a>
-                ))}
-            </div>
-        </div>
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">標籤</p>
+			</div>
+			<div class="tagList">
+				{tags.map((t) => (
+					<a href={t.url}>{t.name}</a>
+				))}
+			</div>
+		</div>
 
-        <div class="otherItem">
-            <div class="titleBox">
-                <p class="title">站點統計</p>
-            </div>
-            <dl class="statList">
-                <div class="statItem">
-                    <dt>文章</dt>
-                    <dd>({stats.postCount})</dd>
-                </div>
-                <div class="statItem">
-                    <dt>分類</dt>
-                    <dd>({stats.categoryCount})</dd>
-                </div>
-                <div class="statItem">
-                    <dt>標籤</dt>
-                    <dd>({stats.tagCount})</dd>
-                </div>
-                <div class="statItem">
-                    <dt>總字數</dt>
-                    <dd>{stats.wordCount.toLocaleString("en-US")}</dd>
-                </div>
-                <div class="statItem full">
-                    <dt>運作天數</dt>
-                    <dd id="running-days" data-start={startTime}>{runningDays}天</dd>
-                </div>
-                <div class="statItem full">
-                    <dt>最後活動</dt>
-                    <dd>{lastActivity}</dd>
-                </div>
-            </dl>
-        </div>
-    </div>
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">站點統計</p>
+			</div>
+			<dl class="statList">
+				<div class="statItem">
+					<dt>文章</dt>
+					<dd>({stats.postCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>分類</dt>
+					<dd>({stats.categoryCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>標籤</dt>
+					<dd>({stats.tagCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>總字數</dt>
+					<dd>{stats.wordCount.toLocaleString("en-US")}</dd>
+				</div>
+				<div class="statItem full">
+					<dt>運作天數</dt>
+					<dd id="running-days" data-start={startTime}>{runningDays}天</dd>
+				</div>
+				<div class="statItem full">
+					<dt>最後活動</dt>
+					<dd>{lastActivity}</dd>
+				</div>
+			</dl>
+		</div>
+	</div>
 
-    <p class="copyright">
-        &copy; {currentYear} {profileConfig.name}. All Rights Reserved.{" / "}
-        <a target="_blank" href={url('rss.xml')}>RSS</a>{" / "}
-        <a target="_blank" href={url('sitemap-index.xml')}>Sitemap</a>{" / Powered by "}
-        <a target="_blank" href="https://astro.build">Astro</a>
-    </p>
+	<p class="copyright">
+		&copy; {currentYear} {SITE.author}. All Rights Reserved.{" / "}
+		<a target="_blank" href={withBase("/rss.xml")}>RSS</a>{" / "}
+		<a target="_blank" href={withBase("/sitemap-index.xml")}>Sitemap</a>{" / Powered by "}
+		<a target="_blank" href="https://astro.build" rel="noopener">Astro</a>
+	</p>
 </footer>
 
 <script>
+import { DAY_MS } from "@lib/date";
+import { onPageLoad } from "../scripts/page-load";
+
 // 靜態頁面在 build 時算好天數，載入時再以當天日期更新，避免兩次 build 之間天數停住
 function updateRunningDays() {
-    const el = document.getElementById("running-days");
-    const start = Number(el?.dataset.start);
-    if (!el || !start) return;
-    const days = Math.floor((Date.now() - start) / 86400000) + 1;
-    el.textContent = `${days}天`;
+	const el = document.getElementById("running-days");
+	const start = Number(el?.dataset.start);
+	if (!el || !start) return;
+	el.textContent = `${Math.floor((Date.now() - start) / DAY_MS) + 1}天`;
 }
 
 function setCategoryOpen(item: Element, isOpen: boolean) {
-    const btn = item.querySelector<HTMLButtonElement>(".toggle");
-    if (!btn) return;
-    item.classList.toggle("close", !isOpen);
-    btn.setAttribute("aria-expanded", String(isOpen));
-    btn.setAttribute("aria-label", `${isOpen ? "收合" : "展開"}${btn.dataset.name ?? ""}`);
+	const btn = item.querySelector<HTMLButtonElement>(".toggle");
+	if (!btn) return;
+	item.classList.toggle("close", !isOpen);
+	btn.setAttribute("aria-expanded", String(isOpen));
+	btn.setAttribute("aria-label", `${isOpen ? "收合" : "展開"}${btn.dataset.name ?? ""}`);
 }
 
 function bindCategoryToggle() {
-    document.querySelectorAll<HTMLButtonElement>(".footerArea .toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const item = btn.closest(".categoryItem");
-            if (item) setCategoryOpen(item, item.classList.contains("close"));
-        });
-    });
+	for (const btn of document.querySelectorAll<HTMLButtonElement>(".footerArea .toggle")) {
+		btn.addEventListener("click", () => {
+			const item = btn.closest(".categoryItem");
+			if (item) setCategoryOpen(item, item.classList.contains("close"));
+		});
+	}
 }
 
-// 頁尾不在 swup 替換範圍內，每次換頁都要依目前文章重新展開分類、標記 current
+// 頁尾不在換頁替換範圍內，每次換頁都依目前文章展開所屬分類、標記 current
 function syncCurrentCategory() {
-    const post = document.getElementById("post-container");
-    const category = post?.dataset.category;
-    const subcategory = post?.dataset.subcategory;
+	const post = document.getElementById("post-container");
+	const category = post?.dataset.category;
+	const subcategory = post?.dataset.subcategory;
 
-    document.querySelectorAll(".footerArea .categoryItem").forEach((item) => {
-        const isCurrent = !!category && item.getAttribute("data-category") === category;
-        item.classList.toggle("current", isCurrent);
-        setCategoryOpen(item, isCurrent);
+	for (const item of document.querySelectorAll(".footerArea .categoryItem")) {
+		const isCurrent = !!category && item.getAttribute("data-category") === category;
+		item.classList.toggle("current", isCurrent);
+		setCategoryOpen(item, isCurrent);
 
-        item.querySelectorAll(".subItem").forEach((sub) => {
-            sub.classList.toggle("current", isCurrent && !!subcategory && sub.getAttribute("data-subcategory") === subcategory);
-        });
-    });
+		for (const sub of item.querySelectorAll(".subItem")) {
+			sub.classList.toggle(
+				"current",
+				isCurrent && !!subcategory && sub.getAttribute("data-subcategory") === subcategory,
+			);
+		}
+	}
 }
 
 updateRunningDays();
 bindCategoryToggle();
-syncCurrentCategory();
-
-if (window.swup) {
-    window.swup.hooks.on("page:view", syncCurrentCategory);
-} else {
-    document.addEventListener("swup:enable", () => {
-        window.swup.hooks.on("page:view", syncCurrentCategory);
-    });
-}
+onPageLoad(syncCurrentCategory);
 </script>
 
 <style lang="scss">
@@ -312,7 +297,12 @@ if (window.swup) {
 	}
 
 	.current {
-		> .name a,
+		> .name {
+			a {
+				color: $mainColor;
+			}
+		}
+
 		> a {
 			color: $mainColor;
 		}

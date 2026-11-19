@@ -1,0 +1,348 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["markdownBox", className]}>
+	<slot />
+</div>
+
+<!-- 內文由 Markdown 產生，元素沒有 Astro 的 scope 屬性，樣式要寫成 global -->
+<style lang="scss" is:global>
+@import '../styles/setting';
+
+.markdownBox {
+	@include font($ls: .06em, $lh: 1.9);
+	overflow-wrap: break-word;
+
+	> * {
+		& + * {
+			margin-top: 1.25em;
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		position: relative;
+		font-weight: $fwBold;
+		line-height: 1.5;
+		scroll-margin-top: 24px;
+
+		@include hover {
+			.anchor {
+				opacity: 1;
+			}
+		}
+	}
+
+	h1,
+	h2 {
+		font-size: 1.5em;
+		margin-top: 2.25em;
+
+		@include media($breakpointSmall) {
+			font-size: 1.375em;
+		}
+	}
+
+	h3 {
+		font-size: 1.25em;
+		margin-top: 2em;
+	}
+
+	h4,
+	h5,
+	h6 {
+		font-size: 1.0625em;
+		margin-top: 1.75em;
+	}
+
+	.anchor {
+		color: $mainColor;
+		opacity: 0;
+		margin-left: .375em;
+		@extend %tsEaseInOut;
+	}
+
+	a:not(.anchor, .githubCard) {
+		color: $textColor;
+		text-decoration: underline;
+		text-decoration-color: $mainColor;
+		text-decoration-thickness: 1px;
+		text-underline-offset: .25em;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $mainColor;
+		}
+	}
+
+	strong {
+		font-weight: $fwBold;
+	}
+
+	hr {
+		border-top: 2px dashed $borderColor;
+		margin: 3em 0;
+	}
+
+	ul,
+	ol {
+		@include flex();
+		flex-direction: column;
+		gap: .5em;
+		padding-left: 1.5em;
+	}
+
+	ul {
+		list-style: disc;
+
+		li {
+			&::marker {
+				color: $mainColor;
+			}
+		}
+	}
+
+	ol {
+		list-style: decimal;
+
+		li {
+			&::marker {
+				color: $introColor;
+			}
+		}
+	}
+
+	li {
+		padding-left: .25em;
+
+		> ul,
+		> ol {
+			margin-top: .5em;
+		}
+	}
+
+	:not(pre) {
+		> code {
+			font-size: .875em;
+			letter-spacing: normal;
+			color: var(--text-primary);
+			background-color: var(--inline-code-bg);
+			border-radius: 4px;
+			padding: .125em .4em;
+		}
+	}
+
+	blockquote {
+		color: $introColor;
+		border-left: 3px solid $borderColor;
+		padding: .25em 0 .25em 1.25em;
+
+		> * {
+			& + * {
+				margin-top: .75em;
+			}
+		}
+	}
+
+	img {
+		cursor: zoom-in;
+		margin: 0 auto;
+	}
+
+	table {
+		display: block;
+		width: max-content;
+		max-width: 100%;
+		overflow-x: auto;
+		font-size: .9375em;
+		line-height: 1.7;
+	}
+
+	th,
+	td {
+		text-align: left;
+		border: 1px solid $borderColor;
+		padding: .625em 1em;
+	}
+
+	th {
+		font-weight: $fwBold;
+		background-color: var(--surface-tag);
+	}
+
+	td {
+		background-color: $btnBgColor;
+	}
+
+	.expressive-code {
+		letter-spacing: normal;
+
+		.frame {
+			@include hover {
+				pre {
+					&::before {
+						opacity: 0;
+					}
+				}
+			}
+		}
+
+		// 沒有檔名標題的程式碼區塊，右上角顯示語言
+		.frame:not(.has-title, .is-terminal) {
+			pre {
+				&[data-language]::before {
+					content: attr(data-language);
+					@include positionALTRB($t: 8px, $r: 8px);
+					z-index: 1;
+					@include font($fs: 11px, $fw: $fwBold, $ls: .05em, $lh: 1.6, $color: var(--accent-rose));
+					font-family: 'JetBrains Mono Variable', monospace;
+					text-transform: uppercase;
+					background-color: color-mix(in srgb, var(--accent-rose) 18%, transparent);
+					border-radius: 4px;
+					padding: 0 6px;
+					pointer-events: none;
+					@extend %tsEaseInOut;
+				}
+			}
+		}
+	}
+
+	.admonition {
+		border-left: 3px solid var(--admonitionColor);
+		padding: .375em 0 .375em 1.25em;
+
+		> * {
+			& + * {
+				margin-top: .5em;
+			}
+		}
+
+		&.note {
+			--admonitionColor: var(--admonition-note);
+		}
+
+		&.tip {
+			--admonitionColor: var(--admonition-tip);
+		}
+
+		&.important {
+			--admonitionColor: var(--admonition-important);
+		}
+
+		&.warning {
+			--admonitionColor: var(--admonition-warning);
+		}
+
+		&.caution {
+			--admonitionColor: var(--admonition-caution);
+		}
+	}
+
+	.admonitionTitle {
+		@include flex(nowrap, flex-start, center);
+		gap: .5em;
+		font-weight: $fwBold;
+		color: var(--admonitionColor);
+
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(6px, 6px, currentColor);
+			flex-shrink: 0;
+			border-radius: 50%;
+		}
+	}
+
+	.githubCard {
+		@include flex();
+		flex-direction: column;
+		gap: .5em;
+		background-color: $btnBgColor;
+		border: 1px solid $borderColor;
+		padding: 1.25em 1.5em;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			border-color: $mainColor;
+		}
+
+		.cardTitle {
+			@include flex(nowrap, flex-start, center);
+			gap: .375em;
+			min-width: 0;
+			font-size: 1.0625em;
+		}
+
+		.avatar {
+			flex-shrink: 0;
+			width: 24px;
+			height: 24px;
+			background: $grayColor center / cover no-repeat;
+			border-radius: 50%;
+			margin-right: .25em;
+		}
+
+		.name {
+			font-weight: $fwBold;
+		}
+
+		.slash,
+		.cardText {
+			color: $introColor;
+		}
+
+		.cardText {
+			font-size: .9375em;
+		}
+
+		.cardInfo {
+			@include flex(wrap);
+			gap: 1.5em;
+			@include font($fs: 13px, $ls: .05em, $lh: 1.5, $color: var(--text-muted));
+		}
+
+		.info {
+			&:empty {
+				display: none;
+			}
+
+			&.star {
+				@include pseudoBefore("★ ", relative);
+			}
+
+			&.fork {
+				@include pseudoBefore("⑂ ", relative);
+			}
+		}
+	}
+
+	.codepenBox {
+		.codepen {
+			@include flex(nowrap, center, center);
+			min-height: 120px;
+			background-color: $btnBgColor;
+			border: 1px solid $borderColor;
+			overflow: hidden;
+
+			pre {
+				display: none;
+			}
+		}
+	}
+
+	.footnotes {
+		font-size: .875em;
+		color: $introColor;
+		border-top: 2px dashed $borderColor;
+		padding-top: 1.5em;
+		margin-top: 3em;
+	}
+}
+</style>

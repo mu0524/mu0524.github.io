@@ -1,0 +1,107 @@
+---
+import { formatIsoDate } from "@lib/date";
+import { LICENSE, SITE } from "@/site.config";
+
+interface Props {
+	title: string;
+	url: string;
+	published: Date;
+	updated?: Date;
+}
+
+const { title, url, published, updated } = Astro.props;
+const isUpdated = !!updated && updated.getTime() !== published.getTime();
+---
+
+<section class="licenseBox" data-pagefind-ignore>
+	<div class="textBox">
+		<p class="title">{title}</p>
+		<a href={url} class="link">{url}</a>
+	</div>
+	<dl class="infoList">
+		<div class="infoItem">
+			<dt>作者</dt>
+			<dd>{SITE.author}</dd>
+		</div>
+		<div class="infoItem">
+			<dt>發布於</dt>
+			<dd>{formatIsoDate(published)}</dd>
+		</div>
+		{isUpdated && updated && (
+			<div class="infoItem">
+				<dt>更新於</dt>
+				<dd>{formatIsoDate(updated)}</dd>
+			</div>
+		)}
+		<div class="infoItem">
+			<dt>授權</dt>
+			<dd><a href={LICENSE.url} target="_blank" rel="noopener license">{LICENSE.name}</a></dd>
+		</div>
+	</dl>
+	<p class="text">轉載請註明出處與原文連結，不得用於商業用途，改作須以相同授權釋出。</p>
+</section>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.licenseBox {
+	@include flex();
+	flex-direction: column;
+	gap: 1em;
+	@include font($fs: 15px, $ls: .06em, $lh: 1.7);
+	background-color: $btnBgColor;
+	border-left: 3px solid $mainColor;
+	padding: 1.25em 1.5em;
+	margin-top: 1em;
+
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+		padding: 1em 1.25em;
+	}
+
+	.textBox {
+		@include flex();
+		flex-direction: column;
+		gap: .25em;
+		min-width: 0;
+	}
+
+	.title {
+		font-weight: $fwBold;
+	}
+
+	.link {
+		color: $mainColor;
+		overflow-wrap: anywhere;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $textColor;
+		}
+	}
+
+	.text {
+		font-size: .875em;
+		color: var(--text-muted);
+	}
+}
+
+.infoList {
+	@include flex(wrap);
+	gap: .75em 2em;
+
+	dt {
+		font-size: .8125em;
+		color: var(--text-muted);
+	}
+
+	a {
+		color: $mainColor;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $textColor;
+		}
+	}
+}
+</style>

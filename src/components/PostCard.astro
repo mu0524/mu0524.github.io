@@ -1,80 +1,55 @@
 ---
-import { type CollectionEntry, render } from "astro:content";
-import path from "node:path";
-import { formatDateToYYYYMMMD } from "../utils/date-utils";
-import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
-import ImageWrapper from "./misc/ImageWrapper.astro";
+import { Image } from "astro:assets";
+import { formatDate } from "@lib/date";
+import { getExcerpt, type Post } from "@lib/posts";
+import { categoryUrl, postUrl, subcategoryUrl, tagUrl } from "@lib/url";
 
 interface Props {
+	post: Post;
 	class?: string;
-	entry: CollectionEntry<"posts">;
-	title: string;
-	url: string;
-	published: Date;
-	updated?: Date;
-	tags: string[];
-	category: string | null;
-	subcategory?: string | null;
-	image: string;
-	description: string;
-	draft: boolean;
-	style: string;
-	lang?: string;
+	style?: string;
 }
-const {
-	entry,
-	title,
-	url,
-	published,
-	tags,
-	category,
-	subcategory,
-	image,
-	description,
-	style,
-	lang,
-} = Astro.props;
-const className = Astro.props.class;
 
-const hasCover = image !== undefined && image !== null && image !== "";
-
-const { remarkPluginFrontmatter } = await render(entry);
+const { post, class: className, style } = Astro.props;
+const { title, published, tags, category, subcategory, image } = post.data;
+const url = postUrl(post.id);
 ---
+
 <article class:list={["postItem", className]} style={style}>
-    <div class="item">
-        <div class="metaBox">
-            <span class="tag">{formatDateToYYYYMMMD(published)}</span>
-            {category && (
-                <a href={getCategoryUrl(category, lang)} class="tag">
-                    {category}{subcategory && ` / ${subcategory}`}
-                </a>
-            )}
-        </div>
+	<div class="item">
+		<div class="metaBox">
+			<span class="tag">{formatDate(published)}</span>
+			{category && (
+				<a href={subcategory ? subcategoryUrl(category, subcategory) : categoryUrl(category)} class="tag">
+					{category}{subcategory && ` / ${subcategory}`}
+				</a>
+			)}
+		</div>
 
-        <div class="titleBox">
-            <h2 class="title">{title}</h2>
-        </div>
+		<div class="titleBox">
+			<h2 class="title">{title}</h2>
+		</div>
 
-        <div class="contentBox">
-            {hasCover && (
-                <figure class="Img">
-                    <ImageWrapper src={image} basePath={path.join("content/posts/", entry.id)} alt={title} class="w-full h-full" />
-                </figure>
-            )}
+		<div class="contentBox">
+			{image && (
+				<figure class="Img">
+					<Image src={image} alt={title} widths={[480, 720, 960]} sizes="(max-width: 991px) 100vw, 640px" />
+				</figure>
+			)}
 
-            <p class="text">{description || remarkPluginFrontmatter.excerpt}</p>
+			<p class="text">{getExcerpt(post)}</p>
 
-            {tags.length > 0 && (
-                <div class="tagBox">
-                    {tags.map((tag) => (
-                        <a href={getTagUrl(tag, lang)}># {tag}</a>
-                    ))}
-                </div>
-            )}
-        </div>
+			{tags.length > 0 && (
+				<div class="tagBox">
+					{tags.map((tag) => (
+						<a href={tagUrl(tag)}># {tag}</a>
+					))}
+				</div>
+			)}
+		</div>
 
-        <a href={url} class="linkWrap" aria-label={title}></a>
-    </div>
+		<a href={url} class="linkWrap" aria-label={title}></a>
+	</div>
 </article>
 
 <style lang="scss">
@@ -177,6 +152,7 @@ const { remarkPluginFrontmatter } = await render(entry);
 		overflow: clip;
 
 		:global(img) {
+			@include imgCover;
 			will-change: scale;
 			@extend %tsEaseInOut;
 		}

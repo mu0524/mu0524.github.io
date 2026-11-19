@@ -1,0 +1,92 @@
+---
+import iconPrev from "@assets/images/theme/icon-angle-double-left.svg?url";
+import iconNext from "@assets/images/theme/icon-angle-double-right.svg?url";
+import { pageUrl } from "@lib/url";
+
+interface Props {
+	current: number;
+	last: number;
+	class?: string;
+}
+
+const { current, last, class: className } = Astro.props;
+
+// 頁數少時全部列出；頁數多時保留第一頁、最後一頁與目前頁前後各一頁，中間用 … 代替
+const GAP = 0;
+function getPages(): number[] {
+	if (last <= 7) return Array.from({ length: last }, (_, i) => i + 1);
+	const start = Math.max(2, Math.min(current - 1, last - 4));
+	const end = Math.min(last - 1, Math.max(current + 1, 5));
+	const middle = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	return [
+		1,
+		...(start > 2 ? [GAP] : []),
+		...middle,
+		...(end < last - 1 ? [GAP] : []),
+		last,
+	];
+}
+
+const pages = getPages();
+---
+
+<nav class:list={["pageBox", className]} aria-label="分頁">
+	{current > 1
+		? <a href={pageUrl(current - 1)} class="arrow" aria-label="上一頁"><img src={iconPrev} alt="" width="16" height="16" /></a>
+		: <span class="arrow disabled"><img src={iconPrev} alt="" width="16" height="16" /></span>}
+	{pages.map((p) => {
+		if (p === GAP) return <span class="num">…</span>;
+		if (p === current) return <span class="num current" aria-current="page">{p}</span>;
+		return <a href={pageUrl(p)} class="num" aria-label={`第 ${p} 頁`}>{p}</a>;
+	})}
+	{current < last
+		? <a href={pageUrl(current + 1)} class="arrow" aria-label="下一頁"><img src={iconNext} alt="" width="16" height="16" /></a>
+		: <span class="arrow disabled"><img src={iconNext} alt="" width="16" height="16" /></span>}
+</nav>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.pageBox {
+	@include flex(nowrap, center, center);
+	gap: 20px;
+	margin-top: 42px;
+
+	.num {
+		@include font($fs: 20px, $ls: .08em, $lh: 1.5, $color: var(--text-muted));
+		@extend %tsEaseInOut;
+
+		&.current {
+			color: $textColor;
+		}
+	}
+
+	a {
+		@include hover {
+			color: $mainColor;
+		}
+	}
+
+	.arrow {
+		@include flex(nowrap, center, center);
+		width: 16px;
+		height: 16px;
+		@extend %tsEaseInOut;
+
+		&.disabled {
+			opacity: .4;
+		}
+
+		img {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	a.arrow {
+		@include hover {
+			translate: 0 -2px;
+		}
+	}
+}
+</style>

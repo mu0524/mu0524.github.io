@@ -10,8 +10,7 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!**/src/**/*.css",
-			"!**/src/styles/_setting.scss",
+			"!**/src/**/*.scss",
 			"!!**/src/public",
 			"!!**/dist",
 			"!!**/node_modules",
@@ -51,14 +50,9 @@
 			"quoteStyle": "double"
 		}
 	},
-	"css": {
-		"parser": {
-			"tailwindDirectives": true
-		}
-	},
 	"overrides": [
 		{
-			"includes": ["**/*.svelte", "**/*.astro"],
+			"includes": ["**/*.astro"],
 			"linter": {
 				"rules": {
 					"style": {

@@ -1,0 +1,111 @@
+---
+import type { MarkdownHeading } from "astro";
+import { SITE } from "@/site.config";
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const minDepth = Math.min(...headings.map((h) => h.depth), 6);
+const LEVEL_CLASS = ["main", "sub", "subSub"];
+
+// 目錄只留文字：拿掉錨點加上的 #，以及標題開頭的 emoji
+const cleanText = (text: string) =>
+	text
+		.replace(/#$/, "")
+		.replace(/^(?:\p{Extended_Pictographic}|️|‍|\s)+/u, "")
+		.trim();
+
+const items = headings
+	.filter((h) => h.depth < minDepth + SITE.tocDepth)
+	.map((h) => ({
+		slug: h.slug,
+		text: cleanText(h.text),
+		level: LEVEL_CLASS[h.depth - minDepth] ?? "subSub",
+	}));
+---
+
+{items.length > 0 && (
+	<aside class="tocArea" aria-label="文章目錄" data-pagefind-ignore>
+		<nav id="toc" class="tocList">
+			{items.map((item) => (
+				<a href={`#${item.slug}`} class:list={["tocItem", item.level]} data-slug={item.slug}>{item.text}</a>
+			))}
+			<span class="activeBar" aria-hidden="true"></span>
+		</nav>
+	</aside>
+)}
+
+<style lang="scss">
+@import '../styles/setting';
+
+// 只在寬螢幕顯示，固定在內容區右側的留白
+.tocArea {
+	position: fixed;
+	top: 56px;
+	left: calc(50% + var(--page-width) / 2);
+	z-index: 20;
+	width: calc((100vw - var(--page-width)) / 2 - 1rem);
+	max-height: calc(100vh - 20rem);
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+	padding: 32px 0;
+
+	@include media(1535) {
+		display: none;
+	}
+}
+
+.tocList {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	@include font($fs: 14px, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
+	border-left: 1px solid $borderColor;
+}
+
+.tocItem {
+	padding: .375em 0 .375em 1.25em;
+	@extend %tsEaseInOut;
+
+	@include hover {
+		color: $mainColor;
+	}
+
+	&.main {
+		@include flex(nowrap, flex-start, center);
+		gap: .5em;
+
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(5px, 5px, currentColor);
+			flex-shrink: 0;
+			border-radius: 50%;
+		}
+	}
+
+	&.sub {
+		padding-left: 2.75em;
+	}
+
+	&.subSub {
+		font-size: 13px;
+		padding-left: 3.75em;
+	}
+
+	&.visible {
+		color: $textColor;
+	}
+}
+
+.activeBar {
+	@include positionALTRB($t: 0, $l: -1px);
+	width: 2px;
+	height: 0;
+	background-color: $mainColor;
+	opacity: 0;
+	transition: top .3s, height .3s, opacity .3s;
+}
+</style>

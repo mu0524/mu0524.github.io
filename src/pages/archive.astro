@@ -1,0 +1,250 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { formatMonthDay } from "@lib/date";
+import { getPosts, UNCATEGORIZED } from "@lib/posts";
+import { archiveUrl, postUrl, tagUrl } from "@lib/url";
+
+const posts = await getPosts();
+
+// 依年份分組，年份新到舊
+const years = new Map<number, typeof posts>();
+for (const post of posts) {
+	const year = post.data.published.getUTCFullYear();
+	years.set(year, [...(years.get(year) ?? []), post]);
+}
+const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<PageLayout title="彙整" description="依年份整理的全部文章，可依分類、子分類與標籤篩選">
+	<section class="archiveArea">
+		<div class="titleBox">
+			<h1 class="title">彙整</h1>
+		</div>
+
+		<!-- 由 scripts/archive.ts 依網址參數顯示目前的篩選條件 -->
+		<div id="archive-filter" class="filterBox" hidden>
+			<span class="label">篩選</span>
+			<span id="archive-filter-text" class="tag"></span>
+			<a href={archiveUrl()} class="clear">顯示全部</a>
+		</div>
+
+		<p id="archive-empty" class="emptyText" hidden>沒有符合條件的文章</p>
+
+		<div class="yearList">
+			{groups.map(([year, list]) => (
+				<div class="yearItem" data-year={year}>
+					<div class="yearBox">
+						<h2 class="year">{year}</h2>
+						<span class="count" data-total={list.length}>{list.length} 篇文章</span>
+					</div>
+					<ul class="postList">
+						{list.map((post) => (
+							<li
+								class="postItem"
+								data-category={post.data.category ?? ""}
+								data-subcategory={post.data.subcategory ?? ""}
+								data-tags={JSON.stringify(post.data.tags)}
+							>
+								<time class="date" datetime={post.data.published.toISOString()}>{formatMonthDay(post.data.published)}</time>
+								<div class="textBox">
+									<a href={postUrl(post.id)} class="name">{post.data.title}</a>
+									<p class="info">
+										<span>{post.data.category ?? UNCATEGORIZED}{post.data.subcategory && ` / ${post.data.subcategory}`}</span>
+									</p>
+								</div>
+								{post.data.tags.length > 0 && (
+									<div class="tagBox">
+										{post.data.tags.map((tag) => (
+											<a href={tagUrl(tag)}># {tag}</a>
+										))}
+									</div>
+								)}
+							</li>
+						))}
+					</ul>
+				</div>
+			))}
+		</div>
+	</section>
+</PageLayout>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.archiveArea {
+	@include flex();
+	flex-direction: column;
+	gap: 32px;
+	@include font($ls: .08em, $lh: 1.8);
+
+	@include media($breakpointSmall) {
+		gap: 24px;
+		font-size: $textSizeSmall;
+	}
+
+	.titleBox {
+		@include flex(nowrap, center, center);
+		gap: .625em;
+		border-bottom: 2px dashed $borderColor;
+		padding-bottom: .625em;
+
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+			flex-shrink: 0;
+		}
+
+		@include pseudoAfter($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+			flex-shrink: 0;
+		}
+
+		.title {
+			flex: 1 1 0;
+			font-size: 1.75em;
+			line-height: 1.5;
+			text-align: center;
+
+			@include media($breakpointSmall) {
+				font-size: 1.5em;
+			}
+		}
+	}
+}
+
+.filterBox {
+	@include flex(wrap, flex-start, center);
+	gap: .75em 1em;
+
+	.label {
+		color: $introColor;
+	}
+
+	.tag {
+		background-color: var(--surface-tag);
+		padding: .375em 1em;
+	}
+
+	.clear {
+		color: $mainColor;
+		text-decoration: underline;
+		text-underline-offset: .25em;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $textColor;
+		}
+	}
+}
+
+.emptyText {
+	color: $introColor;
+	text-align: center;
+	background-color: $grayColor;
+	padding: 3em 1em;
+}
+
+.yearList {
+	@include flex();
+	flex-direction: column;
+	gap: 48px;
+
+	@include media($breakpointSmall) {
+		gap: 32px;
+	}
+}
+
+.yearItem {
+	background-color: $grayColor;
+	padding: 1.5em 2em 1em;
+
+	@include media($breakpointSmall) {
+		padding: 1.25em 1.25em .75em;
+	}
+
+	.yearBox {
+		@include flex(nowrap, space-between, baseline);
+		gap: 1em;
+		border-bottom: 1px solid $borderColor;
+		padding-bottom: .75em;
+	}
+
+	.year {
+		@include font($fs: 1.5em, $fw: $fwBold, $ls: .05em, $lh: 1.4);
+	}
+
+	.count {
+		font-size: .875em;
+		color: $introColor;
+	}
+}
+
+.postList {
+	@include flex();
+	flex-direction: column;
+
+	.postItem {
+		@include flex(nowrap, flex-start, center);
+		gap: 1.5em;
+		border-bottom: 1px dashed $borderColor;
+		padding: 1em 0;
+
+		@include media($breakpointSmall) {
+			flex-wrap: wrap;
+			gap: .5em 1em;
+		}
+
+		&:nth-last-child(1 of :not([hidden])) {
+			border-bottom: 0;
+		}
+	}
+
+	.date {
+		flex-shrink: 0;
+		font-size: .875em;
+		white-space: nowrap;
+		background-color: var(--surface-tag);
+		padding: .25em .75em;
+	}
+
+	.textBox {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.name {
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $mainColor;
+		}
+	}
+
+	.info {
+		font-size: .8125em;
+		color: var(--text-muted);
+	}
+
+	.tagBox {
+		@include flex(wrap, flex-end);
+		gap: .25em .75em;
+		max-width: 40%;
+		font-size: .875em;
+
+		@include media($breakpointSmall) {
+			justify-content: flex-start;
+			max-width: none;
+			width: 100%;
+		}
+
+		a {
+			color: $mainColor;
+			white-space: nowrap;
+			@extend %tsEaseInOut;
+
+			@include hover {
+				color: $textColor;
+			}
+		}
+	}
+}
+</style>
