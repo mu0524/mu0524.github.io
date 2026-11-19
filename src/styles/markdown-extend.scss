@@ -347,3 +347,31 @@ span.dir-rtl {
 span.dir-ltr {
 	text-align: left;
 }
+
+// CodePen 範例（src/plugins/remark-codepen.mjs）
+.codepen-embed {
+	margin: 1.5rem 0;
+	border-radius: var(--radius-large);
+	overflow: hidden;
+
+	// 腳本載入前先顯示原始碼，避免一片空白
+	.codepen {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 1rem;
+		background: var(--codeblock-bg);
+	}
+
+	pre {
+		margin: 0;
+		font-size: 0.8rem;
+		white-space: pre-wrap;
+	}
+
+	iframe {
+		display: block;
+		width: 100%;
+		border: 0;
+	}
+}

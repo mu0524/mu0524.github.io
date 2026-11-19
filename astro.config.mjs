@@ -26,6 +26,7 @@ import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.m
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { rehypeLazyLoadImage } from "./src/plugins/rehype-lazy-load-image.mjs";
 import { rehypeMermaidConfig } from "./src/plugins/rehype-mermaid.mjs";
+import { remarkCodepen } from "./src/plugins/remark-codepen.mjs";
 import { remarkDirection } from "./src/plugins/remark-direction.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
@@ -125,6 +126,7 @@ export default defineConfig({
 				remarkDirection,
 				remarkGithubAdmonitionsToDirectives,
 				remarkDirective,
+				remarkCodepen,
 				remarkSectionize,
 				parseDirectiveNode,
 			],

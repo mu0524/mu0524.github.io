@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="960" height="440" role="img" aria-label="收合時看得到的高度隨時間變化：height auto 直接跳到 0；max-height hack 前六成時間沒反應，最後才快速收合；interpolate-size 從頭到尾平滑收合">
+  <style>
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #2d2a26; }
+    .mono { font-family: "JetBrains Mono", Consolas, "Microsoft JhengHei", monospace; }
+    .axis { stroke: #bdb6a8; stroke-width: 2; fill: none; }
+    .tick { font-size: 15px; fill: #6b645a; }
+    .line { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+
+  <rect width="960" height="440" rx="24" fill="#fbf5e9"/>
+  <text x="40" y="48" font-size="22" font-weight="700">收合時，畫面上看得到的高度</text>
+
+  <!-- 圖例 -->
+  <g font-size="16">
+    <line x1="40" y1="82" x2="72" y2="82" class="line" stroke="#e45f5f"/>
+    <text x="82" y="88" class="mono">height: auto</text>
+    <line x1="290" y1="82" x2="322" y2="82" class="line" stroke="#d99a2b"/>
+    <text x="332" y="88" class="mono">max-height hack</text>
+    <line x1="560" y1="82" x2="592" y2="82" class="line" stroke="#2f8a5b"/>
+    <text x="602" y="88" class="mono">interpolate-size</text>
+  </g>
+
+  <!-- 座標軸 -->
+  <line x1="120" y1="140" x2="880" y2="140" class="axis" stroke-dasharray="4 8"/>
+  <path d="M120 130 V350 H890" class="axis"/>
+  <text x="108" y="146" text-anchor="end" class="tick">200px</text>
+  <text x="108" y="356" text-anchor="end" class="tick">0</text>
+  <text x="120" y="378" text-anchor="middle" class="tick">0s</text>
+  <text x="500" y="378" text-anchor="middle" class="tick">0.25s</text>
+  <text x="880" y="378" text-anchor="middle" class="tick">0.5s</text>
+  <text x="500" y="414" text-anchor="middle" font-size="16" fill="#6b645a">經過時間 →</text>
+
+  <!-- 線 -->
+  <path d="M122 140 V348 H880" class="line" stroke="#e45f5f"/>
+  <path d="M120 140 H591 C680 140 740 340 880 350" class="line" stroke="#d99a2b"/>
+  <path d="M120 140 C330 140 670 350 880 350" class="line" stroke="#2f8a5b"/>
+
+  <!-- 註解 -->
+  <path d="M126 128 V120 H587 V128" fill="none" stroke="#d99a2b" stroke-width="2"/>
+  <text x="356" y="112" text-anchor="middle" font-size="15" fill="#a06b0e">前 60% 的時間在把 1000px 縮到 200px，看起來沒反應</text>
+  <text x="140" y="326" font-size="15" fill="#c43c3c">一開始就直接消失</text>
+</svg>

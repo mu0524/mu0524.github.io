@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="960" height="360" role="img" aria-label="calc-size 中的 size 代表 auto 算出來的高度。假設內容高 200px：size 是 200px，size 乘 0.5 是 100px，size 加 2rem 是 232px，size 減 20px 是 180px">
+  <style>
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #2d2a26; }
+    .mono { font-family: "JetBrains Mono", Consolas, "Microsoft JhengHei", monospace; font-size: 19px; }
+    .bar { fill: #e7b65c; stroke: #2d2a26; stroke-width: 3; }
+    .extra { fill: #f6dfae; stroke: #2d2a26; stroke-width: 3; stroke-dasharray: 6 5; }
+    .ghost { fill: none; stroke: #bdb6a8; stroke-width: 2; stroke-dasharray: 6 5; }
+    .val { font-size: 17px; fill: #6b645a; }
+  </style>
+
+  <rect width="960" height="360" rx="24" fill="#fbf5e9"/>
+  <text x="40" y="50" font-size="22" font-weight="700">calc-size(auto, …) 裡的 <tspan class="mono" font-size="22" fill="#a06b0e">size</tspan>，就是 auto 算出來的高度</text>
+
+  <!-- size -->
+  <text x="40" y="117" class="mono">calc-size(auto, size)</text>
+  <rect x="400" y="92" width="360" height="36" rx="8" class="bar"/>
+  <text x="776" y="117" class="val">200px</text>
+
+  <!-- size * 0.5 -->
+  <text x="40" y="177" class="mono">… size * 0.5</text>
+  <rect x="400" y="152" width="360" height="36" rx="8" class="ghost"/>
+  <rect x="400" y="152" width="180" height="36" rx="8" class="bar"/>
+  <text x="776" y="177" class="val">100px</text>
+
+  <!-- size + 2rem -->
+  <text x="40" y="237" class="mono">… size + 2rem</text>
+  <rect x="740" y="212" width="78" height="36" rx="8" class="extra"/>
+  <rect x="400" y="212" width="360" height="36" rx="8" class="bar"/>
+  <text x="834" y="237" class="val">232px</text>
+
+  <!-- size - 20px -->
+  <text x="40" y="297" class="mono">… size - 20px</text>
+  <rect x="400" y="272" width="360" height="36" rx="8" class="ghost"/>
+  <rect x="400" y="272" width="324" height="36" rx="8" class="bar"/>
+  <text x="776" y="297" class="val">180px</text>
+
+  <text x="920" y="340" text-anchor="end" font-size="14" fill="#8a8275">假設內容高度 200px、1rem = 16px</text>
+</svg>
