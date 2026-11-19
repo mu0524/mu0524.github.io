@@ -142,6 +142,8 @@ export default defineConfig({
 							tip: (x, y) => AdmonitionComponent(x, y, "tip"),
 							important: (x, y) => AdmonitionComponent(x, y, "important"),
 							caution: (x, y) => AdmonitionComponent(x, y, "caution"),
+							// remark-github-admonitions-to-directives 會把 > [!CAUTION] 轉成 :::danger
+							danger: (x, y) => AdmonitionComponent(x, y, "caution"),
 							warning: (x, y) => AdmonitionComponent(x, y, "warning"),
 						},
 					},
