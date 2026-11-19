@@ -1,0 +1,81 @@
+---
+import iconPrev from "@assets/images/theme/icon-angle-double-left.svg?url";
+import iconNext from "@assets/images/theme/icon-angle-double-right.svg?url";
+import type { Post } from "@lib/posts";
+import { postUrl } from "@lib/url";
+
+interface Props {
+	newer?: Post;
+	older?: Post;
+}
+
+const { newer, older } = Astro.props;
+---
+
+{(newer || older) && (
+	<nav class="pageNavBox" aria-label="上下篇文章">
+		{newer ? (
+			<a href={postUrl(newer.id)} class="btn prev" aria-label={`上一篇：${newer.data.title}`}>
+				<img src={iconPrev} alt="" width="16" height="16" />
+				<span>{newer.data.title}</span>
+			</a>
+		) : <span></span>}
+		{older && (
+			<a href={postUrl(older.id)} class="btn next" aria-label={`下一篇：${older.data.title}`}>
+				<span>{older.data.title}</span>
+				<img src={iconNext} alt="" width="16" height="16" />
+			</a>
+		)}
+	</nav>
+)}
+
+<style lang="scss">
+@import '../styles/setting';
+
+.pageNavBox {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px;
+	margin-top: 24px;
+
+	@include media($breakpointSmall) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
+	}
+
+	.btn {
+		@include flex(nowrap, flex-start, center);
+		gap: 12px;
+		min-width: 0;
+		height: 56px;
+		@include font($ls: .08em, $lh: 1.5);
+		background-color: $grayColor;
+		padding: 0 20px;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $mainColor;
+			background-color: $borderColor;
+		}
+
+		&.next {
+			grid-column: 2 / 3;
+			justify-content: flex-end;
+
+			@include media($breakpointSmall) {
+				grid-column: auto;
+			}
+		}
+
+		span {
+			@include oneLine;
+		}
+
+		img {
+			flex-shrink: 0;
+			width: 16px;
+			height: 16px;
+		}
+	}
+}
+</style>

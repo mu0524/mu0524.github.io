@@ -1,0 +1,211 @@
+---
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import License from "@components/License.astro";
+import Markdown from "@components/Markdown.astro";
+import PostNav from "@components/PostNav.astro";
+import Toc from "@components/Toc.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { formatDate, formatIsoDate } from "@lib/date";
+import { getAdjacentPosts, getPosts, type Post } from "@lib/posts";
+import { categoryUrl, postUrl, subcategoryUrl, tagUrl } from "@lib/url";
+import type { GetStaticPaths } from "astro";
+import { SITE } from "@/site.config";
+
+export const getStaticPaths = (async () => {
+	const posts = await getPosts();
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: { post, ...getAdjacentPosts(posts, post.id) },
+	}));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	post: Post;
+	newer?: Post;
+	older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content, headings } = await render(post);
+const {
+	title,
+	description,
+	published,
+	updated,
+	tags,
+	category,
+	subcategory,
+	image,
+} = post.data;
+const isUpdated = !!updated && updated.getTime() !== published.getTime();
+const url = new URL(postUrl(post.id), Astro.site).href;
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: title,
+	description: description || title,
+	keywords: tags,
+	author: { "@type": "Person", name: SITE.author, url: SITE.url },
+	datePublished: formatIsoDate(published),
+	...(isUpdated && updated ? { dateModified: formatIsoDate(updated) } : {}),
+	inLanguage: SITE.lang,
+	url,
+};
+---
+
+<PageLayout title={title} description={description} image={image} article={{ published, updated, tags }}>
+	<script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+	<article id="post-container" class="postArea" data-category={category} data-subcategory={subcategory} data-pagefind-body>
+		<div class="metaBox">
+			<span class="tag">{formatDate(published)}</span>
+			{isUpdated && updated && <span class="tag">更新於 {formatDate(updated)}</span>}
+			{category && (
+				<a href={subcategory ? subcategoryUrl(category, subcategory) : categoryUrl(category)} class="tag">
+					{category}{subcategory && ` / ${subcategory}`}
+				</a>
+			)}
+		</div>
+
+		<div class="titleBox">
+			<h1 class="title" data-pagefind-meta="title">{title}</h1>
+		</div>
+
+		{tags.length > 0 && (
+			<div class="tagBox">
+				{tags.map((tag) => (
+					<a href={tagUrl(tag)}># {tag}</a>
+				))}
+			</div>
+		)}
+
+		{image && (
+			<figure class="Img">
+				<Image src={image} alt={title} widths={[720, 1200, 1600]} sizes="(max-width: 1312px) 100vw, 1184px" loading="eager" />
+			</figure>
+		)}
+
+		<Markdown>
+			<Content />
+		</Markdown>
+
+		<License title={title} url={url} published={published} updated={updated} />
+	</article>
+
+	<PostNav newer={newer} older={older} />
+
+	<Toc slot="aside" headings={headings} />
+</PageLayout>
+
+<style lang="scss">
+@import '../../styles/setting';
+
+.postArea {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	gap: 1.25em;
+	@include font($ls: .08em, $lh: 1.8);
+	background-color: $grayColor;
+	padding: 3em 3em 2em;
+
+	@include media($breakpointMedium) {
+		padding: 2.75em 2em 1.5em;
+	}
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+		padding: 2.5em 1.25em 1.25em;
+	}
+
+	.Img {
+		overflow: clip;
+
+		:global(img) {
+			width: 100%;
+		}
+	}
+
+	:global(.markdownBox) {
+		margin-top: .75em;
+	}
+}
+
+.metaBox {
+	@include positionALTRB($t: -1.25em, $l: 3em);
+	z-index: 2;
+	@include flex(wrap);
+	gap: 1em;
+	max-width: calc(100% - 6em);
+
+	@include media($breakpointMedium) {
+		left: 2em;
+	}
+	@include media($breakpointSmall) {
+		left: 1.25em;
+		max-width: calc(100% - 2.5em);
+	}
+
+	.tag {
+		white-space: nowrap;
+		color: $textColor;
+		background-color: var(--surface-tag);
+		padding: .375em 1em;
+		@extend %tsEaseInOut;
+	}
+
+	a {
+		@include hover {
+			color: $mainColor;
+		}
+	}
+}
+
+.titleBox {
+	@include flex(nowrap, center, center);
+	gap: .625em;
+	border-bottom: 2px dashed $borderColor;
+	padding-bottom: .625em;
+
+	@include pseudoBefore($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	@include pseudoAfter($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	.title {
+		flex: 1 1 0;
+		min-width: 0;
+		font-size: 1.75em;
+		font-weight: $fwRegular;
+		line-height: 1.5;
+		color: $textColor;
+		text-align: center;
+
+		@include media($breakpointSmall) {
+			font-size: 1.5em;
+		}
+	}
+}
+
+.tagBox {
+	@include flex(wrap, flex-end);
+	gap: .625em;
+
+	a {
+		color: $mainColor;
+		@include textTrim();
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $textColor;
+		}
+	}
+}
+
+</style>
