@@ -53,6 +53,7 @@ $rainbow-dark: linear-gradient(
 }
 
 /* An util to define variables that vary with light and dark mode */
+/* --text-* / --accent-rose / --border-default / --surface-* 對應 Figma 設計稿色票，深色值依淺色版推算 */
 @mixin define($vars) {
 	:root {
 		@each $key, $value in $vars {
@@ -73,12 +74,29 @@ $rainbow-dark: linear-gradient(
 		"--primary": (
 			oklch(0.7 0.14 var(--hue)), oklch(0.75 0.14 var(--hue))
 		),
+		"--text-primary": (
+			#53514e, #e2e0dd
+		),
+		"--text-secondary": (
+			#7b7b7b, #aaa7a3
+		),
+		"--accent-rose": (
+			#b9a5a5, #c9b5b5
+		),
+		"--border-default": (
+			#dcdbd9, #3a3937
+		),
+		"--surface-default": (
+			#f6f6f6, #262524
+		),
+		"--surface-btn": (
+			#ffffff, #33312f
+		),
+
 		"--page-bg": (
-			oklch(0.95 0.01 var(--hue)), oklch(0.16 0.014 var(--hue))
+			#ffffff, #1c1b1a
 		),
-		"--card-bg": (
-			white, oklch(0.23 0.015 var(--hue))
-		),
+		"--card-bg": var(--surface-default),
 		"--btn-content": (
 			oklch(0.55 0.12 var(--hue)), oklch(0.75 0.1 var(--hue))
 		),

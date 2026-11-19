@@ -21,7 +21,7 @@ export const siteConfig: SiteConfig = {
 		mode: "light",
 	},
 	banner: {
-		enable: true,
+		enable: false,
 		src: "assets/images/demo-banner.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
@@ -56,7 +56,6 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Home,
 		LinkPreset.Archive,
 		LinkPreset.About,
-		LinkPreset.Friends,
 		{
 			name: "GitHub",
 			url: "https://github.com/mu0524", // Internal links should not include the base path, as it is automatically added

@@ -38,7 +38,7 @@ function toggleScheme() {
   <button
     aria-label="Light/Dark Mode"
     role="menuitem"
-    class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90"
+    class="relative rounded-lg h-11 w-11"
     id="scheme-switch"
     onclick={toggleScheme}
   >
