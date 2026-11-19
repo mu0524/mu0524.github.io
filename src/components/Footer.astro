@@ -1,0 +1,401 @@
+---
+import { Image } from "astro:assets";
+import footerBear from "@assets/images/theme/footer-bear.png";
+import { DAY_MS, formatIsoDate } from "@lib/date";
+import { getCategoryTree, getPosts, getSiteStats, getTags } from "@lib/posts";
+import { withBase } from "@lib/url";
+import { SITE } from "@/site.config";
+
+const posts = await getPosts();
+const categories = getCategoryTree(posts);
+const tags = getTags(posts);
+const stats = await getSiteStats(posts);
+
+const currentYear = new Date().getFullYear();
+const startTime = stats.firstPublished?.getTime() ?? Date.now();
+const runningDays = Math.floor((Date.now() - startTime) / DAY_MS) + 1;
+const lastActivity = stats.lastActivity
+	? formatIsoDate(stats.lastActivity).replaceAll("-", "/")
+	: "-";
+---
+
+<footer class="footerArea">
+	<div class="otherBox">
+		<div class="Img" aria-hidden="true">
+			<Image src={footerBear} alt="" width={370} height={370} />
+		</div>
+
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">分類</p>
+			</div>
+			<ul class="categoryList">
+				{categories.map((c) => (
+					<li class:list={["categoryItem", { close: c.children.length > 0 }]} data-category={c.name}>
+						<div class="name">
+							<a href={c.url}>
+								<span>{c.name}</span>
+								{c.children.length === 0 && <span class="count">({c.count})</span>}
+							</a>
+							{c.children.length > 0 && (
+								<button class="toggle" type="button" aria-expanded="false" aria-label={`展開${c.name}`} data-name={c.name}></button>
+							)}
+						</div>
+						{c.children.length > 0 && (
+							<ul class="subList">
+								{c.children.map((s) => (
+									<li class="subItem" data-subcategory={s.name}>
+										<a href={s.url}>
+											<span>{s.name}</span>
+											<span class="count">({s.count})</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						)}
+					</li>
+				))}
+			</ul>
+		</div>
+
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">標籤</p>
+			</div>
+			<div class="tagList">
+				{tags.map((t) => (
+					<a href={t.url}>{t.name}</a>
+				))}
+			</div>
+		</div>
+
+		<div class="otherItem">
+			<div class="titleBox">
+				<p class="title">站點統計</p>
+			</div>
+			<dl class="statList">
+				<div class="statItem">
+					<dt>文章</dt>
+					<dd>({stats.postCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>分類</dt>
+					<dd>({stats.categoryCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>標籤</dt>
+					<dd>({stats.tagCount})</dd>
+				</div>
+				<div class="statItem">
+					<dt>總字數</dt>
+					<dd>{stats.wordCount.toLocaleString("en-US")}</dd>
+				</div>
+				<div class="statItem full">
+					<dt>運作天數</dt>
+					<dd id="running-days" data-start={startTime}>{runningDays}天</dd>
+				</div>
+				<div class="statItem full">
+					<dt>最後活動</dt>
+					<dd>{lastActivity}</dd>
+				</div>
+			</dl>
+		</div>
+	</div>
+
+	<p class="copyright">
+		&copy; {currentYear} {SITE.author}. All Rights Reserved.{" / "}
+		<a target="_blank" href={withBase("/rss.xml")}>RSS</a>{" / "}
+		<a target="_blank" href={withBase("/sitemap-index.xml")}>Sitemap</a>{" / Powered by "}
+		<a target="_blank" href="https://astro.build" rel="noopener">Astro</a>
+	</p>
+</footer>
+
+<script>
+import { DAY_MS } from "@lib/date";
+import { onPageLoad } from "../scripts/page-load";
+
+// 靜態頁面在 build 時算好天數，載入時再以當天日期更新，避免兩次 build 之間天數停住
+function updateRunningDays() {
+	const el = document.getElementById("running-days");
+	const start = Number(el?.dataset.start);
+	if (!el || !start) return;
+	el.textContent = `${Math.floor((Date.now() - start) / DAY_MS) + 1}天`;
+}
+
+function setCategoryOpen(item: Element, isOpen: boolean) {
+	const btn = item.querySelector<HTMLButtonElement>(".toggle");
+	if (!btn) return;
+	item.classList.toggle("close", !isOpen);
+	btn.setAttribute("aria-expanded", String(isOpen));
+	btn.setAttribute("aria-label", `${isOpen ? "收合" : "展開"}${btn.dataset.name ?? ""}`);
+}
+
+function bindCategoryToggle() {
+	for (const btn of document.querySelectorAll<HTMLButtonElement>(".footerArea .toggle")) {
+		btn.addEventListener("click", () => {
+			const item = btn.closest(".categoryItem");
+			if (item) setCategoryOpen(item, item.classList.contains("close"));
+		});
+	}
+}
+
+// 頁尾不在換頁替換範圍內，每次換頁都依目前文章展開所屬分類、標記 current
+function syncCurrentCategory() {
+	const post = document.getElementById("post-container");
+	const category = post?.dataset.category;
+	const subcategory = post?.dataset.subcategory;
+
+	for (const item of document.querySelectorAll(".footerArea .categoryItem")) {
+		const isCurrent = !!category && item.getAttribute("data-category") === category;
+		item.classList.toggle("current", isCurrent);
+		setCategoryOpen(item, isCurrent);
+
+		for (const sub of item.querySelectorAll(".subItem")) {
+			sub.classList.toggle(
+				"current",
+				isCurrent && !!subcategory && sub.getAttribute("data-subcategory") === subcategory,
+			);
+		}
+	}
+}
+
+updateRunningDays();
+bindCategoryToggle();
+onPageLoad(syncCurrentCategory);
+</script>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.footerArea {
+	position: relative;
+	margin-top: 100px;
+	padding: 64px 0 20px;
+
+	@include media($breakpointSmall) {
+		margin-top: 64px;
+		padding-top: 40px;
+	}
+
+	@include pseudoBefore {
+		@include pseudoShape(100%, 8px, $grayColor);
+		top: 0;
+		left: 0;
+	}
+
+	.copyright {
+		@include font($ls: .08em, $lh: 1.5, $color: var(--text-faint));
+		text-align: center;
+		margin-top: 64px;
+
+		@include media($breakpointSmall) {
+			font-size: $textSizeSmall;
+			margin-top: 40px;
+		}
+
+		a {
+			text-decoration: underline;
+			@extend %tsEaseInOut;
+
+			@include hover {
+				color: $mainColor;
+			}
+		}
+	}
+}
+
+.otherBox {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	align-items: start;
+	gap: 24px;
+
+	@include media($breakpointMedium) {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+	@include media($breakpointSmall) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+
+	.Img {
+		position: relative;
+		align-self: center;
+		justify-self: center;
+		width: 250px;
+		height: 250px;
+		overflow: clip;
+
+		@include media($breakpointMedium) {
+			display: none;
+		}
+
+		:global(img) {
+			@include positionALTRB($t: -24%, $l: -24%);
+			width: 148%;
+			max-width: none;
+			height: 148%;
+		}
+	}
+}
+
+.otherItem {
+	@include flex();
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+	@include font($ls: .08em, $lh: 1.8);
+
+	.titleBox {
+		@include flex(nowrap, center, center);
+		gap: 10px;
+		background-color: $grayColor;
+		padding: 16px 10px;
+
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+		}
+
+		@include pseudoAfter($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+		}
+
+		.title {
+			@include textTrim();
+		}
+	}
+}
+
+.categoryList {
+	@include flex();
+	flex-direction: column;
+	gap: 24px;
+	padding: 0 10px;
+
+	.name {
+		@include flex(nowrap, space-between, center);
+		gap: 10px;
+	}
+
+	a {
+		@include flex(nowrap, flex-start, center);
+		gap: 9px;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $mainColor;
+		}
+
+		span {
+			@include textTrim();
+		}
+	}
+
+	.count {
+		font-size: 14px;
+		color: $introColor;
+	}
+
+	.current {
+		> .name {
+			a {
+				color: $mainColor;
+			}
+		}
+
+		> a {
+			color: $mainColor;
+		}
+	}
+
+	.toggle {
+		position: relative;
+		flex-shrink: 0;
+		width: 20px;
+		height: 20px;
+
+		// 橫線＋直線組成「+」，展開時直線轉平疊在橫線上變成「−」
+		@include pseudoBefore {
+			@include pseudoShape(10px, 1.5px, $mainColor);
+			top: calc(50% - .75px);
+			left: 5px;
+			border-radius: 1px;
+		}
+
+		@include pseudoAfter {
+			@include pseudoShape(10px, 1.5px, $mainColor);
+			top: calc(50% - .75px);
+			left: 5px;
+			border-radius: 1px;
+			@extend %tsEaseInOut;
+		}
+	}
+
+	.subList {
+		@include flex();
+		flex-direction: column;
+		gap: 16px;
+		padding-left: 16px;
+		margin-top: 16px;
+	}
+
+	.close {
+		.toggle::after {
+			rotate: 90deg;
+		}
+
+		.subList {
+			display: none;
+		}
+	}
+}
+
+.tagList {
+	@include flex(wrap);
+	gap: 10px;
+	padding: 0 10px;
+
+	a {
+		min-width: 60px;
+		line-height: 1.5;
+		text-align: center;
+		background-color: $grayColor;
+		border: 1px solid $borderColor;
+		border-radius: 10px;
+		padding: 4px 16px;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $mainColor;
+			border-color: $mainColor;
+		}
+	}
+}
+
+.statList {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 13px 24px;
+	font-size: 14px;
+	padding: 0 10px;
+
+	.statItem {
+		@include flex(nowrap, space-between, center);
+		gap: 10px;
+		white-space: nowrap;
+
+		&.full {
+			grid-column: 1 / -1;
+		}
+	}
+
+	dt {
+		line-height: 1.5;
+	}
+
+	dd {
+		color: $introColor;
+		@include textTrim();
+	}
+}
+</style>

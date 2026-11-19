@@ -1,0 +1,78 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button type="button" id="back-to-top" class="topBtn" aria-label="回到頂端">
+	<Icon name="material-symbols:keyboard-arrow-up-rounded" />
+</button>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.topBtn {
+	position: fixed;
+	right: 24px;
+	bottom: 40px;
+	z-index: 30;
+	@include flex(nowrap, center, center);
+	width: 44px;
+	height: 44px;
+	color: $mainColor;
+	background-color: $btnBgColor;
+	border: 1px solid $borderColor;
+	border-radius: 8px;
+	opacity: 0;
+	translate: 0 12px;
+	pointer-events: none;
+	@extend %tsEaseInOut;
+
+	@include media($breakpointSmall) {
+		right: 16px;
+		bottom: 24px;
+		width: 40px;
+		height: 40px;
+	}
+
+	@include hover {
+		color: $textColor;
+		background-color: $borderColor;
+	}
+
+	&.show {
+		opacity: 1;
+		translate: 0 0;
+		pointer-events: auto;
+	}
+
+	:global(svg) {
+		width: 28px;
+		height: 28px;
+	}
+}
+</style>
+
+<script>
+const btn = document.getElementById("back-to-top");
+let ticking = false;
+
+function update() {
+	btn?.classList.toggle("show", window.scrollY > 400);
+	ticking = false;
+}
+
+window.addEventListener(
+	"scroll",
+	() => {
+		if (ticking) return;
+		ticking = true;
+		requestAnimationFrame(update);
+	},
+	{ passive: true },
+);
+
+btn?.addEventListener("click", () => {
+	window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+update();
+</script>

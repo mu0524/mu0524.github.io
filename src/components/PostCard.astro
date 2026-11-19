@@ -1,0 +1,190 @@
+---
+import { Image } from "astro:assets";
+import { formatDate } from "@lib/date";
+import { getExcerpt, type Post } from "@lib/posts";
+import { categoryUrl, postUrl, subcategoryUrl, tagUrl } from "@lib/url";
+
+interface Props {
+	post: Post;
+	class?: string;
+	style?: string;
+}
+
+const { post, class: className, style } = Astro.props;
+const { title, published, tags, category, subcategory, image } = post.data;
+const url = postUrl(post.id);
+---
+
+<article class:list={["postItem", className]} style={style}>
+	<div class="item">
+		<div class="metaBox">
+			<span class="tag">{formatDate(published)}</span>
+			{category && (
+				<a href={subcategory ? subcategoryUrl(category, subcategory) : categoryUrl(category)} class="tag">
+					{category}{subcategory && ` / ${subcategory}`}
+				</a>
+			)}
+		</div>
+
+		<div class="titleBox">
+			<h2 class="title">{title}</h2>
+		</div>
+
+		<div class="contentBox">
+			{image && (
+				<figure class="Img">
+					<Image src={image} alt={title} widths={[480, 720, 960]} sizes="(max-width: 991px) 100vw, 640px" />
+				</figure>
+			)}
+
+			<p class="text">{getExcerpt(post)}</p>
+
+			{tags.length > 0 && (
+				<div class="tagBox">
+					{tags.map((tag) => (
+						<a href={tagUrl(tag)}># {tag}</a>
+					))}
+				</div>
+			)}
+		</div>
+
+		<a href={url} class="linkWrap" aria-label={title}></a>
+	</div>
+</article>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.postItem {
+	position: relative;
+	min-width: 0;
+}
+
+.item {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	gap: 1.25em;
+	height: 100%;
+	@include font($ls: .08em, $lh: 1.8);
+	background-color: $grayColor;
+	padding: 2.25em 1.25em 1.5em;
+
+	@include media(1366) {
+		font-size: $textSizeMedium;
+	}
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+	}
+
+	@include hover {
+		.title {
+			color: $mainColor;
+		}
+
+		.Img {
+			:global(img) {
+				scale: 1.05;
+			}
+		}
+	}
+}
+
+.metaBox {
+	@include positionALTRB($t: -1.25em, $l: 1.25em);
+	z-index: 3;
+	@include flex(wrap);
+	gap: 1em;
+	max-width: calc(100% - 2.5em);
+
+	.tag {
+		white-space: nowrap;
+		color: $textColor;
+		background-color: var(--surface-tag);
+		padding: .375em 1em;
+		@extend %tsEaseInOut;
+	}
+
+	a {
+		@include hover {
+			color: $mainColor;
+		}
+	}
+}
+
+.titleBox {
+	@include flex(nowrap, center, center);
+	gap: .625em;
+	border-bottom: 2px dashed $borderColor;
+	padding-bottom: .5em;
+
+	@include pseudoBefore($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	@include pseudoAfter($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	.title {
+		flex: 1 1 0;
+		min-width: 0;
+		font-size: 1.25em;
+		font-weight: $fwRegular;
+		line-height: 1.5;
+		color: $textColor;
+		text-align: center;
+		@include ellipsis(2);
+		@extend %tsEaseInOut;
+	}
+}
+
+.contentBox {
+	@include flex();
+	flex-direction: column;
+	flex: 1 1 auto;
+	gap: 1em;
+
+	.Img {
+		aspect-ratio: 16 / 9;
+		overflow: clip;
+
+		:global(img) {
+			@include imgCover;
+			will-change: scale;
+			@extend %tsEaseInOut;
+		}
+	}
+
+	.text {
+		color: $introColor;
+		@include ellipsis(3);
+		min-height: 5.4em;
+	}
+
+	.tagBox {
+		position: relative;
+		z-index: 3;
+		@include flex(wrap, flex-end);
+		gap: .625em;
+		margin-top: auto;
+
+		a {
+			color: $mainColor;
+			@include textTrim();
+			@extend %tsEaseInOut;
+
+			@include hover {
+				color: $textColor;
+			}
+		}
+	}
+}
+
+.linkWrap {
+	@include cover;
+	z-index: 2;
+}
+</style>

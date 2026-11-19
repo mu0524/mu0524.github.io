@@ -24,11 +24,11 @@ export default defineConfig({
 	base: "/",
 	trailingSlash: "ignore",
 	integrations: [
-		// 換頁時只替換 #swup 區塊，導覽區與頁尾保留不重新渲染
+		// 換頁時只替換 #swup-container 區塊，導覽區與頁尾保留不重新渲染
 		swup({
 			theme: false,
 			animationClass: "transition-swup-",
-			containers: ["#swup"],
+			containers: ["#swup-container"],
 			smoothScrolling: true,
 			cache: true,
 			preload: true,

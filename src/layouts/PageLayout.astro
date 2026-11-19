@@ -1,0 +1,52 @@
+---
+import BackToTop from "@components/BackToTop.astro";
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import type { SeoProps } from "@components/Seo.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+type Props = SeoProps;
+---
+
+<BaseLayout {...Astro.props}>
+	<slot name="head" slot="head" />
+
+	<div class="pageWrap">
+		<Header />
+
+		<!-- 換頁時只替換這一塊；目錄放在動畫外層，避免 translate 影響 fixed 定位 -->
+		<main id="swup-container" class="mainArea transition-swup-fade">
+			<div class="onloadAnimation">
+				<slot />
+			</div>
+			<slot name="aside" />
+		</main>
+
+		<Footer />
+	</div>
+
+	<BackToTop />
+</BaseLayout>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.pageWrap {
+	position: relative;
+	max-width: calc(var(--page-width) + 32px);
+	margin: 0 auto;
+	padding: 45px 16px 0;
+
+	@include media($breakpointSmall) {
+		padding-top: 16px;
+	}
+}
+
+.mainArea {
+	margin-top: 64px;
+
+	@include media($breakpointSmall) {
+		margin-top: 32px;
+	}
+}
+</style>

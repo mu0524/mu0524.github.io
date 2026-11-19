@@ -21,6 +21,26 @@ export async function getPosts(): Promise<Post[]> {
 	);
 }
 
+// 沒有填 description 時，取內文第一段純文字當摘要
+export function getExcerpt(post: Post, length = 120): string {
+	if (post.data.description) return post.data.description;
+	const paragraph = (post.body ?? "")
+		.split(/\r?\n\s*\r?\n/)
+		.map((block) => block.trim())
+		.find(
+			(block) =>
+				block && !/^(#|>|```|:::|::|!\[|<|[-*+] |\d+\. |\|)/.test(block),
+		);
+	if (!paragraph) return "";
+	const text = paragraph
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+		.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+		.replace(/[`*_~]/g, "")
+		.replace(/\s+/g, " ")
+		.trim();
+	return text.length > length ? `${text.slice(0, length)}…` : text;
+}
+
 // 左邊放較新的文章、右邊放較舊的文章
 export function getAdjacentPosts(posts: Post[], id: string) {
 	const index = posts.findIndex((post) => post.id === id);

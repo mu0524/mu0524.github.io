@@ -16,7 +16,6 @@ html {
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
 	-webkit-tap-highlight-color: transparent;
-	scrollbar-gutter: stable;
 	background-color: var(--page-bg);
 }
 
@@ -126,21 +125,14 @@ samp {
 }
 
 // swup 換頁淡入淡出
-html.is-changing .transition-swup-fade {
-	transition: opacity .2s ease-in-out;
+html.is-changing {
+	.transition-swup-fade {
+		transition: opacity .2s ease-in-out;
+	}
 }
 
-html.is-animating .transition-swup-fade {
-	opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0s !important;
-		animation-delay: 0s !important;
-		transition-duration: 0s !important;
-		scroll-behavior: auto !important;
+html.is-animating {
+	.transition-swup-fade {
+		opacity: 0;
 	}
 }

@@ -1,7 +1,8 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
+import Pagination from "@components/Pagination.astro";
+import PostCard from "@components/PostCard.astro";
+import PageLayout from "@layouts/PageLayout.astro";
 import { getPosts } from "@lib/posts";
-import { postUrl } from "@lib/url";
 import type { GetStaticPaths } from "astro";
 import { SITE } from "@/site.config";
 
@@ -13,10 +14,29 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 ---
 
-<BaseLayout>
-	<ul>
-		{page.data.map((post) => (
-			<li><a href={postUrl(post.id)}>{post.data.title}</a></li>
+<PageLayout title={page.currentPage > 1 ? `第 ${page.currentPage} 頁` : undefined}>
+	<div class="postList">
+		{page.data.map((post, i) => (
+			<PostCard post={post} class="onloadAnimation" style={`animation-delay: ${i * 50}ms`} />
 		))}
-	</ul>
-</BaseLayout>
+	</div>
+	<Pagination current={page.currentPage} last={page.lastPage} />
+</PageLayout>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.postList {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 64px 24px;
+
+	@include media($breakpointMedium) {
+		gap: 56px 20px;
+	}
+	@include media(991) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 48px;
+	}
+}
+</style>

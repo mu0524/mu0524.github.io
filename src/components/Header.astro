@@ -1,0 +1,164 @@
+---
+import { Image } from "astro:assets";
+import iconAbout from "@assets/images/theme/icon-about.svg?url";
+import iconGithub from "@assets/images/theme/icon-github.svg?url";
+import iconHome from "@assets/images/theme/icon-home.svg?url";
+import infoBunny from "@assets/images/theme/info-bunny.png";
+import { withBase } from "@lib/url";
+import { Icon } from "astro-icon/components";
+import { NAV_LINKS, type NavIcon, SITE } from "@/site.config";
+import Search from "./Search.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+// 設計稿有素材的圖示用素材，彙整沒有素材，改用同風格的實心圖示
+const ICON_SRC: Partial<Record<NavIcon, string>> = {
+	home: iconHome,
+	about: iconAbout,
+	github: iconGithub,
+};
+---
+
+<header class="infoArea onloadAnimation">
+	<div class="textBox">
+		<a href={withBase("/")} class="title">{SITE.title}</a>
+		<p class="text">{SITE.description}</p>
+		<nav class="btnBox" aria-label="主選單">
+			{NAV_LINKS.map((link) => (
+				<a
+					href={link.external ? link.href : withBase(link.href)}
+					target={link.external ? "_blank" : undefined}
+					rel={link.external ? "noopener" : undefined}
+					class="btn"
+				>
+					{ICON_SRC[link.icon]
+						? <img src={ICON_SRC[link.icon]} alt="" width="24" height="24" />
+						: <Icon name="material-symbols:inventory-2-rounded" />}
+					<span>{link.name}</span>
+				</a>
+			))}
+			<div class="toolBox">
+				<Search />
+				<ThemeToggle />
+			</div>
+		</nav>
+	</div>
+	<div class="Img" aria-hidden="true">
+		<Image src={infoBunny} alt="" width={400} height={400} loading="eager" />
+	</div>
+</header>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.infoArea {
+	position: relative;
+	z-index: 40;
+	@include flex($ai: center);
+	gap: 24px;
+	background-color: $grayColor;
+	padding: 16px;
+
+	@include media($breakpointSmall) {
+		gap: 12px;
+	}
+
+	.textBox {
+		@include flex();
+		flex-direction: column;
+		flex: 1 1 0;
+		gap: 16px;
+		min-width: 0;
+	}
+
+	.title {
+		align-self: flex-start;
+		@include font($fs: 32px, $fw: $fwBold, $ls: .05em, $lh: 1.5);
+
+		@include media($breakpointSmall) {
+			font-size: 26px;
+		}
+	}
+
+	.text {
+		@include font($ls: .05em, $lh: 1.5);
+	}
+
+	.btnBox,
+	.toolBox {
+		@include flex(wrap);
+		gap: 16px;
+
+		@include media($breakpointSmall) {
+			gap: 10px;
+		}
+	}
+
+	.btnBox {
+		:global(.btn) {
+			@include flex(nowrap, center, center);
+			gap: 10px;
+			height: 40px;
+			@include font($ls: .1em, $lh: 1, $color: $introColor);
+			white-space: nowrap;
+			background-color: $btnBgColor;
+			border-radius: 8px;
+			padding: 0 10px;
+			@extend %tsEaseInOut;
+
+			@include hover {
+				color: $textColor;
+				background-color: $borderColor;
+			}
+
+			img,
+			:global(svg) {
+				flex-shrink: 0;
+				width: 24px;
+				height: 24px;
+				color: $mainColor;
+			}
+
+			span {
+				@include textTrim();
+			}
+		}
+	}
+
+	.toolBox {
+		@include media(-769) {
+			position: relative;
+		}
+
+		:global(.btn) {
+			width: 40px;
+			padding: 0;
+		}
+	}
+
+	.Img {
+		position: relative;
+		flex-shrink: 0;
+		width: 140px;
+		height: 140px;
+		overflow: clip;
+		scale: -1 1;
+
+		@include media($breakpointSmall) {
+			width: 100px;
+			height: 100px;
+		}
+		@include media($breakpointXS) {
+			@include positionALTRB($t: 8px, $r: 8px);
+			width: 72px;
+			height: 72px;
+		}
+
+		:global(img) {
+			@include positionALTRB($t: -22.04%, $l: -22.47%);
+			width: 144.08%;
+			max-width: none;
+			height: 144.08%;
+		}
+	}
+}
+</style>

@@ -1,0 +1,220 @@
+---
+import { withBase } from "@lib/url";
+import { Icon } from "astro-icon/components";
+---
+
+<div class="searchBox" data-pagefind-ignore>
+	<button type="button" id="search-toggle" class="btn" aria-label="搜尋文章" aria-expanded="false" aria-controls="search-panel">
+		<Icon name="material-symbols:search-rounded" />
+	</button>
+	<div id="search-panel" class="searchPanel" data-pagefind-url={withBase("/pagefind/pagefind.js")} hidden>
+		<label class="inputBox">
+			<Icon name="material-symbols:search-rounded" />
+			<span class="srOnly">搜尋文章</span>
+			<input type="search" id="search-input" placeholder="搜尋文章" autocomplete="off" spellcheck="false" />
+		</label>
+		<p id="search-hint" class="hint" hidden></p>
+		<ul id="search-result" class="resultList"></ul>
+	</div>
+</div>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.searchPanel {
+	@include positionALTRB($t: calc(100% + 8px), $l: 0);
+	z-index: 10;
+	width: min(480px, calc(100vw - 32px));
+	background-color: $btnBgColor;
+	border: 1px solid $borderColor;
+	border-radius: 8px;
+	padding: 8px;
+	box-shadow: 0 12px 32px color-mix(in srgb, #000 8%, transparent);
+
+	@include media($breakpointSmall) {
+		left: 0;
+		right: 0;
+		width: auto;
+	}
+
+	.inputBox {
+		@include flex(nowrap, flex-start, center);
+		gap: 8px;
+		height: 44px;
+		background-color: $grayColor;
+		border-radius: 6px;
+		padding: 0 12px;
+
+		:global(svg) {
+			flex-shrink: 0;
+			width: 20px;
+			height: 20px;
+			color: var(--text-muted);
+		}
+
+		input {
+			flex: 1 1 0;
+			min-width: 0;
+			height: 100%;
+			@include font($fs: 15px, $ls: .05em, $lh: 1.5);
+			outline: none;
+
+			&::placeholder {
+				color: var(--text-muted);
+			}
+		}
+	}
+
+	.hint {
+		@include font($fs: 14px, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
+		padding: 12px 8px 4px;
+	}
+}
+
+.resultList {
+	@include flex();
+	flex-direction: column;
+	max-height: min(60vh, 480px);
+	overflow-y: auto;
+
+	&:not(:empty) {
+		margin-top: 4px;
+	}
+
+	:global(.resultItem) {
+		display: block;
+		border-radius: 6px;
+		padding: 10px 8px;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			background-color: $grayColor;
+		}
+	}
+
+	:global(.title) {
+		@include font($ls: .05em, $lh: 1.5);
+	}
+
+	:global(.text) {
+		@include font($fs: 13px, $ls: .03em, $lh: 1.6, $color: $introColor);
+		@include ellipsis(2);
+		margin-top: 2px;
+	}
+
+	:global(mark) {
+		color: $textColor;
+		background-color: var(--selection-bg);
+	}
+}
+</style>
+
+<script>
+interface PagefindResult {
+	data: () => Promise<{ url: string; excerpt: string; meta: { title?: string } }>;
+}
+interface Pagefind {
+	search: (query: string) => Promise<{ results: PagefindResult[] }>;
+	options: (opts: Record<string, unknown>) => Promise<void>;
+}
+
+const toggle = document.getElementById("search-toggle");
+const panel = document.getElementById("search-panel");
+const input = document.getElementById("search-input") as HTMLInputElement | null;
+const hint = document.getElementById("search-hint");
+const list = document.getElementById("search-result");
+
+let pagefind: Promise<Pagefind | null> | null = null;
+let timer = 0;
+let latest = "";
+
+// 第一次打開才載入 Pagefind，開發模式沒有索引時回傳 null
+function loadPagefind() {
+	if (!pagefind) {
+		const url = panel?.dataset.pagefindUrl ?? "/pagefind/pagefind.js";
+		pagefind = import(/* @vite-ignore */ url)
+			.then(async (pf: Pagefind) => {
+				await pf.options({ excerptLength: 24 });
+				return pf;
+			})
+			.catch(() => null);
+	}
+	return pagefind;
+}
+
+function showHint(text: string) {
+	if (!hint) return;
+	hint.textContent = text;
+	hint.hidden = !text;
+}
+
+function setOpen(open: boolean) {
+	if (!panel || !toggle) return;
+	panel.hidden = !open;
+	toggle.setAttribute("aria-expanded", String(open));
+	if (open) {
+		input?.focus();
+		loadPagefind();
+	}
+}
+
+function escapeHtml(str: string) {
+	return str.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+async function search(query: string) {
+	latest = query;
+	if (!list) return;
+	if (!query) {
+		list.innerHTML = "";
+		showHint("");
+		return;
+	}
+
+	const pf = await loadPagefind();
+	if (!pf) {
+		showHint("搜尋功能要在正式建置（pnpm build）後才能使用");
+		return;
+	}
+
+	const { results } = await pf.search(query);
+	const items = await Promise.all(results.slice(0, 8).map((r) => r.data()));
+	// 輸入很快時，舊的搜尋結果晚回來就丟掉
+	if (query !== latest) return;
+
+	showHint(items.length ? "" : "找不到相關文章");
+	list.innerHTML = items
+		.map(
+			(item) =>
+				`<li><a class="resultItem" href="${item.url}">` +
+				`<p class="title">${escapeHtml(item.meta.title ?? item.url)}</p>` +
+				`<p class="text">${item.excerpt}</p></a></li>`,
+		)
+		.join("");
+}
+
+toggle?.addEventListener("click", () => setOpen(panel?.hidden ?? false));
+
+input?.addEventListener("input", () => {
+	window.clearTimeout(timer);
+	timer = window.setTimeout(() => search(input.value.trim()), 200);
+});
+
+document.addEventListener("keydown", (event) => {
+	if (event.key === "Escape" && panel && !panel.hidden) {
+		setOpen(false);
+		toggle?.focus();
+	}
+});
+
+document.addEventListener("click", (event) => {
+	const target = event.target as Node | null;
+	if (!panel || panel.hidden || !target) return;
+	if (panel.contains(target) || toggle?.contains(target)) {
+		// 點搜尋結果換頁後收起面板
+		if ((target as Element).closest?.(".resultItem")) setOpen(false);
+		return;
+	}
+	setOpen(false);
+});
+</script>
