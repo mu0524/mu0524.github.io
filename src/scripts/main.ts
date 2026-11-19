@@ -3,3 +3,4 @@
 import "./toc";
 import "./lightbox";
 import "./github-card";
+import "./archive";

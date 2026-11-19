@@ -1,0 +1,68 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { withBase } from "@lib/url";
+---
+
+<PageLayout title="找不到頁面">
+	<section class="notFoundArea">
+		<p class="code">404</p>
+		<h1 class="title">找不到這個頁面</h1>
+		<p class="text">網址可能打錯了，或是文章已經搬家。</p>
+		<div class="btnBox">
+			<a href={withBase("/")} class="btn">回到首頁</a>
+			<a href={withBase("/archive/")} class="btn">看全部文章</a>
+		</div>
+	</section>
+</PageLayout>
+
+<style lang="scss">
+@import '../styles/setting';
+
+.notFoundArea {
+	@include flex(nowrap, center, center);
+	flex-direction: column;
+	gap: 1em;
+	@include font($ls: .08em, $lh: 1.8);
+	text-align: center;
+	background-color: $grayColor;
+	padding: 4em 1.5em;
+
+	.code {
+		@include font($fs: 96px, $fw: $fwBold, $ls: .05em, $lh: 1, $color: $mainColor);
+
+		@include media($breakpointSmall) {
+			font-size: 72px;
+		}
+	}
+
+	.title {
+		font-size: 1.5em;
+		line-height: 1.5;
+	}
+
+	.text {
+		color: $introColor;
+	}
+}
+
+.btnBox {
+	@include flex(wrap, center);
+	gap: 16px;
+	margin-top: 1em;
+
+	.btn {
+		@include flex(nowrap, center, center);
+		height: 44px;
+		@include font($ls: .1em, $lh: 1, $color: $introColor);
+		background-color: $btnBgColor;
+		border-radius: 8px;
+		padding: 0 20px;
+		@extend %tsEaseInOut;
+
+		@include hover {
+			color: $textColor;
+			background-color: $borderColor;
+		}
+	}
+}
+</style>
