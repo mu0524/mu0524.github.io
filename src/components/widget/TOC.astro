@@ -36,6 +36,7 @@ const maxLevel = siteConfig.toc.depth;
 <table-of-contents class:list={[className, "tocList"]}>
     {headings.filter((heading) => heading.depth < minDepth + maxLevel).map((heading) =>
         <a href={`#${heading.slug}`} class:list={["tocItem", {
+            "main": heading.depth == minDepth,
             "sub": heading.depth == minDepth + 1,
             "subSub": heading.depth == minDepth + 2,
         }]}>
@@ -271,13 +272,24 @@ if (!customElements.get("table-of-contents")) {
 		color: $mainColor;
 	}
 
+	&.main {
+		@include flex(nowrap, flex-start, center);
+		gap: .5em;
+
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(5px, 5px, currentColor);
+			flex-shrink: 0;
+			border-radius: 50%;
+		}
+	}
+
 	&.sub {
-		padding-left: 2.25em;
+		padding-left: 2.75em;
 	}
 
 	&.subSub {
 		font-size: 13px;
-		padding-left: 3.25em;
+		padding-left: 3.75em;
 	}
 
 	&:global(.visible) {
