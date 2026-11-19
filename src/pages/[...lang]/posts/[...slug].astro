@@ -1,6 +1,8 @@
 ---
 import { render } from "astro:content";
 import path from "node:path";
+import iconPrev from "@assets/images/theme/icon-angle-double-left.svg?url";
+import iconNext from "@assets/images/theme/icon-angle-double-right.svg?url";
 import Comment from "@components/comment/index.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
@@ -9,13 +11,14 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
-import { getPostUrlBySlug } from "@utils/url-utils";
+import { getCategoryUrl, getPostUrlBySlug, getTagUrl } from "@utils/url-utils";
 import type { GetStaticPaths } from "astro";
-import { Icon } from "astro-icon/components";
 import ImageWrapper from "../../../components/misc/ImageWrapper.astro";
-import PostMetadata from "../../../components/PostMeta.astro";
 import { licenseConfig, profileConfig, siteConfig } from "../../../config";
-import { formatDateToYYYYMMDD } from "../../../utils/date-utils";
+import {
+	formatDateToYYYYMMDD,
+	formatDateToYYYYMMMD,
+} from "../../../utils/date-utils";
 
 // export async function getStaticPaths() {
 // 	const blogEntries = await getSortedPosts();
@@ -71,96 +74,244 @@ const jsonLd = {
 };
 
 const ogImage = entry.data.ogImage ?? entry.data.image;
+
+const { category, subcategory, tags, published, updated } = entry.data;
+const isUpdated = !!updated && updated.getTime() !== published.getTime();
 ---
 
 <MainGridLayout banner={ogImage} title={entry.data.title} description={entry.data.description} lang={lang} setOGTypeArticle={true} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
-    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative mb-4">
-        <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
-            {}
-        ]}>
-            <!-- word count and reading time -->
-            <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:notes-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount, lang)}</div>
-                </div>
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:schedule-outline-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">
-                        {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
-                    </div>
-                </div>
-            </div>
 
-            <!-- title -->
-            <div class="relative onload-animation">
-                <div
-                    data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
-                    class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.25rem]/[2.75rem]
-                    text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]
-                ">
-                    {entry.data.title}
-                </div>
-            </div>
-
-            <!-- metadata -->
-            <div class="onload-animation">
-                <PostMetadata
-                        class="mb-5"
-                        published={entry.data.published}
-                        updated={entry.data.updated}
-                        tags={entry.data.tags}
-                        category={entry.data.category}
-                ></PostMetadata>
-                {!entry.data.image && <div class="border-(--line-divider) border-dashed border-b mb-5"></div>}
-            </div>
-
-            <!-- always show cover as long as it has one -->
-
-            {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join("content/posts/", entry.id)} class="mb-8 rounded-xl banner-container onload-animation"/>
-            }
-
-
-            <Markdown class="mb-6 markdown-content onload-animation">
-                <Content />
-            </Markdown>
-
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} updateDate={entry.data.updated} lang={lang} class="mb-6 rounded-xl license-container onload-animation"></License>}
-
+    <article id="post-container" class="postArea">
+        <div class="metaBox onload-animation">
+            <span class="tag">{formatDateToYYYYMMMD(published)}</span>
+            {isUpdated && updated && (
+                <span class="tag">{i18n(I18nKey.updatedAt, lang)} {formatDateToYYYYMMMD(updated)}</span>
+            )}
+            {category && (
+                <a href={getCategoryUrl(category, lang)} class="tag">
+                    {category}{subcategory && ` / ${subcategory}`}
+                </a>
+            )}
         </div>
-    </div>
+
+        <div class="titleBox onload-animation">
+            <h1 class="title" data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title">
+                {entry.data.title}
+            </h1>
+        </div>
+
+        <div class="infoBox onload-animation">
+            <p class="count">
+                <span>{remarkPluginFrontmatter.words} {i18n(I18nKey.wordsCount, lang)}</span>
+                <span>{remarkPluginFrontmatter.minutes} {i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}</span>
+            </p>
+            {tags.length > 0 && (
+                <div class="tagBox">
+                    {tags.map((tag) => (
+                        <a href={getTagUrl(tag, lang)}># {tag}</a>
+                    ))}
+                </div>
+            )}
+        </div>
+
+        {entry.data.image && (
+            <figure class="Img onload-animation">
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join("content/posts/", entry.id)} alt={entry.data.title} class="w-full h-full" />
+            </figure>
+        )}
+
+        <Markdown class="markdown-content onload-animation">
+            <Content />
+        </Markdown>
+
+        {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} updateDate={entry.data.updated} lang={lang} class="license-container onload-animation"></License>}
+    </article>
 
     <Comment post={entry} lang={lang}></Comment>
 
-    <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
-        <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
-            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-start! gap-4" >
-                <Icon name="material-symbols:chevron-left-rounded" class="text-[2rem] text-(--primary)" />
-                <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%-3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.nextTitle}
-                </div>
-            </div>}
-        </a>
-
-        <a href={entry.data.prevSlug ? getPostUrlBySlug(entry.data.prevSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.prevSlug}]}>
-            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-end! gap-4">
-                <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%-3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.prevTitle}
-                </div>
-                <Icon name="material-symbols:chevron-right-rounded" class="text-[2rem] text-(--primary)" />
-            </div>}
-        </a>
-    </div>
-
+    <nav class="pageNavBox" aria-label="Post navigation">
+        {entry.data.nextSlug ? (
+            <a href={getPostUrlBySlug(entry.data.nextSlug, lang)} class="btn prev">
+                <img src={iconPrev} alt="" width="16" height="16" />
+                <span>{entry.data.nextTitle}</span>
+            </a>
+        ) : <span></span>}
+        {entry.data.prevSlug ? (
+            <a href={getPostUrlBySlug(entry.data.prevSlug, lang)} class="btn next">
+                <span>{entry.data.prevTitle}</span>
+                <img src={iconNext} alt="" width="16" height="16" />
+            </a>
+        ) : <span></span>}
+    </nav>
 </MainGridLayout>
+
+<style lang="scss">
+@import '../../../styles/setting';
+
+.postArea {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	gap: 1.25em;
+	@include font($ls: .08em, $lh: 1.8);
+	background-color: $grayColor;
+	padding: 3em 3em 2em;
+
+	@include media($breakpointMedium) {
+		padding: 2.75em 2em 1.5em;
+	}
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+		padding: 2.5em 1.25em 1.25em;
+	}
+
+	.Img {
+		overflow: clip;
+	}
+
+	:global(.markdown-content) {
+		margin-top: .75em;
+	}
+
+	:global(code),
+	:global(pre) {
+		letter-spacing: normal;
+	}
+}
+
+.metaBox {
+	@include positionALTRB($t: -1.25em, $l: 3em);
+	z-index: 2;
+	@include flex(wrap);
+	gap: 1em;
+	max-width: calc(100% - 6em);
+
+	@include media($breakpointMedium) {
+		left: 2em;
+	}
+	@include media($breakpointSmall) {
+		left: 1.25em;
+		max-width: calc(100% - 2.5em);
+	}
+
+	.tag {
+		white-space: nowrap;
+		color: $textColor;
+		background-color: var(--surface-tag);
+		padding: .375em 1em;
+		@extend %ts;
+	}
+
+	a {
+		@include hover {
+			color: $mainColor;
+		}
+	}
+}
+
+.titleBox {
+	@include flex(nowrap, center, center);
+	gap: .625em;
+	border-bottom: 2px dashed $borderColor;
+	padding-bottom: .625em;
+
+	@include pseudoBefore($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	@include pseudoAfter($position: relative) {
+		@include pseudoShape(10px, 3px, $borderColor);
+		flex-shrink: 0;
+	}
+
+	.title {
+		flex: 1 1 0;
+		min-width: 0;
+		font-size: 1.75em;
+		font-weight: $fwRegular;
+		line-height: 1.5;
+		color: $textColor;
+		text-align: center;
+
+		@include media($breakpointSmall) {
+			font-size: 1.5em;
+		}
+	}
+}
+
+.infoBox {
+	@include flex(wrap, space-between, center);
+	gap: .5em 1.5em;
+
+	.count {
+		@include flex(wrap);
+		gap: 1em;
+		font-size: .875em;
+		color: var(--text-muted);
+	}
+
+	.tagBox {
+		@include flex(wrap, flex-end);
+		gap: .625em;
+
+		a {
+			color: $mainColor;
+			@include textTrim();
+			@extend %ts;
+
+			@include hover {
+				color: $textColor;
+			}
+		}
+	}
+}
+
+.pageNavBox {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px;
+	margin-top: 24px;
+
+	@include media($breakpointSmall) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
+	}
+
+	.btn {
+		@include flex(nowrap, flex-start, center);
+		gap: 12px;
+		min-width: 0;
+		height: 56px;
+		@include font($ls: .08em, $lh: 1.5);
+		background-color: $grayColor;
+		padding: 0 20px;
+		@extend %ts;
+
+		@include hover {
+			color: $mainColor;
+			background-color: $borderColor;
+		}
+
+		&.next {
+			grid-column: 2 / 3;
+			justify-content: flex-end;
+
+			@include media($breakpointSmall) {
+				grid-column: auto;
+			}
+		}
+
+		span {
+			@include oneLine;
+		}
+
+		img {
+			flex-shrink: 0;
+			width: 16px;
+			height: 16px;
+		}
+	}
+}
+</style>

@@ -17,7 +17,7 @@ export const siteConfig: SiteConfig = {
 	// Leave it empty `[]` if want disable multi-languages. It can be sorted by array order
 	supportedLangs: [],
 	theme: {
-		hue: 75, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
+		hue: 18, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
 		mode: "light",
 	},
 	banner: {
