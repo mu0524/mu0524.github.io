@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="960" height="360" role="img" aria-label="用 Git Bash 的 unzip 解壓縮檔名變亂碼，改用 Python 解壓縮檔名正常">
+  <style>
+    text { font-family: "JetBrains Mono", Consolas, "Microsoft JhengHei", "PingFang TC", monospace; }
+    .label { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; font-weight: 700; }
+    .term { fill: #2b2926; stroke: #2d2a26; stroke-width: 3; }
+    .cmd { fill: #e8e2d6; font-size: 19px; }
+    .prompt { fill: #e7b65c; }
+  </style>
+
+  <rect width="960" height="360" rx="24" fill="#fbf5e9"/>
+
+  <!-- unzip -->
+  <g>
+    <rect x="30" y="26" width="900" height="140" rx="14" class="term"/>
+    <circle cx="56" cy="50" r="6" fill="#e45f5f"/>
+    <circle cx="76" cy="50" r="6" fill="#e8b85a"/>
+    <circle cx="96" cy="50" r="6" fill="#5cb685"/>
+    <rect x="740" y="38" width="170" height="30" rx="15" fill="#fdeaea"/>
+    <text x="825" y="59" font-size="17" text-anchor="middle" class="label" fill="#c43c3c">✗ Git Bash unzip</text>
+    <text x="56" y="102" class="cmd"><tspan class="prompt">$</tspan> unzip article-1.zip</text>
+    <text x="56" y="140" font-size="19" fill="#ff8a80">þé¦õ+Çڦ+µ+©զñÞë¦þ©¢µ»ڽÆڽÆþÜä LCH vs RGB 1c8f…eb2c.md</text>
+  </g>
+
+  <!-- python -->
+  <g>
+    <rect x="30" y="194" width="900" height="140" rx="14" class="term"/>
+    <circle cx="56" cy="218" r="6" fill="#e45f5f"/>
+    <circle cx="76" cy="218" r="6" fill="#e8b85a"/>
+    <circle cx="96" cy="218" r="6" fill="#5cb685"/>
+    <rect x="740" y="206" width="170" height="30" rx="15" fill="#e3f4ea"/>
+    <text x="825" y="227" font-size="17" text-anchor="middle" class="label" fill="#2f8a5b">✓ Python zipfile</text>
+    <text x="56" y="270" class="cmd"><tspan class="prompt">$</tspan> python unzip_notion.py article-1.zip out</text>
+    <text x="56" y="308" font-size="19" fill="#9be5b4">為什麼漸層色總是髒髒的 LCH vs RGB 1c8f…eb2c.md</text>
+  </g>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="冰山圖：水面上是建置就會報錯的問題，水面下是建置會過、要看畫面才發現的問題">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d6e9f4"/>
+      <stop offset="1" stop-color="#a9cce3"/>
+    </linearGradient>
+    <clipPath id="card"><rect width="960" height="600" rx="24"/></clipPath>
+  </defs>
+  <style>
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #2d2a26; }
+    .ink { stroke: #2d2a26; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+    .lead { stroke: #2d2a26; stroke-width: 2; stroke-dasharray: 3 5; fill: none; }
+    .item { font-size: 21px; }
+  </style>
+
+  <g clip-path="url(#card)">
+    <rect width="960" height="600" fill="#fbf5e9"/>
+    <rect y="190" width="960" height="410" fill="url(#sea)"/>
+
+    <!-- 水面下的冰山 -->
+    <path d="M412 190 L348 252 L318 360 L352 470 L452 548 L566 530 L640 448 L664 336 L626 236 L566 190 Z" fill="#eef6fb" class="ink" opacity="0.95"/>
+    <path d="M380 300 L430 260 M560 260 L610 310 M400 450 L450 500" class="ink" stroke-width="2" opacity="0.35"/>
+
+    <!-- 水面上的冰山 -->
+    <path d="M430 190 L462 132 L490 108 L516 140 L548 190 Z" fill="#ffffff" class="ink"/>
+    <path d="M490 108 L478 160" class="ink" stroke-width="2" opacity="0.4"/>
+
+    <!-- 水面 -->
+    <path d="M0 190 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#4f8fb8" stroke-width="3"/>
+  </g>
+
+  <!-- 左側標籤 -->
+  <rect x="36" y="96" width="232" height="52" rx="26" fill="#e3f4ea" stroke="#3f9e6d" stroke-width="2.5"/>
+  <text x="152" y="130" font-size="22" font-weight="700" text-anchor="middle">✓ 建置就會報錯</text>
+
+  <rect x="36" y="300" width="232" height="84" rx="20" fill="#fdeaea" stroke="#d64545" stroke-width="2.5"/>
+  <text x="152" y="335" font-size="22" font-weight="700" text-anchor="middle">✗ 建置會過</text>
+  <text x="152" y="366" font-size="18" text-anchor="middle">打開頁面才看得出來</text>
+
+  <!-- 水面上的項目 -->
+  <circle cx="500" cy="152" r="7" fill="#3f9e6d"/>
+  <path d="M507 152 L600 120" class="lead"/>
+  <text x="608" y="127" class="item">缺 frontmatter → 建置失敗</text>
+
+  <!-- 水面下的項目 -->
+  <g>
+    <circle cx="590" cy="262" r="7" fill="#d64545"/>
+    <path d="M597 262 L690 250" class="lead"/>
+    <text x="698" y="257" class="item">程式碼網址被包 &lt; &gt;</text>
+
+    <circle cx="610" cy="320" r="7" fill="#d64545"/>
+    <path d="M617 320 L690 310" class="lead"/>
+    <text x="698" y="317" class="item">粗體的星號露出來</text>
+
+    <circle cx="620" cy="378" r="7" fill="#d64545"/>
+    <path d="M627 378 L690 370" class="lead"/>
+    <text x="698" y="377" class="item">連結 404、佔位字串</text>
+
+    <circle cx="600" cy="436" r="7" fill="#d64545"/>
+    <path d="M607 436 L690 430" class="lead"/>
+    <text x="698" y="437" class="item">圖片外連、沒有 alt</text>
+
+    <circle cx="556" cy="490" r="7" fill="#d64545"/>
+    <path d="M563 490 L690 490" class="lead"/>
+    <text x="698" y="497" class="item">標題層級被壓平</text>
+  </g>
+</svg>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="筆記從 Notion 搬到部落格的路上，有好幾個坑">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d99a2b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    .ink { stroke: #2d2a26; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+  </style>
+
+  <rect width="1200" height="630" rx="28" fill="#fbf5e9"/>
+
+  <!-- 裝飾 -->
+  <circle cx="1060" cy="90" r="46" fill="#f6dfae"/>
+  <path d="M150 100 l8 -18 l8 18 l18 8 l-18 8 l-8 18 l-8 -18 l-18 -8 z" fill="#e8b85a"/>
+  <path d="M640 120 l5 -12 l5 12 l12 5 l-12 5 l-5 12 l-5 -12 l-12 -5 z" fill="#e8b85a"/>
+  <circle cx="980" cy="560" r="6" fill="#e8b85a"/>
+  <circle cx="230" cy="570" r="5" fill="#e8b85a"/>
+
+  <!-- 地面 -->
+  <line x1="90" y1="500" x2="1110" y2="500" class="ink"/>
+
+  <!-- 坑 -->
+  <ellipse cx="545" cy="502" rx="46" ry="13" fill="#2d2a26"/>
+  <ellipse cx="680" cy="502" rx="38" ry="11" fill="#2d2a26"/>
+
+  <!-- 坑裡探頭的小蟲 -->
+  <g>
+    <path d="M522 500 q0 -34 23 -34 q23 0 23 34 z" fill="#e45f5f" class="ink"/>
+    <circle cx="537" cy="482" r="5" fill="#fff"/>
+    <circle cx="553" cy="482" r="5" fill="#fff"/>
+    <circle cx="538" cy="483" r="2.4" fill="#2d2a26"/>
+    <circle cx="554" cy="483" r="2.4" fill="#2d2a26"/>
+    <path d="M536 466 q-6 -14 -14 -14 M554 466 q6 -14 14 -14" class="ink" fill="none" stroke-width="3"/>
+  </g>
+  <g>
+    <path d="M664 500 q0 -24 16 -24 q16 0 16 24 z" fill="#e45f5f" class="ink"/>
+    <circle cx="675" cy="488" r="3.6" fill="#fff"/>
+    <circle cx="686" cy="488" r="3.6" fill="#fff"/>
+    <circle cx="676" cy="489" r="1.8" fill="#2d2a26"/>
+    <circle cx="687" cy="489" r="1.8" fill="#2d2a26"/>
+  </g>
+
+  <!-- 左：Notion 匯出的筆記 -->
+  <g>
+    <rect x="150" y="170" width="290" height="330" rx="18" fill="#ffffff" class="ink"/>
+    <rect x="182" y="205" width="160" height="18" rx="9" fill="#2d2a26"/>
+    <rect x="182" y="250" width="226" height="12" rx="6" fill="#d9d4ca"/>
+    <rect x="182" y="278" width="196" height="12" rx="6" fill="#d9d4ca"/>
+    <rect x="182" y="306" width="214" height="12" rx="6" fill="#d9d4ca"/>
+    <rect x="182" y="342" width="226" height="64" rx="10" fill="#f3efe6"/>
+    <rect x="198" y="360" width="120" height="10" rx="5" fill="#bdb6a8"/>
+    <rect x="198" y="380" width="160" height="10" rx="5" fill="#bdb6a8"/>
+    <rect x="182" y="428" width="180" height="12" rx="6" fill="#d9d4ca"/>
+    <text x="295" y="146" font-size="26" font-weight="700" fill="#2d2a26" text-anchor="middle">Notion 筆記</text>
+  </g>
+
+  <!-- 搬運路線 -->
+  <path d="M460 320 Q612 170 750 320" fill="none" stroke="#d99a2b" stroke-width="5" stroke-dasharray="4 14" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- 搬運中的箱子 -->
+  <g transform="rotate(-6 605 236)">
+    <rect x="565" y="208" width="80" height="58" rx="6" fill="#e7b65c" class="ink"/>
+    <line x1="565" y1="228" x2="645" y2="228" class="ink" stroke-width="3"/>
+    <rect x="593" y="208" width="24" height="20" fill="#f6dfae" stroke="#2d2a26" stroke-width="3"/>
+    <text x="605" y="256" font-size="20" font-weight="700" fill="#2d2a26" text-anchor="middle">.md</text>
+  </g>
+
+  <!-- 右：部落格 -->
+  <g>
+    <rect x="770" y="170" width="300" height="330" rx="18" fill="#ffffff" class="ink"/>
+    <path d="M770 222 h300" class="ink"/>
+    <circle cx="800" cy="196" r="7" fill="#e45f5f"/>
+    <circle cx="824" cy="196" r="7" fill="#e8b85a"/>
+    <circle cx="848" cy="196" r="7" fill="#5cb685"/>
+    <rect x="798" y="246" width="244" height="84" rx="12" fill="#f6dfae"/>
+    <path d="M818 312 l34 -36 l26 24 l20 -16 l30 28 z" fill="#e7b65c"/>
+    <circle cx="1004" cy="272" r="12" fill="#fbf5e9"/>
+    <rect x="798" y="350" width="170" height="16" rx="8" fill="#2d2a26"/>
+    <rect x="798" y="382" width="244" height="12" rx="6" fill="#d9d4ca"/>
+    <rect x="798" y="408" width="210" height="12" rx="6" fill="#d9d4ca"/>
+    <rect x="798" y="434" width="230" height="12" rx="6" fill="#d9d4ca"/>
+    <text x="920" y="146" font-size="26" font-weight="700" fill="#2d2a26" text-anchor="middle">Astro 部落格</text>
+  </g>
+</svg>
