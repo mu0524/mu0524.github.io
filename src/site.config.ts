@@ -3,7 +3,7 @@
 export const SITE = {
 	title: "Fanggg's Blog",
 	subtitle: "個人部落格",
-	description: "歡迎來到我的部落格！",
+	description: "一隻兔子陪你讀前端筆記，CSS、JavaScript 與各種踩坑紀錄。",
 	author: "Fanggg",
 	lang: "zh-TW",
 	url: "https://mu0524.github.io",
