@@ -32,3 +32,6 @@ yarn.lock
 
 # test
 coverage
+
+# Claude Code 本機設定與 skill（不上傳）
+.claude/
