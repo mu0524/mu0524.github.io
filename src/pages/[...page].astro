@@ -20,7 +20,8 @@ const { page } = Astro.props;
 			<PostCard post={post} class="onloadAnimation" style={`animation-delay: ${i * 50}ms`} />
 		))}
 	</div>
-	<Pagination current={page.currentPage} last={page.lastPage} />
+	{/* 只有一頁時不顯示頁碼 */}
+	{page.lastPage > 1 && <Pagination current={page.currentPage} last={page.lastPage} />}
 </PageLayout>
 
 <style lang="scss">

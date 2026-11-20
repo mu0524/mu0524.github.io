@@ -9,7 +9,7 @@ export const SITE = {
 	url: "https://mu0524.github.io",
 	github: "https://github.com/mu0524",
 	// 首頁每頁文章數
-	pageSize: 4,
+	pageSize: 6,
 	// 文章目錄顯示到第幾層標題（從文章最上層的標題算起）
 	tocDepth: 2,
 };
