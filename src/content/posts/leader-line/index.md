@@ -1,7 +1,7 @@
 ---
-title: "Leader Line：輕量級 DOM 元素連接線套件"
+title: "幫 DOM 元素牽紅線"
 published: 2026-11-19
-description: 用 Leader Line 把兩個 DOM 元素連起來，適合流程圖、節點編輯器等畫面；整理安裝、常用選項、連接點定位與拖曳連線跟隨的實作方式，附可直接操作的 CodePen 範例。
+description: "流程圖、節點編輯器要畫連接線？交給 Leader Line 來牽線！從安裝、樣式、指定起點到拖曳跟隨，附 CodePen 實戰範例。"
 image: ./cover.png
 tags: [JavaScript, 套件, SVG]
 category: 前端開發

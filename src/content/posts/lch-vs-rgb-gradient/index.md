@@ -1,7 +1,7 @@
 ---
-title: "為什麼漸層色總是髒髒的？LCH vs. RGB"
+title: "漸層中間那團灰是哪來的？"
 published: 2026-11-19
-description: 漸層動畫的顏色總是混濁、過渡不順？原因出在 RGB 色彩模式，改用更符合人眼感知的 LCH 就能讓漸層乾淨又自然。附 CSS 寫法與可直接操作的 CodePen 範例。
+description: "漸層中間總卡著一團灰？兇手是 RGB 色彩模式。換成更貼近人眼的 LCH，顏色馬上乾淨起來，附 CSS 寫法與 CodePen。"
 image: ./cover.png
 tags: [CSS, 漸層, Figma]
 category: 前端開發

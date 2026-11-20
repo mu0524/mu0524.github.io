@@ -1,7 +1,7 @@
 ---
-title: "CSS interpolate-size 與 calc-size() 完全指南"
+title: "height: auto 終於會動了！"
 published: 2026-11-19
-description: 終於能對 height auto 做過渡動畫了！整理 interpolate-size 與 calc-size() 的語法、實際範例、搭配 details 元素的用法與瀏覽器支援狀況，附可直接操作的 CodePen 範例。
+description: "不用再拿 max-height 硬湊數字了！interpolate-size 一行就讓 height: auto 順順展開，手風琴、details 都適用，附 CodePen 範例。"
 image: ./cover.png
 tags: [CSS, 動畫]
 category: 前端開發

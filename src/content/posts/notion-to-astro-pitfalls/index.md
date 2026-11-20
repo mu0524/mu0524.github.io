@@ -1,7 +1,7 @@
 ---
-title: "Notion 文章搬到 Astro 部落格踩過的坑"
+title: "從 Notion 搬家，我踩了 12 個坑"
 published: 2026-11-19
-description: 以為 Notion 匯出的 Markdown 可以直接丟進 Astro 用，結果從解壓縮就開始出問題。整理 12 個搬家時踩到的坑與處理方式，附上一次檢查的指令。
+description: "以為匯出 Markdown 就能直接用，結果一解壓縮就亂碼了⋯⋯整理從 Notion 搬到 Astro 的 12 個坑與解法，附一行檢查指令。"
 image: ./cover.png
 tags: [Notion, Astro, Markdown]
 category: 隨筆

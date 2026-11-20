@@ -1,7 +1,7 @@
 ---
-title: "CSS mask-composite：用兩層遮罩做出聯集、差集、交集、排除"
+title: "遮罩也能玩集合運算？"
 published: 2026-11-20
-description: mask-composite 決定多層 mask 疊在一起時要怎麼合成，可以做出聯集、差集、交集、排除四種效果。整理標準與 WebKit 寫法對照、容易寫錯的地方，附可直接操作的 CodePen 與漸層邊框實例。
+description: "聯集、差集、交集、排除，數學課的集合在 CSS 遮罩裡復活了！附 WebKit 寫法對照、容易踩的雷與漸層邊框實例。"
 image: ./cover.png
 tags: [CSS, 遮罩, mask]
 category: 前端開發
