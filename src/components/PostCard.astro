@@ -33,7 +33,7 @@ const url = postUrl(post.id);
 		<div class="contentBox">
 			{image && (
 				<figure class="Img">
-					<Image src={image} alt={title} widths={[480, 720, 960]} sizes="(max-width: 991px) 100vw, 640px" />
+					<Image src={image} alt={title} widths={[480, 720, 960]} sizes="(max-width: 768px) 100vw, (max-width: 1180px) 50vw, 420px" />
 				</figure>
 			)}
 
@@ -68,7 +68,7 @@ const url = postUrl(post.id);
 	height: 100%;
 	@include font($ls: .08em, $lh: 1.8);
 	background-color: $grayColor;
-	padding: 2.25em 1.25em 1.5em;
+	padding: 2em 1.25em 1.5em;
 
 	@include media($breakpointSmall) {
 		font-size: $textSizeSmall;
@@ -88,13 +88,16 @@ const url = postUrl(post.id);
 }
 
 .metaBox {
-	@include positionALTRB($t: -1.25em, $l: 1.25em);
+	@include positionALTRB($t: -1em, $l: 1.25em);
 	z-index: 3;
 	@include flex(wrap);
 	gap: 1em;
 	max-width: calc(100% - 2.5em);
 
 	.tag {
+		font-size: .875em;
+		letter-spacing: .05em;
+		line-height: 1.6;
 		white-space: nowrap;
 		color: $textColor;
 		background-color: var(--surface-tag);
@@ -128,13 +131,13 @@ const url = postUrl(post.id);
 	.title {
 		flex: 0 1 auto;
 		min-width: 0;
-		font-size: 1.25em;
+		font-size: 1.125em;
+		letter-spacing: .05em;
 		line-height: 1.5;
 		color: $textColor;
 		text-align: center;
 		@include ellipsis(1);
 		@extend %ts;
-
 	}
 }
 
@@ -156,6 +159,7 @@ const url = postUrl(post.id);
 	}
 
 	.text {
+		font-size: .875rem;
 		color: $introColor;
 		@include ellipsis(3);
 		min-height: 5.4em;
