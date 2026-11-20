@@ -83,29 +83,31 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 	}
 
 	.titleBox {
-		@include flex(nowrap, center, center);
-		gap: .625em;
+		position: relative;
 		border-bottom: 2px dashed $borderColor;
 		padding-bottom: .625em;
 
-		@include pseudoBefore($position: relative) {
-			@include pseudoShape(10px, 3px, $borderColor);
-			flex-shrink: 0;
-		}
-
-		@include pseudoAfter($position: relative) {
-			@include pseudoShape(10px, 3px, $borderColor);
-			flex-shrink: 0;
-		}
-
 		.title {
+			position: relative;
 			flex: 1 1 0;
+			@include flex(nowrap, center, center);
+			gap: .625em;
 			font-size: 1.75em;
 			line-height: 1.5;
 			text-align: center;
 
 			@include media($breakpointSmall) {
 				font-size: 1.5em;
+			}
+
+			@include pseudoBefore($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
+			}
+
+			@include pseudoAfter($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
 			}
 		}
 	}

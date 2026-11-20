@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { render } from "astro:content";
 import License from "@components/License.astro";
 import Markdown from "@components/Markdown.astro";
@@ -81,12 +80,6 @@ const jsonLd = {
 			</div>
 		)}
 
-		{image && (
-			<figure class="Img">
-				<Image src={image} alt={title} widths={[720, 1200, 1600]} sizes="(max-width: 1312px) 100vw, 1184px" loading="eager" />
-			</figure>
-		)}
-
 		<Markdown>
 			<Content />
 		</Markdown>
@@ -119,16 +112,9 @@ const jsonLd = {
 		padding: 2.5em 1.25em 1.25em;
 	}
 
-	.Img {
-		overflow: clip;
-
-		:global(img) {
-			width: 100%;
-		}
-	}
-
-	:global(.markdownBox) {
-		margin-top: .75em;
+	// 內文第一個元素（通常是 h2）不留上方間距，與標籤列的距離只由 gap 決定
+	:global(.markdownBox > :first-child) {
+		margin-top: 0;
 	}
 }
 
@@ -163,32 +149,26 @@ const jsonLd = {
 }
 
 .titleBox {
-	@include flex(nowrap, center, center);
-	gap: .625em;
 	border-bottom: 2px dashed $borderColor;
 	padding-bottom: .625em;
 
-	@include pseudoBefore($position: relative) {
-		@include pseudoShape(10px, 3px, $borderColor);
-		flex-shrink: 0;
-	}
-
-	@include pseudoAfter($position: relative) {
-		@include pseudoShape(10px, 3px, $borderColor);
-		flex-shrink: 0;
-	}
-
 	.title {
-		flex: 1 1 0;
-		min-width: 0;
-		font-size: 1.75em;
-		font-weight: $fwRegular;
+		position: relative;
+		@include flex(nowrap, flex-start, center);
+		gap: .625em;
+		font-size: 1.5em;
+		font-weight: $fwMedium;
 		line-height: 1.5;
 		color: $textColor;
-		text-align: center;
 
-		@include media($breakpointSmall) {
-			font-size: 1.5em;
+		@include pseudoBefore($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+			flex-shrink: 0;
+		}
+
+		@include pseudoAfter($position: relative) {
+			@include pseudoShape(10px, 3px, $borderColor);
+			flex-shrink: 0;
 		}
 	}
 }
