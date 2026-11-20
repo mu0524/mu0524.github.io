@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // 主要字體
 $mainFont: 'Jaldi', 'Roboto', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
 
@@ -11,14 +13,10 @@ $borderColor: var(--border-default);
 // 標題、內文顏色
 $textColor: var(--text-primary);
 $introColor: var(--text-secondary);
-$titleColor: $textColor;
-
-$lineColor: $borderColor;
 
 // 主要內容預設寬度(wrap)、rwd斷點
 $defaultWidth: 1280px;
 
-$breakpointMac: 1280px;
 $breakpointMedium: 1180px; //平板
 $breakpointSmall: 768px; //手機板
 $breakpointXS: 480px;
@@ -30,10 +28,6 @@ $textSizeSmall: .875rem;
 
 // extend
 %ts {
-	transition: all .6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-%tsEaseInOut {
 	transition: all .6s ease-in-out;
 }
 
@@ -44,50 +38,40 @@ $fwSemiBold: 600;
 $fwBold: 700;
 
 @mixin font($fs: $textSize, $fw: $fwRegular, $ls: .02em, $lh: 1.75, $color: $textColor) {
-	font: {
-		size: $fs;
-		weight: $fw;
-	}
-
+	font-size: $fs;
+	font-weight: $fw;
 	letter-spacing: $ls;
 	line-height: $lh;
 	color: $color;
 }
 
 // mixin
-@mixin wrap($maxWidth: $defaultWidth, $paddingLeft: 50px, $paddingRight: 50px, $position: center) {
-	
-	@if $position == center {
-	$position: 0 auto;
-	} @else if $position == left {
-		$position: 0 auto 0 0;
-	} @else if $position == right {
-		$position: 0 0 0 auto;
-	}
-
+@mixin wrap($maxWidth: $defaultWidth, $paddingInline: 50px, $position: center) {
 	width: 100%;
 	max-width: $maxWidth;
-	margin: $position;
-	padding-left: $paddingLeft;
-	padding-right: $paddingRight;
-	@content;
-	
-	@include media(1180){
-		padding-left: 30px;
-		padding-right: 30px;
+	padding-inline: $paddingInline;
+
+	@if $position == center {
+		margin-inline: auto;
+	} @else if $position == left {
+		margin-inline: 0 auto;
+	} @else if $position == right {
+		margin-inline: auto 0;
 	}
-	@include media(768){
-		padding-left: 20px;
-		padding-right: 20px;
+
+	@content;
+
+	@include media($breakpointMedium) {
+		padding-inline: 30px;
+	}
+	@include media($breakpointSmall) {
+		padding-inline: 20px;
 	}
 }
 
-@mixin positionALTRB($t: auto, $r: auto, $b: auto, $l: auto, ) {
+@mixin positionALTRB($t: auto, $r: auto, $b: auto, $l: auto) {
 	position: absolute;
-	top: $t;
-	right: $r;
-	bottom: $b;
-	left: $l;
+	inset: $t $r $b $l;
 }
 
 @mixin pseudoBefore($content: "", $position: absolute) {
@@ -108,34 +92,19 @@ $fwBold: 700;
 	}
 }
 
+// 搭配 pseudoBefore / pseudoAfter 使用，content 由它們輸出
 @mixin pseudoShape($w: 100%, $h: 100%, $bg: transparent) {
-	content: "";
 	width: $w;
 	height: $h;
 	background-color: $bg;
 }
 
-@mixin flex($fw: nowrap, $jc: unset, $ai: unset) {
+// 參數為 null 時不輸出，沿用瀏覽器預設值
+@mixin flex($fw: null, $jc: null, $ai: null) {
 	display: flex;
 	flex-wrap: $fw;
 	justify-content: $jc;
 	align-items: $ai;
-}
-
-@mixin calcLetterSpacing($fontSize, $PhotoShopLetterSpacing) {
-    letter-spacing: #{calc($fontSize * $PhotoShopLetterSpacing / 1000)}px;
-}
-
-@mixin dash($color: rgba(#000, 0.1), $ratio: 50%, $direction: right, $width: 10px) {
-    background-image: linear-gradient(to #{$direction}, $color 0%, $color $ratio, transparent $ratio, transparent 100%);
-
-    @if ($direction == top) or ($direction == bottom) {
-        background-size: 100% $width;
-        background-repeat: repeat-y;
-    } @else if($direction == right) or ($direction == left) {
-        background-size: $width 100%;
-        background-repeat: repeat-x;
-    }
 }
 
 @mixin textTrim() {
@@ -143,35 +112,11 @@ $fwBold: 700;
 	text-box-trim: trim-both;
 }
 
-@mixin img100 {
-	width: 100%;
-	height: auto;
-	display: block;
-	backface-visibility: hidden;
-}
-
 @mixin imgCover {
 	width: 100%;
 	height: 100%;
 	display: block;
 	object-fit: cover;
-}
-
-@mixin imgContain {
-	width: 100%;
-	height: 100%;
-	display: block;
-	object-fit: contain;
-}
-
-@mixin clearfix {
-	&::after {
-		content: "";
-		height: 0;
-		clear: both;
-		display: block;
-		visibility: hidden;
-	}
 }
 
 @mixin oneLine {
@@ -188,60 +133,9 @@ $fwBold: 700;
 	-webkit-box-orient: vertical;
 }
 
-@mixin textOut {
-	overflow: hidden;
-	text-indent: 100%;
-	white-space: nowrap;
-}
-
-// 捲軸樣式
-// 預設為「置中細線」樣式（白色細線 + 主色圓角滑塊）
-// $lineWidth：有值時軌道改為「置中細線」樣式（$bgColor 為細線顏色，軌道其餘透明），傳 null 則改為實心軌道
-// $radius：滑塊圓角
-// $trackMargin：軌道頭尾內縮（細線不貼齊上下 / 左右邊）
-// Firefox 不支援 ::-webkit-scrollbar，以 scrollbar-color 退回細捲軸；
-// 須包在 @supports 內，否則 Chrome 121+ 偵測到 scrollbar-color 會忽略 ::-webkit-scrollbar
-@mixin scrollBar($width: 6px, $height: 6px, $bgColor: #ddd, $barColor: $mainColor, $lineWidth: 1px, $radius: 6px, $trackMargin: 4px 0) {
-
-	&::-webkit-scrollbar{
-		width: $width;
-		height: $height;
-	}
-
-	&::-webkit-scrollbar-track{
-		@if $lineWidth {
-			// 單色漸層當作線條，置中不重複：直向捲軸畫垂直線、橫向捲軸畫水平線
-			background: linear-gradient($bgColor, $bgColor) center / #{$lineWidth} 100% no-repeat;
-
-			&:horizontal {
-				background-size: 100% $lineWidth;
-			}
-		} @else {
-			box-shadow: inset 0 0 $width rgba(#000, 0.15);
-			background-color: $bgColor;
-		}
-
-		@if $trackMargin {
-			margin: $trackMargin;
-		}
-	}
-
-	&::-webkit-scrollbar-thumb{
-		background: $barColor;
-
-		@if $radius {
-			border-radius: $radius;
-		}
-	}
-
-	@supports not selector(::-webkit-scrollbar) {
-		scrollbar-width: thin;
-		scrollbar-color: $barColor if($lineWidth, transparent, $bgColor);
-	}
-}
-
+// 只在有滑鼠等可懸停的裝置套用 hover，觸控裝置點擊後不會殘留 hover 樣式
 @mixin hover {
-	@include media(-1181) {
+	@media (hover: hover) and (pointer: fine) {
 		&:hover {
 			@content;
 		}
@@ -249,213 +143,40 @@ $fwBold: 700;
 }
 
 @mixin cover($width: 100%, $height: 100%) {
+	position: absolute;
+	inset: 0;
 	width: $width;
 	height: $height;
 	margin: auto;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
 }
 
-@mixin mediaQuery($queryType, $max, $min) {
-	@if $queryType==1 {
-		@media screen and (max-width:$max) and (min-width:$min) {
-			@content;
-		}
+// media：輸出 range 語法，不帶單位時視為 px
+// media(768)        → (width <= 768px)
+// media(-768)       → (width > 768px)，與 media(768) 剛好互補，中間沒有空隙
+// media(768, 1180)  → (768px <= width <= 1180px)
+@function _mediaPx($value) {
+	@if math.is-unitless($value) {
+		@return $value * 1px;
 	}
 
-	@else if $queryType==2 {
-		@media screen and (max-width:$max) {
-			@content;
-		}
-	}
-
-	@else if $queryType==3 {
-		@media screen and (min-width:$min) {
-			@content;
-		}
-	}
-}
-
-// media
-@mixin mmiw($width, $unit) {
-	@media (min-width: $width+$unit) {
-		@content;
-	}
-}
-
-@mixin mmaw($width, $unit) {
-	@media (max-width: $width+$unit) {
-		@content;
-	}
-}
-
-@mixin mmiaw($widthStart, $widthEnd, $unit) {
-	@media (min-width: $widthStart+$unit) and (max-width: $widthEnd+$unit) {
-		@content;
-	}
+	@return $value;
 }
 
 @mixin media($width, $widthRange: null) {
-	// 判斷型態
-	$unit: null;
-	$type: type-of($width);
+	@if $widthRange != null {
+		$min: _mediaPx(math.min($width, $widthRange));
+		$max: _mediaPx(math.max($width, $widthRange));
 
-	// number
-	@if ($type==number) {
-
-		// 轉string
-		$width: $width + '';
-
-		// 有輸入$widthRange
-		@if ($widthRange !=null) {
-			$width: $width + '-' + $widthRange;
+		@media (#{$min} <= width <= #{$max}) {
+			@content;
 		}
-
-		$type: string;
-	}
-
-	// list
-	@if ($type==list) {
-
-		$width: nth($width, 1) + '-' + nth($width, 2);
-		$type: string;
-
-	}
-
-	// string 	
-	@if ($type==string) {
-
-		// 抓dash位置	
-		$dashIndex: str-index($width, '-');
-
-		// 字串長度
-		$stringLength: str-length($width);
-
-		// 整理單位和寬度
-		@if ($dashIndex==1) or ($dashIndex==$stringLength) or ($dashIndex==null) {
-			$unit: checkUnit($width);
-			$width: removeUnit($width, $unit);
+	} @else if $width < 0 {
+		@media (width > #{_mediaPx(math.abs($width))}) {
+			@content;
 		}
-
-		@if ($dashIndex==$stringLength) or ($dashIndex==null) {
-
-			// max-width
-			$max: $stringLength - 1;
-
-			@if ($dashIndex==null) {
-				$max: $stringLength;
-			}
-
-			$width: str-slice($width, 1, $max);
-
-			// 呼叫對應mixin
-			@include mmaw($width, $unit) {
-				@content;
-			}
-
-		}
-
-		@else if ($dashIndex==1) {
-
-			// min-width
-			$width: str-slice($width, 2, $stringLength);
-
-			// 呼叫對應mixin
-			@include mmiw($width, $unit) {
-				@content;
-			}
-
-		}
-
-		@else {
-
-			// min-width and max-width
-			// 以dash切割
-			$firstWidth: str-slice($width, 1, $dashIndex - 1);
-			$secondWidth: str-slice($width, $dashIndex + 1, $stringLength);
-
-			$unit: checkUnit($firstWidth);
-
-			$firstWidth: removeUnit($firstWidth, $unit);
-			$secondWidth: removeUnit($secondWidth, $unit);
-
-			// 組成數字
-			$widths: number($firstWidth), number($secondWidth);
-
-			@include mmiaw(min($widths...), max($widths...), $unit) {
-				@content;
-			}
+	} @else {
+		@media (width <= #{_mediaPx($width)}) {
+			@content;
 		}
 	}
-}
-
-//function
-// string to number
-@function number($string) {
-	$number: 0;
-
-	@for $i from 1 through str-length($string) {
-		// 切割字串
-		$character: str-slice($string, $i, $i);
-
-		// 利用index取得對應數字
-		$index: str-index('0123456789', $character) - 1;
-
-		// 組合數字
-		$number: $number * 10 + $index;
-	}
-
-	@return $number;
-}
-
-// 單位判斷
-@function checkUnit($string) {
-
-	$units: px em;
-	$unit: null;
-
-	@for $i from 1 through length($units) {
-		// 跑出對應的單位
-		$hasUnit: str-index($string, nth($units, $i));
-
-		@if ($hasUnit !=null) {
-			$unit: nth($units, $i);
-		}
-	}
-
-	// 跑完還是沒有
-	@if($unit==null) {
-		$unit: px;
-	}
-
-	@return $unit;
-}
-
-// remove unit
-@function removeUnit($string, $unit) {
-
-	// 找出單位index
-	$index: str-index($string, $unit);
-
-	@if ($index !=null) {
-		// 取出對應的數字
-		$string: str-slice($string, 1, $index - 1);
-	}
-
-	@return $string;
-}
-
-@function rem($size) {
-	@return $size / 16px * 1rem;
-}
-
-@function cp($value, $contentValue) {
-	@return percentage($value / $contentValue);
-}
-
-@function itemWidth($item, $gap) {
-	@return calc((100% - #{$item - 1} * #{$gap}) / #{$item});
 }

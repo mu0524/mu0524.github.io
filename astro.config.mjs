@@ -109,19 +109,4 @@ export default defineConfig({
 			],
 		}),
 	},
-	vite: {
-		css: {
-			preprocessorOptions: {
-				scss: {
-					// _setting.scss 沿用 Laravel 專案的寫法，關閉舊語法的棄用提醒
-					silenceDeprecations: [
-						"import",
-						"global-builtin",
-						"if-function",
-						"slash-div",
-					],
-				},
-			},
-		},
-	},
 });

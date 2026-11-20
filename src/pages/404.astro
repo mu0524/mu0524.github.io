@@ -16,7 +16,7 @@ import { withBase } from "@lib/url";
 </PageLayout>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .notFoundArea {
 	@include flex(nowrap, center, center);
@@ -57,7 +57,7 @@ import { withBase } from "@lib/url";
 		background-color: $btnBgColor;
 		border-radius: 8px;
 		padding: 0 20px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $textColor;

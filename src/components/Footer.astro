@@ -165,7 +165,7 @@ onPageLoad(syncCurrentCategory);
 </script>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .footerArea {
 	position: relative;
@@ -195,7 +195,7 @@ onPageLoad(syncCurrentCategory);
 
 		a {
 			text-decoration: underline;
-			@extend %tsEaseInOut;
+			@extend %ts;
 
 			@include hover {
 				color: $mainColor;
@@ -280,7 +280,7 @@ onPageLoad(syncCurrentCategory);
 	a {
 		@include flex(nowrap, flex-start, center);
 		gap: 9px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $mainColor;
@@ -327,7 +327,7 @@ onPageLoad(syncCurrentCategory);
 			top: calc(50% - .75px);
 			left: 5px;
 			border-radius: 1px;
-			@extend %tsEaseInOut;
+			@extend %ts;
 		}
 	}
 
@@ -363,7 +363,7 @@ onPageLoad(syncCurrentCategory);
 		border: 1px solid $borderColor;
 		border-radius: 10px;
 		padding: 4px 16px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $mainColor;

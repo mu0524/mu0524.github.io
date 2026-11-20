@@ -39,7 +39,7 @@ const items = headings
 )}
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 // 只在寬螢幕顯示，固定在內容區右側的留白
 .tocArea {
@@ -69,7 +69,7 @@ const items = headings
 
 .tocItem {
 	padding: .375em 0 .375em 1.25em;
-	@extend %tsEaseInOut;
+	@extend %ts;
 
 	@include hover {
 		color: $mainColor;

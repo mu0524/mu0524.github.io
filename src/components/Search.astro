@@ -19,7 +19,7 @@ import { Icon } from "astro-icon/components";
 </div>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .searchPanel {
 	@include positionALTRB($t: calc(100% + 8px), $l: 0);
@@ -85,7 +85,7 @@ import { Icon } from "astro-icon/components";
 		display: block;
 		border-radius: 6px;
 		padding: 10px 8px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			background-color: $grayColor;

@@ -30,7 +30,7 @@ const { newer, older } = Astro.props;
 )}
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .pageNavBox {
 	display: grid;
@@ -51,7 +51,7 @@ const { newer, older } = Astro.props;
 		@include font($ls: .08em, $lh: 1.5);
 		background-color: $grayColor;
 		padding: 0 20px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $mainColor;

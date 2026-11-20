@@ -48,7 +48,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 </header>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .infoArea {
 	position: relative;
@@ -103,7 +103,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 			background-color: $btnBgColor;
 			border-radius: 8px;
 			padding: 0 10px;
-			@extend %tsEaseInOut;
+			@extend %ts;
 
 			@include hover {
 				color: $textColor;
@@ -125,7 +125,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 	}
 
 	.toolBox {
-		@include media(-769) {
+		@include media(-$breakpointSmall) {
 			position: relative;
 		}
 

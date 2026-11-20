@@ -45,7 +45,7 @@ const pages = getPages();
 </nav>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .pageBox {
 	@include flex(nowrap, center, center);
@@ -54,7 +54,7 @@ const pages = getPages();
 
 	.num {
 		@include font($fs: 1.25rem, $ls: .08em, $lh: 1.5, $color: var(--text-muted));
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		&.current {
 			color: $textColor;
@@ -71,7 +71,7 @@ const pages = getPages();
 		@include flex(nowrap, center, center);
 		width: 16px;
 		height: 16px;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		&.disabled {
 			opacity: .4;

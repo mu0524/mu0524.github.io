@@ -53,7 +53,7 @@ const url = postUrl(post.id);
 </article>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .postItem {
 	position: relative;
@@ -99,7 +99,7 @@ const url = postUrl(post.id);
 		color: $textColor;
 		background-color: var(--surface-tag);
 		padding: .375em 1em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 	}
 
 	a {
@@ -133,7 +133,7 @@ const url = postUrl(post.id);
 		color: $textColor;
 		text-align: center;
 		@include ellipsis(1);
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 	}
 }
@@ -151,7 +151,7 @@ const url = postUrl(post.id);
 		:global(img) {
 			@include imgCover;
 			will-change: scale;
-			@extend %tsEaseInOut;
+			@extend %ts;
 		}
 	}
 
@@ -171,7 +171,7 @@ const url = postUrl(post.id);
 		a {
 			color: $mainColor;
 			@include textTrim();
-			@extend %tsEaseInOut;
+			@extend %ts;
 
 			@include hover {
 				color: $textColor;

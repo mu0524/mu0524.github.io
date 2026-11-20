@@ -42,7 +42,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 </section>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .licenseBox {
 	@include flex();
@@ -73,7 +73,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 	.link {
 		color: $mainColor;
 		overflow-wrap: anywhere;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $textColor;
@@ -97,7 +97,7 @@ const isUpdated = !!updated && updated.getTime() !== published.getTime();
 
 	a {
 		color: $mainColor;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $textColor;

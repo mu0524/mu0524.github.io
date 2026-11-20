@@ -12,7 +12,7 @@ const { class: className } = Astro.props;
 
 <!-- 內文由 Markdown 產生，元素沒有 Astro 的 scope 屬性，樣式要寫成 global -->
 <style lang="scss" is:global>
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .markdownBox {
 	@include font($ls: .06em, $lh: 1.9);
@@ -68,7 +68,7 @@ const { class: className } = Astro.props;
 		color: $mainColor;
 		opacity: 0;
 		margin-left: .375em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 	}
 
 	a:not(.anchor, .githubCard) {
@@ -77,7 +77,7 @@ const { class: className } = Astro.props;
 		text-decoration-color: $mainColor;
 		text-decoration-thickness: 1px;
 		text-underline-offset: .25em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $mainColor;
@@ -210,7 +210,7 @@ const { class: className } = Astro.props;
 					border-radius: 4px;
 					padding: 0 6px;
 					pointer-events: none;
-					@extend %tsEaseInOut;
+					@extend %ts;
 				}
 			}
 		}
@@ -267,7 +267,7 @@ const { class: className } = Astro.props;
 		background-color: $btnBgColor;
 		border: 1px solid $borderColor;
 		padding: 1.25em 1.5em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			border-color: $mainColor;

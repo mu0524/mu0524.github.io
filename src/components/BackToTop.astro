@@ -7,7 +7,7 @@ import { Icon } from "astro-icon/components";
 </button>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .topBtn {
 	position: fixed;
@@ -24,7 +24,7 @@ import { Icon } from "astro-icon/components";
 	opacity: 0;
 	translate: 0 12px;
 	pointer-events: none;
-	@extend %tsEaseInOut;
+	@extend %ts;
 
 	@include media($breakpointSmall) {
 		right: 16px;

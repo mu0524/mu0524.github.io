@@ -69,7 +69,7 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 </PageLayout>
 
 <style lang="scss">
-@import '../styles/setting';
+@use '../styles/setting' as *;
 
 .archiveArea {
 	@include flex();
@@ -130,7 +130,7 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 		color: $mainColor;
 		text-decoration: underline;
 		text-underline-offset: .25em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $textColor;
@@ -214,7 +214,7 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 	}
 
 	.name {
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $mainColor;
@@ -241,7 +241,7 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 		a {
 			color: $mainColor;
 			white-space: nowrap;
-			@extend %tsEaseInOut;
+			@extend %ts;
 
 			@include hover {
 				color: $textColor;

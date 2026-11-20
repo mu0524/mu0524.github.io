@@ -93,7 +93,7 @@ const jsonLd = {
 </PageLayout>
 
 <style lang="scss">
-@import '../../styles/setting';
+@use '../../styles/setting' as *;
 
 .postArea {
 	position: relative;
@@ -138,7 +138,7 @@ const jsonLd = {
 		color: $textColor;
 		background-color: var(--surface-tag);
 		padding: .375em 1em;
-		@extend %tsEaseInOut;
+		@extend %ts;
 	}
 
 	a {
@@ -180,7 +180,7 @@ const jsonLd = {
 	a {
 		color: $mainColor;
 		@include textTrim();
-		@extend %tsEaseInOut;
+		@extend %ts;
 
 		@include hover {
 			color: $textColor;

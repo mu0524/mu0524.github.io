@@ -1,7 +1,7 @@
 // 全站共用：色票、基本 reset、換頁動畫
 // 各元件樣式寫在元件自己的 <style lang="scss">
 @use "variables";
-@import "setting";
+@use "setting" as *;
 
 *,
 *::before,
