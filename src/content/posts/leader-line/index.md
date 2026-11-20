@@ -130,7 +130,7 @@ new LeaderLine(startElement, endElement, {
       <option>arrow1</option><option>arrow2</option><option>arrow3</option><option>disc</option><option>square</option><option>behind</option><option>hand</option><option>crosshair</option>
     </select>
   </label>
-  <label>color <input type="color" name="color" value="#d99a2b"></label>
+  <label>color <input type="color" name="color" value="#454545"></label>
   <label>size <input type="range" name="size" min="1" max="12" value="4"></label>
 </form>
 <div class="box" id="start" style="left: 40px; top: 110px">拖我</div>
@@ -141,8 +141,9 @@ body {
   margin: 0;
   height: 100vh;
   font-family: system-ui, sans-serif;
-  color: #2d2a26;
-  background: #fbf5e9;
+  color: #454545;
+  background: #f5f5f5;
+  accent-color: #454545;
 }
 
 .panel {
@@ -163,9 +164,9 @@ body {
 .box {
   position: absolute;
   padding: 1rem 1.25rem;
-  border: 3px solid #2d2a26;
+  border: 1px solid #c7c7c7;
   border-radius: 12px;
-  background: #fff6e0;
+  background: #fff;
   font-weight: 700;
   cursor: grab;
   user-select: none;
@@ -372,7 +373,7 @@ new LeaderLine(
     <div class="lineAnchor end"></div>
     <div class="nodeHeader">Source Photo</div>
     <div class="Img">
-      <img src="https://picsum.photos/seed/weave1/600/450" alt="source" />
+      <img src="https://picsum.photos/seed/weave1/600/450?grayscale" alt="source" />
     </div>
     <div class="lineAnchor start"></div>
   </div>
@@ -381,7 +382,7 @@ new LeaderLine(
     <div class="lineAnchor end"></div>
     <div class="nodeHeader">Stable Diffusion</div>
     <div class="Img">
-      <img src="https://picsum.photos/seed/weave2/600/525" alt="model" />
+      <img src="https://picsum.photos/seed/weave2/600/525?grayscale" alt="model" />
     </div>
     <div class="lineAnchor start"></div>
   </div>
@@ -390,7 +391,7 @@ new LeaderLine(
     <div class="lineAnchor end"></div>
     <div class="nodeHeader">Output</div>
     <div class="Img">
-      <img src="https://picsum.photos/seed/weave3/600/450" alt="output" />
+      <img src="https://picsum.photos/seed/weave3/600/450?grayscale" alt="output" />
     </div>
     <div class="lineAnchor start"></div>
   </div>
@@ -402,8 +403,8 @@ body {
   height: 100vh;
   font-family: system-ui, sans-serif;
   background:
-    radial-gradient(circle, #d9d4ca 1px, transparent 1px) 0 0 / 20px 20px,
-    #fbf5e9;
+    radial-gradient(circle, #c7c7c7 1px, transparent 1px) 0 0 / 20px 20px,
+    #f5f5f5;
 }
 
 .nodeConnect {
@@ -412,8 +413,9 @@ body {
   top: var(--top);
   width: 170px;
   border-radius: 14px;
+  border: 1px solid #e6e6e6;
   background: #fff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgba(146, 146, 146, 0.15);
   cursor: grab;
   user-select: none;
 }
@@ -422,7 +424,7 @@ body {
   padding: 0.6rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #2d2a26;
+  color: #454545;
 }
 
 .Img img {
@@ -526,7 +528,7 @@ document.querySelectorAll(".nodeConnect").forEach((card) => {
   <div class="lineAnchor end"></div>
   <div class="nodeHeader">Source Photo</div>
   <div class="Img">
-    <img src="https://picsum.photos/seed/weave1/600/450" alt="source" />
+    <img src="https://picsum.photos/seed/weave1/600/450?grayscale" alt="source" />
   </div>
   <div class="lineAnchor start"></div>
 </div>
