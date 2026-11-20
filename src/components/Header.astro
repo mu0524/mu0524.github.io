@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import iconAbout from "@assets/images/theme/icon-about.svg?url";
 import iconGithub from "@assets/images/theme/icon-github.svg?url";
 import iconHome from "@assets/images/theme/icon-home.svg?url";
-import infoBunny from "@assets/images/theme/info-bunny.png";
+import profile from "@assets/images/theme/profile.png";
 import { withBase } from "@lib/url";
 import { Icon } from "astro-icon/components";
 import { NAV_LINKS, type NavIcon, SITE } from "@/site.config";
@@ -43,7 +43,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 		</nav>
 	</div>
 	<div class="Img" aria-hidden="true">
-		<Image src={infoBunny} alt="" width={400} height={400} loading="eager" />
+		<Image src={profile} alt="" width={400} height={400} loading="eager" />
 	</div>
 </header>
 
@@ -141,7 +141,6 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 		width: 140px;
 		height: 140px;
 		overflow: clip;
-		scale: -1 1;
 
 		@include media($breakpointSmall) {
 			width: 100px;
@@ -154,10 +153,9 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 		}
 
 		:global(img) {
-			@include positionALTRB($t: -22.04%, $l: -22.47%);
-			width: 144.08%;
-			max-width: none;
-			height: 144.08%;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
 		}
 	}
 }

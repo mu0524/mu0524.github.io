@@ -26,7 +26,7 @@ const props = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<Seo {...props} />
-		<link rel="icon" href={withBase("/favicon/favicon.ico")} />
+		<link rel="icon" type="image/png" href={withBase("/favicon/fav-ico.png")} />
 		<link rel="alternate" type="application/rss+xml" title={SITE.title} href={new URL(withBase("/rss.xml"), Astro.site)} />
 
 		<!-- 在畫面繪製前套用深色模式，避免閃一下淺色 -->
