@@ -30,13 +30,13 @@
 		"astro-icon": "^1.2.0",
 		"markdown-it": "^15.0.3",
 		"mdast-util-to-string": "^4.0.0",
-		"pagefind": "^1.5.2",
+		"pagefind": "^1.6.0",
 		"photoswipe": "^5.4.4",
 		"rehype-autolink-headings": "^7.1.0",
 		"rehype-slug": "^6.0.0",
 		"remark-directive": "^4.0.0",
 		"sanitize-html": "^2.18.1",
-		"sass": "^1.106.1",
+		"sass": "^1.108.2",
 		"sharp": "^0.35.5"
 	},
 	"devDependencies": {
