@@ -20,6 +20,7 @@
 		"@expressive-code/plugin-line-numbers": "^0.44.2",
 		"@fontsource-variable/jetbrains-mono": "^5.3.0",
 		"@fontsource/jaldi": "^5.3.0",
+		"@fontsource/noto-sans-tc": "^5.3.1",
 		"@fontsource/roboto": "^5.3.0",
 		"@iconify-json/material-symbols": "^1.2.95",
 		"@swup/astro": "^1.8.0",

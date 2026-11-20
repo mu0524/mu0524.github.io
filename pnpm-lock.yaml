@@ -29,6 +29,9 @@ importers:
       '@fontsource/jaldi':
         specifier: ^5.3.0
         version: 5.3.0
+      '@fontsource/noto-sans-tc':
+        specifier: ^5.3.1
+        version: 5.3.1
       '@fontsource/roboto':
         specifier: ^5.3.0
         version: 5.3.0
@@ -1145,6 +1148,9 @@ packages:
 
   '@fontsource/jaldi@5.3.0':
     resolution: {integrity: sha512-J+7LjJFXcwW3EibK4oImuiEamEmPaMX+LAdtJaMDe6chQncZoor75S1W1exqVxPQcNhI9HySy5aDVw0pJ5ND2w==}
+
+  '@fontsource/noto-sans-tc@5.3.1':
+    resolution: {integrity: sha512-kiOTKRnkEV4dsMqfmIuH3TnkYp5Rqq2f4LgAArx0Y5eVzCebU2TgWup5TWCWWSk28nBf4mgunLTyQP+xQ74gcQ==}
 
   '@fontsource/roboto@5.3.0':
     resolution: {integrity: sha512-BapRJOWYP+LZ21zp+wBQjfpPYKRoxc4LspJ/RLuI+HSMBD5u/X4O+ESDrSvEqDSy0rAl7GwBJ+09mdc16cVQ1Q==}
@@ -6014,6 +6020,8 @@ snapshots:
   '@fontsource-variable/jetbrains-mono@5.3.0': {}
 
   '@fontsource/jaldi@5.3.0': {}
+
+  '@fontsource/noto-sans-tc@5.3.1': {}
 
   '@fontsource/roboto@5.3.0': {}
 

@@ -1,5 +1,5 @@
 // 主要字體
-$mainFont: 'Jaldi', 'Roboto', 'Microsoft JhengHei', sans-serif;
+$mainFont: 'Jaldi', 'Roboto', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
 
 // 顏色：對應 variables.scss 的 CSS 變數，深淺色模式會自動切換
 // 用 var() 的顏色不能再包 rgba()，需要透明度時改用 color-mix()
