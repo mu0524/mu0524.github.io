@@ -46,7 +46,7 @@ draft: false
 
 ## 🗺️ 搬家流程
 
-![搬家流程：1 用 Python 解壓縮、2 改成英文檔名、3 補 frontmatter 並刪掉 H1、4 跑 grep 指令檢查內文、5 打開頁面實際看過](./flow.svg)
+![搬家流程：1 用 Python 解壓縮、2 改成英文檔名、3 補 frontmatter 並刪掉 H1、4 跑 grep 指令檢查內文、5 打開頁面實際看過](./flow.png)
 
 第 5 步最容易偷懶，但也最重要：**`pnpm build` 能過不代表畫面是對的**
 
@@ -58,7 +58,7 @@ draft: false
 
 **🐛 症狀**：用 Git Bash 內建的 `unzip` 解開匯出檔，中文檔名全變成亂碼
 
-![上面是 Git Bash 的 unzip，檔名變成一串亂碼；下面是 Python 的 zipfile，中文檔名正常](./filename.svg)
+![上面是 Git Bash 的 unzip，檔名變成一串亂碼；下面是 Python 的 zipfile，中文檔名正常](./filename.png)
 
 **🔍 原因**：zip 裡其實有標記檔名是 UTF-8，是 `unzip` 在 Windows 上沒處理好
 
