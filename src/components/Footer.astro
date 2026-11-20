@@ -1,6 +1,5 @@
 ---
-import { Image } from "astro:assets";
-import footerBear from "@assets/images/theme/footer-bear.png";
+import bunnyWalking from "@assets/images/theme/bunny-walking.gif";
 import { DAY_MS, formatIsoDate } from "@lib/date";
 import { getCategoryTree, getPosts, getSiteStats, getTags } from "@lib/posts";
 import { withBase } from "@lib/url";
@@ -22,7 +21,8 @@ const lastActivity = stats.lastActivity
 <footer class="footerArea">
 	<div class="otherBox">
 		<div class="Img" aria-hidden="true">
-			<Image src={footerBear} alt="" width={370} height={370} />
+			<!-- GIF 動畫不經過 Astro 圖片轉檔（會變成靜態圖），直接輸出原檔 -->
+			<img src={bunnyWalking.src} alt="" width={bunnyWalking.width} height={bunnyWalking.height} loading="lazy" decoding="async" />
 		</div>
 
 		<div class="otherItem">
@@ -222,19 +222,16 @@ onPageLoad(syncCurrentCategory);
 		position: relative;
 		align-self: center;
 		justify-self: center;
-		width: 250px;
-		height: 250px;
-		overflow: clip;
+		width: 100%;
+		max-width: 300px;
 
 		@include media($breakpointMedium) {
 			display: none;
 		}
 
-		:global(img) {
-			@include positionALTRB($t: -24%, $l: -24%);
-			width: 148%;
-			max-width: none;
-			height: 148%;
+		img {
+			width: 100%;
+			height: auto;
 		}
 	}
 }
