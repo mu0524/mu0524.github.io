@@ -161,6 +161,7 @@ const url = postUrl(post.id);
 	.text {
 		font-size: .875rem;
 		color: $introColor;
+		text-align: center;
 		@include ellipsis(3);
 		min-height: 5.4em;
 	}
@@ -168,7 +169,7 @@ const url = postUrl(post.id);
 	.tagBox {
 		position: relative;
 		z-index: 3;
-		@include flex(wrap, flex-end);
+		@include flex(wrap, center);
 		gap: .625em;
 		margin-top: auto;
 
