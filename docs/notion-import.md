@@ -141,6 +141,17 @@ rm -rf node_modules/.astro .astro/data-store.json && pnpm build
 - 狀況：文章頁會把 frontmatter 的 `image` 轉成 1200px 寬的 JPEG 當社群分享預覽圖（OG image，見 `src/components/Seo.astro`），Facebook、LINE 等平台不支援 SVG
 - 處理：插圖可以用 SVG，封面另外輸出成 PNG。文章用資料夾形式（`posts/{slug}/index.md`）時，圖片放在同一個資料夾，寫 `image: ./cover.png` 即可
 
+### 16. 同一天發布的文章，新文章沒有排在第一筆
+
+- 狀況：`published` 只寫日期時，同一天的文章會照檔名排序（見 `src/lib/posts.ts` 的 `getPosts`），新文章不一定在最前面
+- 處理：同一天已經有其他文章時，新文章的 `published` 加上台灣時間
+
+```yaml
+published: 2026-11-20T17:00:00+08:00
+```
+
+- 注意：日期是用 UTC 顯示的，台灣時間早上 8 點以前（例如 `T07:00:00+08:00`）會顯示成前一天，時間要填 08:00 以後
+
 ## 檢查指令
 
 轉換完後在 `src/content/posts/` 下執行，快速找出常見問題：
