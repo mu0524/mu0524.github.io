@@ -23,6 +23,7 @@ pnpm preview    # 預覽建置結果
 
 | 指令 | 說明 |
 |------|------|
+| `pnpm watch` | 監看 `src/`、`public/` 變動，存檔後自動重新 build（搭配 WAMP 的 `fanggg.test` 預覽 `dist/`） |
 | `pnpm check` | Astro 與 TypeScript 型別檢查 |
 | `pnpm lint` | Biome 檢查並自動修正 `src/` |
 | `pnpm format` | Biome 格式化 `src/` |
@@ -41,12 +42,14 @@ pnpm preview    # 預覽建置結果
 │   └── dependabot.yml               # 每週檢查 npm 依賴更新
 ├── .vscode/                         # 推薦擴充套件 (Biome + Astro) 與格式化設定
 ├── docs/
+│   ├── character/                   # 吉祥物兔子角色設定圖
 │   ├── codepen.md                   # 文章內嵌 CodePen 範例的寫法
 │   └── notion-import.md             # Notion 匯出文章的轉換流程
 ├── public/
-│   └── favicon/                     # Favicon
+│   └── favicon/fav-ico.png          # Favicon
 ├── scripts/
-│   └── new-post.js                  # 新增文章腳本
+│   ├── new-post.js                  # 新增文章腳本
+│   └── watch-build.js               # pnpm watch：存檔後自動重新 build
 ├── src/
 │   ├── assets/images/theme/         # 主題用圖片與圖示（會被 Astro 優化）
 │   ├── components/                  # UI 元件（Header、Footer、文章卡片、目錄、搜尋等）
@@ -73,7 +76,8 @@ pnpm preview    # 預覽建置結果
 │   ├── styles/                      # 全域樣式與 SCSS 變數
 │   └── site.config.ts               # ⭐ 網站設定，見下方「修改網站設定」
 ├── astro.config.mjs                 # Astro 框架設定
-└── biome.jsonc                      # Biome linter 設定
+├── biome.jsonc                      # Biome linter 設定
+└── CLAUDE.md                        # 文章插圖風格規範（黑灰白編輯極簡・柔霧插畫風）
 ```
 
 <br>
@@ -90,7 +94,7 @@ pnpm preview    # 預覽建置結果
 | 頁面轉場 | Swup - 不重新整理頁面的換頁 |
 | 圖片燈箱 | PhotoSwipe |
 | 圖示 | Material Symbols（astro-icon） |
-| 字體 | Roboto、Jaldi、JetBrains Mono（程式碼） |
+| 字體 | Jaldi、Roboto（英數）、Noto Sans TC 400～700（中文）、JetBrains Mono（程式碼），皆以 Fontsource 自行提供 |
 | 程式碼檢查 | Biome、`astro check` |
 | 部署 | GitHub Pages + GitHub Actions 自動建置 |
 
@@ -168,8 +172,12 @@ draft: true
 | 類型 | 位置 | 引用方式 |
 |------|------|----------|
 | 文章內用圖 | `src/content/posts/<slug>/` | `![alt](./filename.png)`，由 Astro 自動壓縮優化 |
-| 主題圖片與圖示 | `src/assets/images/theme/` | 在元件中 import |
-| Favicon | `public/favicon/` | 原樣輸出 |
+| 主題圖片與圖示 | `src/assets/images/theme/` | 在元件中 import；頭貼 `profile.png`、頁尾動畫 `bunny-walking.gif` |
+| Favicon | `public/favicon/fav-ico.png` | 原樣輸出，建議 192×192 |
+
+> GIF 動畫不要用 Astro 的 `<Image>`，轉檔後會變成靜態圖，改用 `<img src={匯入的圖.src}>` 輸出原檔（見 `Footer.astro`）。
+>
+> 文章封面與插圖的風格規範寫在 `CLAUDE.md`：封面固定 16:9，輸出 1920×1080。
 
 <br>
 
@@ -213,8 +221,9 @@ push 與 PR 到 `master` 時自動執行，只做檢查，不影響部署：
 |------|------|
 | 程式碼與主題設計 | 保留所有權利，未經同意請勿使用於其他網站或作品 |
 | 文章內容 | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)（顯示在每篇文章底部） |
-| 插圖與引用圖片 | 首頁兔子、頁尾熊等插圖與文章中引用的他人圖片，版權屬原作者所有 |
-| 字體 | Roboto、Jaldi、JetBrains Mono，皆為 OFL 1.1 |
+| 網站插圖 | 頭貼、頁尾兔子動畫、文章封面與插圖，未經同意請勿使用 |
+| 引用圖片 | 文章中引用的他人圖片，版權屬原作者所有 |
+| 字體 | Jaldi、Roboto、Noto Sans TC、JetBrains Mono，皆為 OFL 1.1 |
 | 第三方套件 | Astro、Expressive Code、Pagefind、PhotoSwipe、Swup、Material Symbols 等，依各自授權使用 |
 
 完整內容見 [LICENSE.txt](LICENSE.txt)。
