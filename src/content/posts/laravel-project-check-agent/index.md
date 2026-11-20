@@ -2,11 +2,14 @@
 title: "上線前，先讓 agent 幫專案健檢"
 published: 2026-11-20T17:00:00+08:00
 description: "交付前總怕漏改設定？用 Claude Code 做了一個 Laravel CMS 專案檢查 agent，一句話跑完 6 個檢查項，最後產出一張三態總表。"
+image: ./cover.png
 tags: [Claude Code, AI, Laravel]
 category: AI 工具
 subcategory: Claude Code
 draft: false
 ---
+
+![左邊是方吉被一疊疊檢查清單包圍、還有項目沒勾到，一臉困惑；右邊是方吉拿著杯子，滿足地看著筆電上的清單自動逐項打勾](./intro.png)
 
 ## 🔍 前言
 
@@ -161,6 +164,8 @@ agent 會找出前台所有的 `nl2br(`，逐筆判斷是否需要修正
 ---
 
 ## 🗺️ 執行流程
+
+![執行流程六步驟：1 說明本次範圍、2 逐項執行檢查、3 判斷是否修改檔案，會修改就先列出變更內容、確認後才寫入，不會修改就直接進入下一步、4 回報單項結果，還有下一項就回到步驟 2、5 產出總表，以三種狀態標示、6 有修改 config 時提醒執行 php artisan config:clear](./flow.png)
 
 1. **說明本次範圍**：先列出這次要執行的檢查項
 2. **逐項執行檢查**：依清單順序進行
