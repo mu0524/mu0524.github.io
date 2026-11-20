@@ -25,7 +25,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
 const ogImage = image
 	? new URL(
-			(await getImage({ src: image, width: 1200, format: "jpeg" })).src,
+			// 封面是透明背景 PNG，轉 JPEG 前先鋪白底，否則透明處會變黑
+			(
+				await getImage({
+					src: image,
+					width: 1200,
+					format: "jpeg",
+					background: "#ffffff",
+				})
+			).src,
 			Astro.site,
 		).href
 	: undefined;
