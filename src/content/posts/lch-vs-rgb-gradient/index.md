@@ -125,8 +125,9 @@ UI 設計時用 LCH 調整明度，可以確保 **對比度足夠又不會讓顏
 body {
   padding: 1.25rem;
   font-family: system-ui, sans-serif;
-  color: #2d2a26;
-  background: #fbf5e9;
+  color: #454545;
+  background: #f5f5f5;
+  accent-color: #454545;
 }
 
 .pickers {
@@ -145,9 +146,10 @@ body {
 
 button {
   padding: 0.35rem 0.9rem;
-  border: 2px solid #2d2a26;
+  border: 1px solid #c7c7c7;
   border-radius: 999px;
   background: #fff;
+  color: #454545;
   cursor: pointer;
 }
 
@@ -248,7 +250,7 @@ body {
   margin: 0;
   padding: 1rem;
   box-sizing: border-box;
-  background: #fbf5e9;
+  background: #f5f5f5;
 }
 
 .hero {
@@ -271,6 +273,7 @@ body {
   padding: 0.4rem 1rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.85);
+  color: #454545;
   font: 700 1.25rem system-ui, sans-serif;
 }
 

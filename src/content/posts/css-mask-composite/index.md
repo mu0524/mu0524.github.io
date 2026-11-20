@@ -98,8 +98,9 @@ draft: false
 body {
   padding: 1.25rem;
   font-family: system-ui, sans-serif;
-  color: #2d2a26;
-  background: #fbf5e9;
+  color: #454545;
+  background: #f5f5f5;
+  accent-color: #454545;
 }
 
 .controls {
@@ -127,7 +128,7 @@ body {
 .shape {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #ff6b6b, #48dbfb);
+  background: linear-gradient(90deg, #454545, #c7c7c7);
 }
 
 .stage svg {
@@ -138,7 +139,7 @@ body {
 
 .stage circle {
   fill: none;
-  stroke: #2d2a26;
+  stroke: #454545;
   stroke-width: 0.8;
   stroke-dasharray: 3 2.5;
   opacity: 0.5;
@@ -153,8 +154,8 @@ pre {
   margin: 1rem 0 0;
   padding: 0.75rem 1rem;
   border-radius: 10px;
-  background: #2d2a26;
-  color: #fbf5e9;
+  background: #454545;
+  color: #f5f5f5;
   font-size: 0.8rem;
   white-space: pre-wrap;
 }
@@ -309,8 +310,8 @@ body {
   gap: 1.5rem;
   padding: 1.5rem;
   font-family: system-ui, sans-serif;
-  color: #2d2a26;
-  background: #fbf5e9;
+  color: #454545;
+  background: #f5f5f5;
 }
 
 .card {
@@ -326,7 +327,7 @@ body {
 
 .card p {
   margin: 0;
-  color: #6b645a;
+  color: #929292;
 }
 
 /* 漸層邊框 */
@@ -336,7 +337,7 @@ body {
   inset: 0;
   padding: 4px; /* 邊框粗細 */
   border-radius: inherit;
-  background: linear-gradient(135deg, #ff6b6b, #48dbfb);
+  background: linear-gradient(135deg, #454545, #e6e6e6);
   pointer-events: none;
 
   -webkit-mask:
@@ -357,7 +358,7 @@ body {
 }
 
 .spin::before {
-  background: conic-gradient(from var(--angle), #ff6b6b, #feca57, #48dbfb, #ff6b6b);
+  background: conic-gradient(from var(--angle), #454545, #c7c7c7, #e6e6e6, #929292, #454545);
   animation: spin 3s linear infinite;
 }
 

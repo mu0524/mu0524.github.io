@@ -108,14 +108,16 @@ draft: false
 body {
   font-family: system-ui, sans-serif;
   padding: 1rem;
-  color: #2d2a26;
+  color: #454545;
+  background: #f5f5f5;
 }
 
 button {
   padding: 0.5rem 1.2rem;
-  border: 2px solid #2d2a26;
+  border: 0;
   border-radius: 999px;
-  background: #e7b65c;
+  background: #454545;
+  color: #fff;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -137,7 +139,7 @@ h3 {
 .panel {
   overflow: hidden;
   border-radius: 8px;
-  background: #fff6e0;
+  background: #fff;
 }
 
 .panel p {
@@ -175,7 +177,8 @@ h3 {
 
 .unsupported {
   display: none;
-  color: #c43c3c;
+  color: #454545;
+  font-weight: 700;
 }
 
 @supports not (interpolate-size: allow-keywords) {
@@ -297,7 +300,8 @@ interpolate-size: allow-keywords | numeric-only;
 body {
   font-family: system-ui, sans-serif;
   padding: 2rem;
-  color: #2d2a26;
+  color: #454545;
+  background: #f5f5f5;
 }
 
 .toolbar {
@@ -314,9 +318,10 @@ body {
   padding: 0 0.7rem;
   overflow: hidden;
   white-space: nowrap;
-  border: 2px solid #2d2a26;
+  border: 1px solid #c7c7c7;
   border-radius: 999px;
-  background: #fff6e0;
+  background: #fff;
+  color: #454545;
   font-size: 1rem;
   cursor: pointer;
   transition: width 0.3s ease;
@@ -324,15 +329,16 @@ body {
 
 .icon-btn:hover {
   width: max-content;
-  background: #e7b65c;
+  background: #e6e6e6;
 }
 
 .icon {
   flex-shrink: 0;
+  filter: grayscale(1);
 }
 
 .hint {
-  color: #8a8275;
+  color: #929292;
 }
 ```
 :::
@@ -455,7 +461,7 @@ body {
   height: 100vh;
   margin: 0;
   font-family: system-ui, sans-serif;
-  color: #2d2a26;
+  color: #454545;
 }
 
 .sidebar {
@@ -466,7 +472,7 @@ body {
   padding: 0.5rem;
   overflow: hidden;
   white-space: nowrap;
-  background: #2d2a26;
+  background: #454545;
   box-sizing: border-box;
   transition: width 0.4s ease;
 }
@@ -485,7 +491,7 @@ body {
   border: 0;
   border-radius: 8px;
   background: none;
-  color: #fbf5e9;
+  color: #f5f5f5;
   font-size: 1rem;
   text-decoration: none;
   cursor: pointer;
@@ -493,13 +499,17 @@ body {
 
 .sidebar a:hover,
 .toggle:hover {
-  background: #4a453e;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar a span {
+  filter: grayscale(1);
 }
 
 main {
   flex: 1;
   padding: 1.5rem;
-  background: #fbf5e9;
+  background: #f5f5f5;
 }
 ```
 ```js
@@ -642,9 +652,9 @@ details[open]::details-content {
 details {
   interpolate-size: allow-keywords;
   margin-bottom: 0.75rem;
-  border: 2px solid #2d2a26;
+  border: 1px solid #e6e6e6;
   border-radius: 10px;
-  background: #fff6e0;
+  background: #fff;
 }
 
 details::details-content {
@@ -673,7 +683,8 @@ details p {
 body {
   font-family: system-ui, sans-serif;
   padding: 1.5rem;
-  color: #2d2a26;
+  color: #454545;
+  background: #f5f5f5;
 }
 ```
 :::
