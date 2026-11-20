@@ -1,42 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="960" height="440" role="img" aria-label="收合時看得到的高度隨時間變化：height auto 直接跳到 0；max-height hack 前六成時間沒反應，最後才快速收合；interpolate-size 從頭到尾平滑收合">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="1000" height="480" role="img" aria-label="收合時看得到的高度隨時間變化：height auto 直接跳到 0；max-height hack 前六成時間沒反應，最後才快速收合；interpolate-size 從頭到尾平滑收合">
+  <defs>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F5F5F5"/>
+    </linearGradient>
+    <clipPath id="cardClip"><rect x="0" y="0" width="960" height="440" rx="18"/></clipPath>
+    <filter id="haze" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="36"/></filter>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#929292" flood-opacity="0.13"/></filter>
+  </defs>
   <style>
-    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #2d2a26; }
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #454545; }
     .mono { font-family: "JetBrains Mono", Consolas, "Microsoft JhengHei", monospace; }
-    .axis { stroke: #bdb6a8; stroke-width: 2; fill: none; }
-    .tick { font-size: 15px; fill: #6b645a; }
-    .line { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .axis { stroke: #E6E6E6; stroke-width: 2; fill: none; }
+    .tick { font-size: 15px; fill: #929292; }
+    .note { font-size: 15px; fill: #929292; }
+    .line { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .auto { stroke: #929292; stroke-width: 5; stroke-dasharray: 0.1 11; }
+    .hack { stroke: #C7C7C7; stroke-width: 5; }
+    .smooth { stroke: #454545; stroke-width: 5; }
   </style>
 
-  <rect width="960" height="440" rx="24" fill="#fbf5e9"/>
-  <text x="40" y="48" font-size="22" font-weight="700">收合時，畫面上看得到的高度</text>
+  <g transform="translate(20 14)">
+    <!-- 卡片 -->
+    <rect width="960" height="440" rx="18" fill="#FFFFFF" filter="url(#shadow)"/>
+    <g clip-path="url(#cardClip)">
+      <rect width="960" height="440" fill="url(#mist)"/>
+      <ellipse cx="840" cy="70" rx="170" ry="80" fill="#E6E6E6" opacity="0.55" filter="url(#haze)"/>
+      <ellipse cx="200" cy="430" rx="220" ry="70" fill="#E6E6E6" opacity="0.45" filter="url(#haze)"/>
+    </g>
+    <rect x="0.75" y="0.75" width="958.5" height="438.5" rx="17.5" fill="none" stroke="#E6E6E6" stroke-width="1.5"/>
 
-  <!-- 圖例 -->
-  <g font-size="16">
-    <line x1="40" y1="82" x2="72" y2="82" class="line" stroke="#e45f5f"/>
-    <text x="82" y="88" class="mono">height: auto</text>
-    <line x1="290" y1="82" x2="322" y2="82" class="line" stroke="#d99a2b"/>
-    <text x="332" y="88" class="mono">max-height hack</text>
-    <line x1="560" y1="82" x2="592" y2="82" class="line" stroke="#2f8a5b"/>
-    <text x="602" y="88" class="mono">interpolate-size</text>
+    <text x="40" y="50" font-size="22" font-weight="700">收合時，畫面上看得到的高度</text>
+
+    <!-- 圖例 -->
+    <g font-size="16">
+      <line x1="44" y1="84" x2="72" y2="84" class="line auto"/>
+      <text x="84" y="90" class="mono">height: auto</text>
+      <line x1="290" y1="84" x2="322" y2="84" class="line hack"/>
+      <text x="334" y="90" class="mono">max-height hack</text>
+      <line x1="560" y1="84" x2="592" y2="84" class="line smooth"/>
+      <text x="604" y="90" class="mono" font-weight="700">interpolate-size</text>
+    </g>
+
+    <!-- 座標軸 -->
+    <line x1="120" y1="140" x2="880" y2="140" class="axis" stroke-dasharray="4 8"/>
+    <path d="M120 130 V350 H890" class="axis"/>
+    <text x="108" y="146" text-anchor="end" class="tick">200px</text>
+    <text x="108" y="356" text-anchor="end" class="tick">0</text>
+    <text x="120" y="378" text-anchor="middle" class="tick">0s</text>
+    <text x="500" y="378" text-anchor="middle" class="tick">0.25s</text>
+    <text x="880" y="378" text-anchor="middle" class="tick">0.5s</text>
+    <text x="500" y="414" text-anchor="middle" font-size="15" fill="#929292">經過時間 →</text>
+
+    <!-- 線 -->
+    <path d="M120 140 H591 C680 140 740 340 880 350" class="line hack"/>
+    <path d="M122 140 V350 H880" class="line auto"/>
+    <path d="M120 140 C330 140 670 350 880 350" class="line smooth"/>
+
+    <!-- 註解 -->
+    <path d="M126 128 V120 H587 V128" fill="none" stroke="#C7C7C7" stroke-width="1.5"/>
+    <text x="356" y="112" text-anchor="middle" class="note">前 60% 的時間在把 1000px 縮到 200px，看起來沒反應</text>
+    <text x="142" y="328" class="note">一開始就直接消失</text>
   </g>
-
-  <!-- 座標軸 -->
-  <line x1="120" y1="140" x2="880" y2="140" class="axis" stroke-dasharray="4 8"/>
-  <path d="M120 130 V350 H890" class="axis"/>
-  <text x="108" y="146" text-anchor="end" class="tick">200px</text>
-  <text x="108" y="356" text-anchor="end" class="tick">0</text>
-  <text x="120" y="378" text-anchor="middle" class="tick">0s</text>
-  <text x="500" y="378" text-anchor="middle" class="tick">0.25s</text>
-  <text x="880" y="378" text-anchor="middle" class="tick">0.5s</text>
-  <text x="500" y="414" text-anchor="middle" font-size="16" fill="#6b645a">經過時間 →</text>
-
-  <!-- 線 -->
-  <path d="M122 140 V348 H880" class="line" stroke="#e45f5f"/>
-  <path d="M120 140 H591 C680 140 740 340 880 350" class="line" stroke="#d99a2b"/>
-  <path d="M120 140 C330 140 670 350 880 350" class="line" stroke="#2f8a5b"/>
-
-  <!-- 註解 -->
-  <path d="M126 128 V120 H587 V128" fill="none" stroke="#d99a2b" stroke-width="2"/>
-  <text x="356" y="112" text-anchor="middle" font-size="15" fill="#a06b0e">前 60% 的時間在把 1000px 縮到 200px，看起來沒反應</text>
-  <text x="140" y="326" font-size="15" fill="#c43c3c">一開始就直接消失</text>
 </svg>

@@ -1,38 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="960" height="360" role="img" aria-label="calc-size 中的 size 代表 auto 算出來的高度。假設內容高 200px：size 是 200px，size 乘 0.5 是 100px，size 加 2rem 是 232px，size 減 20px 是 180px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" role="img" aria-label="calc-size 中的 size 代表 auto 算出來的高度。假設內容高 200px：size 是 200px，size 乘 0.5 是 100px，size 加 2rem 是 232px，size 減 20px 是 180px">
+  <defs>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F5F5F5"/>
+    </linearGradient>
+    <linearGradient id="barFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#A8A8A8"/>
+      <stop offset="1" stop-color="#929292"/>
+    </linearGradient>
+    <clipPath id="cardClip"><rect x="0" y="0" width="960" height="360" rx="18"/></clipPath>
+    <filter id="haze" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="34"/></filter>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#929292" flood-opacity="0.13"/></filter>
+  </defs>
   <style>
-    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #2d2a26; }
+    text { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; fill: #454545; }
     .mono { font-family: "JetBrains Mono", Consolas, "Microsoft JhengHei", monospace; font-size: 19px; }
-    .bar { fill: #e7b65c; stroke: #2d2a26; stroke-width: 3; }
-    .extra { fill: #f6dfae; stroke: #2d2a26; stroke-width: 3; stroke-dasharray: 6 5; }
-    .ghost { fill: none; stroke: #bdb6a8; stroke-width: 2; stroke-dasharray: 6 5; }
-    .val { font-size: 17px; fill: #6b645a; }
+    .bar { fill: url(#barFill); }
+    .extra { fill: #E6E6E6; stroke: #929292; stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .ghost { fill: none; stroke: #C7C7C7; stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .val { font-size: 17px; fill: #929292; }
   </style>
 
-  <rect width="960" height="360" rx="24" fill="#fbf5e9"/>
-  <text x="40" y="50" font-size="22" font-weight="700">calc-size(auto, …) 裡的 <tspan class="mono" font-size="22" fill="#a06b0e">size</tspan>，就是 auto 算出來的高度</text>
+  <g transform="translate(20 14)">
+    <!-- 卡片 -->
+    <rect width="960" height="360" rx="18" fill="#FFFFFF" filter="url(#shadow)"/>
+    <g clip-path="url(#cardClip)">
+      <rect width="960" height="360" fill="url(#mist)"/>
+      <ellipse cx="860" cy="60" rx="160" ry="70" fill="#E6E6E6" opacity="0.55" filter="url(#haze)"/>
+      <ellipse cx="160" cy="350" rx="200" ry="60" fill="#E6E6E6" opacity="0.45" filter="url(#haze)"/>
+    </g>
+    <rect x="0.75" y="0.75" width="958.5" height="358.5" rx="17.5" fill="none" stroke="#E6E6E6" stroke-width="1.5"/>
 
-  <!-- size -->
-  <text x="40" y="117" class="mono">calc-size(auto, size)</text>
-  <rect x="400" y="92" width="360" height="36" rx="8" class="bar"/>
-  <text x="776" y="117" class="val">200px</text>
+    <text x="40" y="50" font-size="22" font-weight="700">calc-size(auto, …) 裡的 <tspan class="mono" font-size="22" text-decoration="underline">size</tspan>，就是 auto 算出來的高度</text>
 
-  <!-- size * 0.5 -->
-  <text x="40" y="177" class="mono">… size * 0.5</text>
-  <rect x="400" y="152" width="360" height="36" rx="8" class="ghost"/>
-  <rect x="400" y="152" width="180" height="36" rx="8" class="bar"/>
-  <text x="776" y="177" class="val">100px</text>
+    <!-- size -->
+    <text x="40" y="117" class="mono">calc-size(auto, size)</text>
+    <rect x="400" y="92" width="360" height="36" rx="8" class="bar"/>
+    <text x="776" y="117" class="val">200px</text>
 
-  <!-- size + 2rem -->
-  <text x="40" y="237" class="mono">… size + 2rem</text>
-  <rect x="740" y="212" width="78" height="36" rx="8" class="extra"/>
-  <rect x="400" y="212" width="360" height="36" rx="8" class="bar"/>
-  <text x="834" y="237" class="val">232px</text>
+    <!-- size * 0.5 -->
+    <text x="40" y="177" class="mono">… size * 0.5</text>
+    <rect x="400.75" y="152.75" width="358.5" height="34.5" rx="8" class="ghost"/>
+    <rect x="400" y="152" width="180" height="36" rx="8" class="bar"/>
+    <text x="776" y="177" class="val">100px</text>
 
-  <!-- size - 20px -->
-  <text x="40" y="297" class="mono">… size - 20px</text>
-  <rect x="400" y="272" width="360" height="36" rx="8" class="ghost"/>
-  <rect x="400" y="272" width="324" height="36" rx="8" class="bar"/>
-  <text x="776" y="297" class="val">180px</text>
+    <!-- size + 2rem -->
+    <text x="40" y="237" class="mono">… size + 2rem</text>
+    <rect x="740.75" y="212.75" width="76.5" height="34.5" rx="8" class="extra"/>
+    <rect x="400" y="212" width="360" height="36" rx="8" class="bar"/>
+    <text x="834" y="237" class="val">232px</text>
 
-  <text x="920" y="340" text-anchor="end" font-size="14" fill="#8a8275">假設內容高度 200px、1rem = 16px</text>
+    <!-- size - 20px -->
+    <text x="40" y="297" class="mono">… size - 20px</text>
+    <rect x="400.75" y="272.75" width="358.5" height="34.5" rx="8" class="ghost"/>
+    <rect x="400" y="272" width="324" height="36" rx="8" class="bar"/>
+    <text x="776" y="297" class="val">180px</text>
+
+    <text x="920" y="340" text-anchor="end" font-size="14" fill="#929292">假設內容高度 200px、1rem = 16px</text>
+  </g>
 </svg>

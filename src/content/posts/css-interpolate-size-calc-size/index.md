@@ -63,7 +63,7 @@ draft: false
 
 假設內容只有 200px，收合時的狀況會是這樣：
 
-![收合時看得到的高度隨時間變化：height auto 直接跳到 0；max-height hack 前六成時間沒反應，最後才快速收合；interpolate-size 從頭到尾平滑收合](./collapse.svg)
+![收合時看得到的高度隨時間變化：height auto 直接跳到 0；max-height hack 前六成時間沒反應，最後才快速收合；interpolate-size 從頭到尾平滑收合](./collapse.png)
 
 - 😐 要預估最大高度，猜太小內容會被切掉
 - 😐 動畫時間跟實際內容不成比例
@@ -392,7 +392,7 @@ calc-size(<basis>, <calculation>)
 
 一張圖看懂 `size` 是什麼：
 
-![calc-size 中的 size 代表 auto 算出來的高度。假設內容高 200px：size 是 200px，size 乘 0.5 是 100px，size 加 2rem 是 232px，size 減 20px 是 180px](./calc-size.svg)
+![calc-size 中的 size 代表 auto 算出來的高度。假設內容高 200px：size 是 200px，size 乘 0.5 是 100px，size 加 2rem 是 232px，size 減 20px 是 180px](./calc-size.png)
 
 ```css
 /* size 代表 basis 的計算結果 */
