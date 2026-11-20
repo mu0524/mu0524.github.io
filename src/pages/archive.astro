@@ -74,11 +74,11 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 .archiveArea {
 	@include flex();
 	flex-direction: column;
-	gap: 32px;
+	gap: 2rem;
 	@include font($ls: .08em, $lh: 1.8);
 
 	@include media($breakpointSmall) {
-		gap: 24px;
+		gap: 1.5rem;
 		font-size: $textSizeSmall;
 	}
 
@@ -148,10 +148,10 @@ const groups = [...years.entries()].sort((a, b) => b[0] - a[0]);
 .yearList {
 	@include flex();
 	flex-direction: column;
-	gap: 48px;
+	gap: 3rem;
 
 	@include media($breakpointSmall) {
-		gap: 32px;
+		gap: 2rem;
 	}
 }
 

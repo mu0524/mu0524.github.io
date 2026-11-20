@@ -22,13 +22,13 @@ import { Icon } from "astro-icon/components";
 @use '../styles/setting' as *;
 
 .searchPanel {
-	@include positionALTRB($t: calc(100% + 8px), $l: 0);
+	@include positionALTRB($t: calc(100% + .5rem), $l: 0);
 	z-index: 10;
-	width: min(480px, calc(100vw - 32px));
+	width: min(30rem, calc(100vw - 2rem));
 	background-color: $btnBgColor;
 	border: 1px solid $borderColor;
 	border-radius: 8px;
-	padding: 8px;
+	padding: .5rem;
 	box-shadow: 0 12px 32px color-mix(in srgb, #000 8%, transparent);
 
 	@include media($breakpointSmall) {
@@ -39,11 +39,11 @@ import { Icon } from "astro-icon/components";
 
 	.inputBox {
 		@include flex(nowrap, flex-start, center);
-		gap: 8px;
-		height: 44px;
+		gap: .5rem;
+		height: 2.75rem;
 		background-color: $grayColor;
 		border-radius: 6px;
-		padding: 0 12px;
+		padding: 0 .75rem;
 
 		:global(svg) {
 			flex-shrink: 0;
@@ -67,7 +67,7 @@ import { Icon } from "astro-icon/components";
 
 	.hint {
 		@include font($fs: $textSizeSmall, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
-		padding: 12px 8px 4px;
+		padding: .75rem .5rem .25rem;
 	}
 }
 
@@ -78,13 +78,13 @@ import { Icon } from "astro-icon/components";
 	overflow-y: auto;
 
 	&:not(:empty) {
-		margin-top: 4px;
+		margin-top: .25rem;
 	}
 
 	:global(.resultItem) {
 		display: block;
 		border-radius: 6px;
-		padding: 10px 8px;
+		padding: .625rem .5rem;
 		@extend %ts;
 
 		@include hover {
@@ -99,7 +99,7 @@ import { Icon } from "astro-icon/components";
 	:global(.text) {
 		@include font($fs: .8125rem, $ls: .03em, $lh: 1.6, $color: $introColor);
 		@include ellipsis(2);
-		margin-top: 2px;
+		margin-top: .125rem;
 	}
 
 	:global(mark) {

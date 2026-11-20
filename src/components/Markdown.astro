@@ -33,7 +33,7 @@ const { class: className } = Astro.props;
 		position: relative;
 		font-weight: $fwBold;
 		line-height: 1.5;
-		scroll-margin-top: 24px;
+		scroll-margin-top: 1.5rem;
 
 		@include hover {
 			.anchor {
@@ -201,14 +201,14 @@ const { class: className } = Astro.props;
 			pre {
 				&[data-language]::before {
 					content: attr(data-language);
-					@include positionALTRB($t: 8px, $r: 8px);
+					@include positionALTRB($t: .5rem, $r: .5rem);
 					z-index: 1;
 					@include font($fs: .6875rem, $fw: $fwBold, $ls: .05em, $lh: 1.6, $color: var(--accent-rose));
 					font-family: 'JetBrains Mono Variable', monospace;
 					text-transform: uppercase;
 					background-color: color-mix(in srgb, var(--accent-rose) 18%, transparent);
 					border-radius: 4px;
-					padding: 0 6px;
+					padding: 0 .375rem;
 					pointer-events: none;
 					@extend %ts;
 				}
@@ -326,7 +326,7 @@ const { class: className } = Astro.props;
 	.codepenBox {
 		.codepen {
 			@include flex(nowrap, center, center);
-			min-height: 120px;
+			min-height: 7.5rem;
 			background-color: $btnBgColor;
 			border: 1px solid $borderColor;
 			overflow: hidden;

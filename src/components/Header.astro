@@ -54,19 +54,19 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 	position: relative;
 	z-index: 40;
 	@include flex($ai: center);
-	gap: 24px;
+	gap: 1.5rem;
 	background-color: $grayColor;
-	padding: 16px;
+	padding: 1rem;
 
 	@include media($breakpointSmall) {
-		gap: 12px;
+		gap: .75rem;
 	}
 
 	.textBox {
 		@include flex();
 		flex-direction: column;
 		flex: 1 1 0;
-		gap: 16px;
+		gap: 1rem;
 		min-width: 0;
 	}
 
@@ -86,23 +86,23 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 	.btnBox,
 	.toolBox {
 		@include flex(wrap);
-		gap: 16px;
+		gap: 1rem;
 
 		@include media($breakpointSmall) {
-			gap: 10px;
+			gap: .625rem;
 		}
 	}
 
 	.btnBox {
 		:global(.btn) {
 			@include flex(nowrap, center, center);
-			gap: 10px;
-			height: 40px;
+			gap: .625rem;
+			height: 2.5rem;
 			@include font($ls: .1em, $lh: 1, $color: $introColor);
 			white-space: nowrap;
 			background-color: $btnBgColor;
 			border-radius: 8px;
-			padding: 0 10px;
+			padding: 0 .625rem;
 			@extend %ts;
 
 			@include hover {
@@ -130,7 +130,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 		}
 
 		:global(.btn) {
-			width: 40px;
+			width: 2.5rem;
 			padding: 0;
 		}
 	}

@@ -30,15 +30,15 @@ const { page } = Astro.props;
 .postList {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 64px 24px;
+	gap: 4rem 1.5rem;
 
 	@include media($breakpointMedium) {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 56px 20px;
+		gap: 3.5rem 1.25rem;
 	}
 	@include media($breakpointSmall) {
 		grid-template-columns: minmax(0, 1fr);
-		gap: 48px;
+		gap: 3rem;
 	}
 }
 </style>

@@ -47,16 +47,16 @@ import { withBase } from "@lib/url";
 
 .btnBox {
 	@include flex(wrap, center);
-	gap: 16px;
+	gap: 1rem;
 	margin-top: 1em;
 
 	.btn {
 		@include flex(nowrap, center, center);
-		height: 44px;
+		height: 2.75rem;
 		@include font($ls: .1em, $lh: 1, $color: $introColor);
 		background-color: $btnBgColor;
 		border-radius: 8px;
-		padding: 0 20px;
+		padding: 0 1.25rem;
 		@extend %ts;
 
 		@include hover {
