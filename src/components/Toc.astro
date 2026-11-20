@@ -63,7 +63,7 @@ const items = headings
 	position: relative;
 	@include flex();
 	flex-direction: column;
-	@include font($fs: 14px, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
+	@include font($fs: $textSizeSmall, $ls: .05em, $lh: 1.6, $color: var(--text-muted));
 	border-left: 1px solid $borderColor;
 }
 
@@ -91,7 +91,7 @@ const items = headings
 	}
 
 	&.subSub {
-		font-size: 13px;
+		font-size: .8125rem;
 		padding-left: 3.75em;
 	}
 

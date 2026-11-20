@@ -203,7 +203,7 @@ const { class: className } = Astro.props;
 					content: attr(data-language);
 					@include positionALTRB($t: 8px, $r: 8px);
 					z-index: 1;
-					@include font($fs: 11px, $fw: $fwBold, $ls: .05em, $lh: 1.6, $color: var(--accent-rose));
+					@include font($fs: .6875rem, $fw: $fwBold, $ls: .05em, $lh: 1.6, $color: var(--accent-rose));
 					font-family: 'JetBrains Mono Variable', monospace;
 					text-transform: uppercase;
 					background-color: color-mix(in srgb, var(--accent-rose) 18%, transparent);
@@ -305,7 +305,7 @@ const { class: className } = Astro.props;
 		.cardInfo {
 			@include flex(wrap);
 			gap: 1.5em;
-			@include font($fs: 13px, $ls: .05em, $lh: 1.5, $color: var(--text-muted));
+			@include font($fs: .8125rem, $ls: .05em, $lh: 1.5, $color: var(--text-muted));
 		}
 
 		.info {

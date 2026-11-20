@@ -23,12 +23,10 @@ $breakpointMedium: 1180px; //平板
 $breakpointSmall: 768px; //手機板
 $breakpointXS: 480px;
 
-// 字級（Figma 設計稿 text/normal 20px、text/small 16px）
-$titleSize: clamp(26px, 1.67vw, 32px);
-$dataTitleSize: clamp(18px, 1.04vw, 20px);
-$textSize: 16px;
-$textSizeMedium: 15px;
-$textSizeSmall: 14px;
+// 字級：一律用 rem；跟著父層縮放的子元素用 em
+// $textSizeSmall 是手機版整個區塊縮小時共用的字級
+$textSize: 1rem;
+$textSizeSmall: .875rem;
 
 // extend
 %ts {
