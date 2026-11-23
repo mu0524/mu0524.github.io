@@ -1,11 +1,12 @@
 ---
 title: "讓商品圖自帶放大鏡"
-published: 2026-11-20T17:50:00+08:00
+published: 2026-11-23T11:55:00+08:00
 description: "滑過商品圖就能看清細節！用 elevatezoom-plus 做出視窗放大、鏡頭放大效果，附完整參數表、三種放大方式與商品頁相簿的 CodePen 範例。"
+image: ./cover.png
 tags: [JavaScript, jQuery, 套件]
 category: 前端開發
 subcategory: JavaScript
-draft: true
+draft: false
 ---
 
 ## 🔍 elevatezoom-plus 套件說明
