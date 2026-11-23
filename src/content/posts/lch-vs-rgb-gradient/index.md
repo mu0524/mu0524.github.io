@@ -17,9 +17,6 @@ draft: false
 
 改成 **LCH 色彩模式**，就能讓漸層更自然、色彩更乾淨 ✨
 
-> [!TIP]
-> 文中的 CodePen 範例都可以直接操作，點右上角「Edit on CodePen」還能開到 CodePen 修改
-
 ---
 
 ## 🎨 LCH 跟 RGB 是什麼？

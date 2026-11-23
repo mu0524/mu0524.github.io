@@ -20,9 +20,6 @@ draft: false
 > [!NOTE]
 > 原版的 `leader-line` 已經很久沒更新，這篇用的是社群維護的 fork `leader-line-new`，修掉了原版幾個已知問題
 
-> [!TIP]
-> 文中的 CodePen 範例都可以直接操作，點右上角「Edit on CodePen」還能開到 CodePen 修改
-
 ---
 
 ## 📦 安裝方式

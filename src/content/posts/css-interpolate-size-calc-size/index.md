@@ -22,9 +22,6 @@ draft: false
 | `interpolate-size` | 讓 `auto` 這類關鍵字**可以做動畫** |
 | `calc-size()` | 讓 `auto` 這類關鍵字**可以做運算**，例如「auto 的一半」 |
 
-> [!TIP]
-> 文中的 CodePen 範例都可以直接操作，點右上角「Edit on CodePen」還能開到 CodePen 修改
-
 ---
 
 ## 🤔 為什麼需要它？

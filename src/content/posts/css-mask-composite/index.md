@@ -15,9 +15,6 @@ draft: false
 
 換個合成方式，同樣兩個圓就能做出 **聯集、差集、交集、排除** 四種形狀 ✨
 
-> [!TIP]
-> 文中的 CodePen 範例都可以直接操作，點右上角「Edit on CodePen」還能開到 CodePen 修改
-
 ---
 
 ## 🎭 先複習一下 mask

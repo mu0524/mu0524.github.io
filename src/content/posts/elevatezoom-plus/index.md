@@ -101,9 +101,6 @@ elevatezoom-plus 提供圖片放大、縮放與放大鏡效果，適合用在電
 
 ## 🧪 範例
 
-> [!TIP]
-> 範例都可以直接操作，點右上角「Edit on CodePen」還能開到 CodePen 修改
-
 ### 1. 三種放大方式
 
 `zoomType` 決定放大的方式：
