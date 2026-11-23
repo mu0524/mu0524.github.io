@@ -374,8 +374,6 @@ body {
 > [!TIP]
 > 也可以把兩層順序對調，改用差集：`linear-gradient(#000 0 0), linear-gradient(#000 0 0) content-box` 搭配 `mask-composite: subtract`，結果一樣
 
-更多漸層邊框的做法可以參考 [CSS 漸層邊框](https://ibestlibrary.ito.tw/codepen-detail/border-gradient/)
-
 ---
 
 ## 🏆 結論
