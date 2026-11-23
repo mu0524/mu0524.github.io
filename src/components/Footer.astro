@@ -62,10 +62,16 @@ const lastActivity = stats.lastActivity
 			<div class="titleBox">
 				<p class="title">標籤</p>
 			</div>
-			<div class="tagList">
-				{tags.map((t) => (
-					<a href={t.url}>{t.name}</a>
-				))}
+			<div class="tagBox">
+				<div class="tagList" id="footer-tag-list">
+					{tags.map((t) => (
+						<a href={t.url}>{t.name}</a>
+					))}
+				</div>
+				<!-- 標籤超過三排才會由 JS 收合並顯示按鈕；沒有 JS 時維持全部展開 -->
+				<button class="tagToggle" type="button" aria-expanded="false" aria-controls="footer-tag-list" hidden>
+					<span>展開全部</span>
+				</button>
 			</div>
 		</div>
 
@@ -159,8 +165,56 @@ function syncCurrentCategory() {
 	}
 }
 
+// 標籤超過三排時收合，按鈕切換展開／收合
+function setTagOpen(box: Element, isOpen: boolean) {
+	const btn = box.querySelector<HTMLButtonElement>(".tagToggle");
+	if (!btn) return;
+	box.classList.toggle("close", !isOpen);
+	btn.setAttribute("aria-expanded", String(isOpen));
+	btn.querySelector("span")!.textContent = isOpen ? "收合" : "展開全部";
+}
+
+// 先套上收合狀態再量高度，內容沒有超出就不需要按鈕
+function checkTagOverflow(box: Element) {
+	const list = box.querySelector<HTMLElement>(".tagList");
+	const btn = box.querySelector<HTMLButtonElement>(".tagToggle");
+	if (!list || !btn || box.classList.contains("open")) return;
+	box.classList.add("close");
+	const isOverflow = list.scrollHeight > list.clientHeight + 1;
+	box.classList.toggle("close", isOverflow);
+	btn.hidden = !isOverflow;
+}
+
+function bindTagToggle() {
+	const box = document.querySelector(".footerArea .tagBox");
+	if (!box) return;
+	const btn = box.querySelector<HTMLButtonElement>(".tagToggle");
+	const list = box.querySelector(".tagList");
+
+	btn?.addEventListener("click", () => {
+		const isOpen = box.classList.contains("close");
+		box.classList.toggle("open", isOpen);
+		setTagOpen(box, isOpen);
+	});
+
+	// 用鍵盤 Tab 到被收起來的標籤時自動展開，焦點才不會落在看不到的地方
+	list?.addEventListener("focusin", () => {
+		if (!box.classList.contains("close")) return;
+		box.classList.add("open");
+		setTagOpen(box, true);
+	});
+
+	checkTagOverflow(box);
+	let timer = 0;
+	window.addEventListener("resize", () => {
+		clearTimeout(timer);
+		timer = window.setTimeout(() => checkTagOverflow(box), 150);
+	});
+}
+
 updateRunningDays();
 bindCategoryToggle();
+bindTagToggle();
 onPageLoad(syncCurrentCategory);
 </script>
 
@@ -344,6 +398,55 @@ onPageLoad(syncCurrentCategory);
 		.subList {
 			display: none;
 		}
+	}
+}
+
+.tagBox {
+	@include flex();
+	flex-direction: column;
+	gap: .75rem;
+
+	// 收合時只顯示三排：標籤高 2.125rem（行高 1.5rem + 上下 padding + 邊框）× 3 ＋ 兩個間距
+	&.close {
+		.tagList {
+			max-height: 7.625rem;
+			overflow: hidden;
+			mask-image: linear-gradient(to bottom, #000 55%, transparent);
+		}
+	}
+}
+
+.tagToggle {
+	@include flex(nowrap, center, center);
+	gap: .5rem;
+	align-self: center;
+	font-size: $textSizeSmall;
+	letter-spacing: .08em;
+	color: $introColor;
+	padding: .25rem .625rem;
+	@extend %ts;
+
+	@include hover {
+		color: $mainColor;
+	}
+
+	&[hidden] {
+		display: none;
+	}
+
+	// 向下的箭頭，展開後轉成向上
+	@include pseudoAfter($position: relative) {
+		@include pseudoShape(.4375rem, .4375rem);
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		translate: 0 -.125rem;
+		rotate: 45deg;
+		@extend %ts;
+	}
+
+	&[aria-expanded="true"]::after {
+		translate: 0 .125rem;
+		rotate: 225deg;
 	}
 }
 
