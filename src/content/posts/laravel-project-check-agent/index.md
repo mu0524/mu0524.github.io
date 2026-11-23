@@ -89,9 +89,12 @@ agent 會依下表順序逐項執行
 
 只新增缺少的欄位、不更動既有設定，並排除 `necessary/dashboard/`
 
+ 
+
 ### 2. 前台 H 標籤規則
 
-掃描前台 blade，檢查 H1～H3 的數量與層級是否正確。透過 `@include` 引入的 partial 也一併納入，H1 以整頁合計計算
+掃描前台 blade，檢查 H1～H3 的數量與層級是否正確。  
+透過 `@include` 引入的 partial 也一併納入，H1 以整頁合計計算
 
 | 頁面類型 | 判斷依據 | `<h1>` | `<h2>` | `<h3>` |
 | --- | --- | --- | --- | --- |
@@ -106,11 +109,15 @@ agent 會依下表順序逐項執行
 | 標題由編輯器欄位（`data_exp`）輸出 | ⚠️ |
 | 出現 `<h4>`～`<h6>`，或無法判定頁面類型 | ⚠️ |
 
+ 
+
 ### 3. 單元 sitemap 產生設定
 
 比對前台路由與各單元的 `create_sitemap_unit`、`create_sitemap_m`、`create_sitemap`，修正會產生 404 網址的設定
 
 符合標準規則的項目，列出後直接修正；例外情況則先詢問再處理
+
+ 
 
 ### 4. nl2br 安全輸出
 
@@ -131,6 +138,8 @@ agent 會找出前台所有的 `nl2br(`，逐筆判斷是否需要修正
 | textarea 純文字（如 `data_introduction`、`data_address`） | 加上 `e()` |
 | TinyMCE 富文本（如 `data_exp`、`data_content`） | 不加，加了會破壞格式 |
 | 無法判定 | ⚠️ 請使用者確認 |
+
+ 
 
 ### 5. 編輯器共用樣式一致性
 
@@ -156,6 +165,8 @@ agent 會找出前台所有的 `nl2br(`，逐筆判斷是否需要修正
 - 只修改 `textEditor.scss`，不更動 `master.scss` 與 `public/css/`
 - 使用到 `_setting.scss` 以外才定義的變數或 mixin，或多語系的 `master.scss` 彼此不一致時，列為 ⚠️
 - 修正後需重新編譯 `public/css/textEditor.css` 與 `public/backend/css/backend_bootstrap.css`
+
+ 
 
 ### 6. 後台欄位前台使用
 
@@ -231,4 +242,5 @@ Skill 型檢查項的單項報告，則依該 Skill 規定的格式輸出
 - **缺少 Skill 時**：對應的 Skill 不存在或無法載入時，略過該項並說明原因，其餘項目照常執行
 - **處理範圍**：只處理程式檔案與設定，不更動使用者上傳的資料
 - **樣式檔**：只修改 SCSS 原始檔，編譯產物需由使用者自行重新編譯
-- **記憶**：agent 會把專案特有的結構特例，以及使用者對檢查流程的偏好，記錄在 `~/.claude/agent-memory/laravel-project-check/`，供之後的檢查沿用。這份記憶是跨專案共用的
+- **記憶**：agent 會把專案特有的結構特例，以及使用者對檢查流程的偏好，記錄在 `~/.claude/agent-memory/laravel-project-check/`，供之後的檢查沿用。  
+  這份記憶是跨專案共用的

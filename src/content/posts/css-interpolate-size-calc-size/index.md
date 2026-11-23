@@ -257,7 +257,8 @@ interpolate-size: allow-keywords | numeric-only;
 
 ### 範例二：hover 展開的圖示按鈕
 
-平常只露出圖示，滑過去才展開文字。收合時用固定寬度，展開時用 `max-content`：
+平常只露出圖示，滑過去才展開文字。  
+收合時用固定寬度，展開時用 `max-content`：
 
 ```css {7,14}
 :root {
@@ -516,6 +517,8 @@ document.getElementById("toggle").addEventListener("click", () => {
 ```
 :::
 
+ 
+
 #### 只顯示內容的一半
 
 做「閱讀更多」的預覽很好用：
@@ -527,6 +530,8 @@ document.getElementById("toggle").addEventListener("click", () => {
 }
 ```
 
+ 
+
 #### 留出固定空間
 
 ```css
@@ -535,6 +540,8 @@ document.getElementById("toggle").addEventListener("click", () => {
   /* 內容高度扣掉 80px */
 }
 ```
+
+ 
 
 #### 搭配 `@keyframes` 動畫
 
@@ -554,6 +561,8 @@ document.getElementById("toggle").addEventListener("click", () => {
   overflow: hidden;
 }
 ```
+
+ 
 
 #### 響應式縮放
 
@@ -592,7 +601,8 @@ width: calc-size(auto, clamp(100px, size, 500px));
 | `auto` 但不超過某個值 | `calc-size(auto, min(size, 500px))` |
 
 > [!TIP]
-> **簡單記法**：目標就是內在尺寸本身 → `interpolate-size`；要對內在尺寸「加工」→ `calc-size()`
+> **簡單記法**：  
+> 目標就是內在尺寸本身 → `interpolate-size`；要對內在尺寸「加工」→ `calc-size()`
 
 > [!IMPORTANT]
 >
@@ -699,7 +709,8 @@ body {
 
 **2. 可以繼承**
 
-`interpolate-size` 是可繼承的屬性，設在父層，所有子元素都會生效。建議直接設在 `:root`
+`interpolate-size` 是可繼承的屬性，設在父層，所有子元素都會生效。  
+建議直接設在 `:root`
 
 **3. 不影響最終版面**
 

@@ -107,7 +107,8 @@ new LeaderLine(startElement, endElement, {
 
 ### 自己玩玩看
 
-切換下面的選項，看看連線怎麼變化。兩個方塊都可以拖曳 👇
+切換下面的選項，看看連線怎麼變化。  
+兩個方塊都可以拖曳 👇
 
 :::codepen{title="Leader Line 選項遊樂場" height="460" scripts="https://cdn.jsdelivr.net/npm/leader-line-new@1.1.9/leader-line.min.js"}
 ```html

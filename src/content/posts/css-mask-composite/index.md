@@ -233,6 +233,8 @@ WebKit 的值是用 **source（上面那層）** 和 **destination（下面那�
 > 
 > 但在只認得 WebKit 寫法的舊版瀏覽器，差集的結果會 **左右相反**
 
+ 
+
 ### 2. `mask-composite` 要寫在 `mask` 後面
 
 `mask` 是簡寫屬性，會把沒寫到的子屬性重設回預設值，**`mask-composite` 也包含在內**
@@ -250,6 +252,8 @@ WebKit 的值是用 **source（上面那層）** 和 **destination（下面那�
 ```
 
 `-webkit-mask` 跟 `-webkit-mask-composite` 也是一樣的道理
+
+ 
 
 ### 3. 舊版 Chrome 要搭配 `-webkit-mask`
 

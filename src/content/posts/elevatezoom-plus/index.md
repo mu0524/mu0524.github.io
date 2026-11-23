@@ -92,7 +92,8 @@ elevatezoom-plus 提供圖片放大、縮放與放大鏡效果，適合用在電
 | `cursor` | `inherit` | 滑鼠游標樣式（`default`、`pointer`、`grab`、`crosshair` 等） |
 
 > [!NOTE]
-> 預設值依 ez-plus 1.2.1 的原始碼（`jquery.ez-plus.js`）整理。淡入淡出的預設值 `false` 代表沒有動畫，填入毫秒數才會啟用
+> 預設值依 ez-plus 1.2.1 的原始碼（`jquery.ez-plus.js`）整理。  
+> 淡入淡出的預設值 `false` 代表沒有動畫，填入毫秒數才會啟用
 
 `zoomWindowPosition` 的 16 個位置，預設值 `1` 是圖片右側、上緣對齊：
 
@@ -221,6 +222,8 @@ $("input[name=mode]").on("change", render);
 render();
 ```
 :::
+
+ 
 
 ### 2. 商品頁相簿
 
@@ -401,6 +404,8 @@ if (ez) {
 $photo.ezPlus(newConfig);
 ```
 
+ 
+
 ### 2. 放大鏡會擋住圖片上的滑鼠事件
 
 ez-plus 會在 `body` 底下產生一個 `.zoomContainer`，疊在圖片正上方，放大鏡 `.zoomLens` 也在裡面
@@ -414,6 +419,8 @@ ez-plus 會把放大鏡上的 **click** 轉給圖片，所以單純綁 click 沒
   pointer-events: none;
 }
 ```
+
+ 
 
 ### 3. 手機上要另外處理
 
