@@ -102,7 +102,7 @@ const jsonLd = {
 	gap: 1.25em;
 	@include font($ls: .08em, $lh: 1.8);
 	background-color: $grayColor;
-	padding: 3em 3em 2em;
+	padding: 3em 2em 2em;
 
 	@include media($breakpointMedium) {
 		padding: 2.75em 2em 1.5em;
@@ -119,7 +119,7 @@ const jsonLd = {
 }
 
 .metaBox {
-	@include positionALTRB($t: -1.25em, $l: 3em);
+	@include positionALTRB($t: -1em, $l: 2em);
 	z-index: 2;
 	@include flex(wrap);
 	gap: 1em;
@@ -134,10 +134,12 @@ const jsonLd = {
 	}
 
 	.tag {
+		font-size: .85rem;
+		line-height: 1;
 		white-space: nowrap;
 		color: $textColor;
 		background-color: var(--surface-tag);
-		padding: .375em 1em;
+		padding: .625em 1em;
 		@extend %ts;
 	}
 
