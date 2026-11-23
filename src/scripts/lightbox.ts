@@ -36,7 +36,8 @@ async function open(img: HTMLImageElement) {
 
 function bind() {
 	for (const img of document.querySelectorAll<HTMLImageElement>(SELECTOR)) {
-		if (img.closest("a")) continue;
+		// 連結裡的圖、標記 data-no-zoom 的裝飾插圖不放大
+		if (img.closest("a, [data-no-zoom]")) continue;
 		img.addEventListener("click", () => open(img));
 	}
 }

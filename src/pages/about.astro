@@ -15,7 +15,7 @@ const title = entry.data.title ?? "關於我";
 		<div class="titleBox">
 			<h1 class="title">{title}</h1>
 		</div>
-		<Markdown>
+		<Markdown class="aboutContent">
 			<Content />
 		</Markdown>
 	</article>
@@ -64,6 +64,180 @@ const title = entry.data.title ?? "關於我";
 
 			@include media($breakpointSmall) {
 				font-size: 1.5em;
+			}
+		}
+	}
+}
+</style>
+
+<!-- about.md 的內文由 Markdown 產生，沒有 scope 屬性，樣式要寫成 global -->
+<style lang="scss" is:global>
+@use '../styles/setting' as *;
+
+.aboutContent {
+	.heroImg {
+		width: min(100%, 26rem);
+
+		img {
+			width: 100%;
+			height: auto;
+			cursor: default;
+		}
+	}
+
+	.aboutBox {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 17.5rem;
+		grid-template-areas: "txt img";
+		align-items: start;
+		gap: 2.5em;
+
+		@include media($breakpointSmall) {
+			grid-template-columns: minmax(0, 1fr);
+			grid-template-areas:
+				"img"
+				"txt";
+			gap: 1.5em;
+		}
+
+		&.reverse {
+			grid-template-columns: 17.5rem minmax(0, 1fr);
+			grid-template-areas: "img txt";
+			align-items: center;
+			gap: 2em;
+
+			@include media($breakpointSmall) {
+				grid-template-columns: minmax(0, 1fr);
+				grid-template-areas:
+					"img"
+					"txt";
+				gap: 1.5em;
+			}
+		}
+
+		.Txt {
+			grid-area: txt;
+
+			> * {
+				& + * {
+					margin-top: 1.25em;
+				}
+			}
+		}
+
+		.Img {
+			grid-area: img;
+
+			@include media($breakpointSmall) {
+				justify-self: center;
+				width: min(100%, 20rem);
+			}
+
+			img {
+				width: 100%;
+				height: auto;
+				cursor: default;
+			}
+		}
+	}
+
+	.Txt {
+		&.bubble {
+			position: relative;
+			justify-self: start;
+			background-color: $btnBgColor;
+			border: 1px solid $borderColor;
+			border-radius: 1.5em;
+			padding: 1.25em 1.75em;
+
+			@include pseudoBefore() {
+				@include pseudoShape(1rem, 1rem, $btnBgColor);
+				@include positionALTRB($t: 50%, $l: -.5rem);
+				border-bottom: 1px solid $borderColor;
+				border-left: 1px solid $borderColor;
+				transform: translateY(-50%) rotate(45deg);
+
+				@include media($breakpointSmall) {
+					inset: -.5rem auto auto 50%;
+					transform: translateX(-50%) rotate(135deg);
+				}
+			}
+
+			> * {
+				& + * {
+					margin-top: .5em;
+				}
+			}
+
+			p {
+				&:last-child {
+					font-size: 1.125em;
+					font-weight: $fwBold;
+				}
+			}
+
+			code {
+				color: var(--page-bg);
+				background-color: $mainColor;
+			}
+		}
+	}
+
+	.storyBox {
+		background-color: $btnBgColor;
+		border-left: 4px solid $mainColor;
+		border-radius: 0 1em 1em 0;
+		padding: 1.25em 1.5em;
+
+		> * {
+			& + * {
+				margin-top: .75em;
+			}
+		}
+	}
+
+	.cardList {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+		gap: 1em;
+
+		&.topic {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+
+			@include media($breakpointXS) {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+	}
+
+	.cardItem {
+		background-color: $btnBgColor;
+		border: 1px solid $borderColor;
+		border-radius: 1em;
+		padding: 1.25em;
+
+		.title {
+			font-weight: $fwBold;
+			line-height: 1.5;
+			margin-bottom: .75em;
+		}
+
+		.text {
+			font-size: .9375em;
+			line-height: 1.8;
+			color: $introColor;
+		}
+
+		.tagBox {
+			@include flex(wrap);
+			gap: .5em;
+
+			span {
+				font-size: .875em;
+				line-height: 1;
+				background-color: var(--surface-tag);
+				border-radius: 999px;
+				padding: .5em .875em;
 			}
 		}
 	}
