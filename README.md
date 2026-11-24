@@ -173,6 +173,7 @@ draft: true
 |------|------|----------|
 | 文章內用圖 | `src/content/posts/<slug>/` | `![alt](./filename.png)`，由 Astro 自動壓縮優化 |
 | 主題圖片與圖示 | `src/assets/images/theme/` | 在元件中 import；頭貼 `profile.png`、頁尾動畫 `bunny-walking.gif` |
+| 預設分享圖 | `src/assets/images/theme/og-default.png` | 沒有封面的頁面分享到社群時用這張，1200×630、不透明背景 |
 | Favicon | `public/favicon/fav-ico.png` | 原樣輸出，建議 192×192 |
 
 > GIF 動畫不要用 Astro 的 `<Image>`，轉檔後會變成靜態圖，改用 `<img src={匯入的圖.src}>` 輸出原檔（見 `Footer.astro`）。

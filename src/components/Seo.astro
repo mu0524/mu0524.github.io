@@ -1,5 +1,6 @@
 ---
 import { getImage } from "astro:assets";
+import ogDefault from "@assets/images/theme/og-default.png";
 import { formatIsoDate } from "@lib/date";
 import type { ImageMetadata } from "astro";
 import { SITE } from "@/site.config";
@@ -23,20 +24,19 @@ const fullTitle = title
 const desc = description || SITE.description;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
-const ogImage = image
-	? new URL(
-			// 封面是透明背景 PNG，轉 JPEG 前先鋪白底，否則透明處會變黑
-			(
-				await getImage({
-					src: image,
-					width: 1200,
-					format: "jpeg",
-					background: "#ffffff",
-				})
-			).src,
-			Astro.site,
-		).href
-	: undefined;
+// 沒有封面的頁面（首頁、彙整、關於我等）用全站預設分享圖
+const ogImage = new URL(
+	// 封面是透明背景 PNG，轉 JPEG 前先鋪白底，否則透明處會變黑
+	(
+		await getImage({
+			src: image ?? ogDefault,
+			width: 1200,
+			format: "jpeg",
+			background: "#ffffff",
+		})
+	).src,
+	Astro.site,
+).href;
 ---
 
 <title>{fullTitle}</title>
@@ -50,7 +50,7 @@ const ogImage = image
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={desc} />
 <meta property="og:type" content={article ? "article" : "website"} />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image" content={ogImage} />
 
 {article && (
 	<>
@@ -60,7 +60,7 @@ const ogImage = image
 	</>
 )}
 
-<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={desc} />
-{ogImage && <meta name="twitter:image" content={ogImage} />}
+<meta name="twitter:image" content={ogImage} />
