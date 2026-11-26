@@ -1,0 +1,486 @@
+// 主視覺顏色、次要顏色
+$mainColor: #10376e;
+$secondColor: #ff9e18;
+$thirdColor: #f6f6f6;
+
+// 標題、內文顏色
+$titleColor: $mainColor;
+$textTitleColor: #000000;
+$darkTextColor: #929292;
+$textColor: #767676;
+
+// 框線顏色
+$lineColor: #d0d0d0;
+
+// 主要內容預設寬度(wrap)、rwd斷點
+$defaultWidth: 1435px;
+
+$breakpointMedium: 1180px; //平板
+$breakpointSmall: 768px; //手機板
+
+// extend
+%ts {
+	transition: all .5s ease-in-out;
+}
+
+@mixin img100 {
+	width: 100%;
+	height: auto;
+	display: block;
+	backface-visibility: hidden;
+}
+
+@mixin ellipsis($line) {
+	display: -webkit-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: $line;
+	-webkit-box-orient: vertical;
+}
+
+@mixin cover($width: 100%, $height: 100%) {
+	width: $width;
+	height: $height;
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+@mixin hover {
+	@include media(-1181) {
+		&:hover {
+			@content;
+		}
+	}
+}
+
+@mixin mediaQuery($queryType, $max, $min) {
+	@if $queryType==1 {
+		@media screen and (max-width:$max) and (min-width:$min) {
+			@content;
+		}
+	}
+
+	@else if $queryType==2 {
+		@media screen and (max-width:$max) {
+			@content;
+		}
+	}
+
+	@else if $queryType==3 {
+		@media screen and (min-width:$min) {
+			@content;
+		}
+	}
+}
+
+// media
+@mixin mmiw($width, $unit) {
+	@media (min-width: $width+$unit) {
+		@content;
+	}
+}
+
+@mixin mmaw($width, $unit) {
+	@media (max-width: $width+$unit) {
+		@content;
+	}
+}
+
+@mixin mmiaw($widthStart, $widthEnd, $unit) {
+	@media (min-width: $widthStart+$unit) and (max-width: $widthEnd+$unit) {
+		@content;
+	}
+}
+
+@mixin media($width, $widthRange: null) {
+	// 判斷型態
+	$unit: null;
+	$type: type-of($width);
+
+	// number
+	@if ($type==number) {
+
+		// 轉string
+		$width: $width + '';
+
+		// 有輸入$widthRange
+		@if ($widthRange !=null) {
+			$width: $width + '-' + $widthRange;
+		}
+
+		$type: string;
+	}
+
+	// list
+	@if ($type==list) {
+
+		$width: nth($width, 1) + '-' + nth($width, 2);
+		$type: string;
+
+	}
+
+	// string 	
+	@if ($type==string) {
+
+		// 抓dash位置	
+		$dashIndex: str-index($width, '-');
+
+		// 字串長度
+		$stringLength: str-length($width);
+
+		// 整理單位和寬度
+		@if ($dashIndex==1) or ($dashIndex==$stringLength) or ($dashIndex==null) {
+			$unit: checkUnit($width);
+			$width: removeUnit($width, $unit);
+		}
+
+		@if ($dashIndex==$stringLength) or ($dashIndex==null) {
+
+			// max-width
+			$max: $stringLength - 1;
+
+			@if ($dashIndex==null) {
+				$max: $stringLength;
+			}
+
+			$width: str-slice($width, 1, $max);
+
+			// 呼叫對應mixin
+			@include mmaw($width, $unit) {
+				@content;
+			}
+
+		}
+
+		@else if ($dashIndex==1) {
+
+			// min-width
+			$width: str-slice($width, 2, $stringLength);
+
+			// 呼叫對應mixin
+			@include mmiw($width, $unit) {
+				@content;
+			}
+
+		}
+
+		@else {
+
+			// min-width and max-width
+			// 以dash切割
+			$firstWidth: str-slice($width, 1, $dashIndex - 1);
+			$secondWidth: str-slice($width, $dashIndex + 1, $stringLength);
+
+			$unit: checkUnit($firstWidth);
+
+			$firstWidth: removeUnit($firstWidth, $unit);
+			$secondWidth: removeUnit($secondWidth, $unit);
+
+			// 組成數字
+			$widths: number($firstWidth), number($secondWidth);
+
+			@include mmiaw(min($widths...), max($widths...), $unit) {
+				@content;
+			}
+		}
+	}
+}
+
+
+// ====== 以下開始 ======  //
+.solutionArea {
+	position: relative;
+	height: 100dvh; //固定區塊，高度需跟視窗同高避免曝光
+	background-color: #f3f3f3;
+	padding: 140px 0 80px;
+	overflow-x: clip;
+
+	@include media(1366) {
+		padding: 120px 0 80px;
+	}
+	@include media(991) {
+		padding: 80px 0;
+		height: auto;
+	}
+	@include media($breakpointSmall) {
+		padding: 60px 0;
+	}
+
+	.titleBox {
+        display: flex;
+        align-items: center;
+		column-gap: 24px;
+		margin-bottom: 94px;
+
+		@include media($breakpointMedium) {
+			margin-bottom: 72px;
+		}
+
+		@include media($breakpointSmall) {
+			flex-direction: column;
+			align-items: flex-start;
+			row-gap: 10px;
+			margin-bottom: 54px;
+		}
+
+		.title {
+			flex: 0 0 auto;
+			width: 290px;
+
+			@include media($breakpointMedium) {
+				width: 200px;
+			}
+		}
+
+		.text {
+			flex: 1 1 auto;
+			max-width: 790px;
+		}
+	}
+
+	.wrap {
+		position: relative;
+	}
+}
+
+.solutionBox {
+	position: relative;
+    display: flex;
+    align-items: center;
+	column-gap: 16px;
+	width: 100%;
+	max-width: 1725px;
+	padding: 0 95px;
+	margin-left: auto;
+	z-index: 2;
+
+	@include media(1536) {
+		@include wrap;
+	}
+
+	.leftBox {
+		position: relative;
+		flex: 1 1 auto;
+		width: calc(43% - 16px);
+	}
+
+	.rightBox {
+		position: relative;
+		flex: 0 0 auto;
+		width: 56%;
+	}
+
+	.controlBox {
+		margin-top: 48px;
+	}
+}
+
+.solutionTxtList {
+	position: relative;
+	
+	.solutionTxtItem {
+		position: relative;
+		padding: 25.5px 0;
+		border-bottom: 1px solid $lineColor;
+
+		@include media(1440) {
+			padding: 24px 0;
+		}
+		@include media(1366) {
+			padding: 16px 0;
+		}
+
+		&:first-child {
+			border-top: 1px solid $lineColor;
+		}
+
+		&:not(:first-child) {
+			.Txt {
+				.textBox {
+					overflow: clip;
+				}
+			}
+		}
+
+        // 文字樣式
+		&.show {
+			.itemTitle {
+				color: $secondColor;
+			}
+
+			.Txt {
+				.title {
+					color: $mainColor;
+
+					&::before {
+						width: 100%;
+					}
+				}
+
+				.textBox {
+					height: 140px;
+					padding-top: 20px;
+
+					@include media(1440) {
+						padding-top: 16px;
+					}
+					@include media(1366) {
+						height: 130px;
+					}
+					@include media($breakpointMedium) {
+						padding-top: 12px;
+					}
+				}
+			}
+		}
+	}
+
+	.item{
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		column-gap: 24px;
+	}
+
+	.itemTitle {
+		position: relative;
+		flex: 0 0 auto;
+		font-size: $textTitleSizeMedium;
+		font-weight: 500;
+		line-height: 1.5;
+		color: $mainColor;
+		@extend %ts;
+
+		@include media(1440) {
+			font-size: $textTitleSizeSmall;
+		}
+		@include media(1366) {
+			font-size: 16px;
+		}
+	}
+
+	.Txt {
+		position: relative;
+		flex: 1 1 auto;
+		max-width: 430px;
+		margin-left: auto;
+
+		.title {
+			position: relative;
+			width: fit-content;
+			font-size: $textTitleSizeSmall;
+			font-weight: 600;
+			line-height: 1.5;
+			color: $darkTextColor;
+			@include ellipsis(1);
+			padding-bottom: 8px;
+			margin-bottom: -8px;
+
+			@include media($breakpointMedium) {
+				font-size: $textSize;
+				padding-bottom: 4px;
+			}
+			
+			@include pseudoBefore{
+				width: 0%;
+				height: 2px;
+				background-color: $mainColor;
+				bottom: 0;
+				left: 0;
+				@extend %ts;
+			}
+
+			a {
+				color: inherit;
+
+				@include hover{
+					color: $mainColor;
+				}
+			}
+		}
+
+		.textBox {
+			position: relative;
+			height: 0px;
+			overflow: hidden;
+			@extend %ts;
+
+			.text {
+				font-size: $textSize;
+				line-height: 1.5;
+				color: $textTitleColor;
+				height: 72px;
+				@include ellipsis(3);
+
+				@include media(1366) {
+					font-size: $textSizeMedium;
+					height: 65px;
+				}
+			}
+
+			.linkBtn {
+				position: relative;
+				display: inline-block;
+				font-size: $textSizeMedium;
+				font-weight: 600;
+				line-height: 1.5;
+				color: #474747;
+				text-decoration-line: underline;
+				text-decoration-style: solid;
+				text-decoration-thickness: 2px;
+				text-underline-offset: 6px;
+				text-decoration-color: #474747;
+				text-decoration-skip-ink: none;
+				margin-top: 24px;
+				@extend %ts;
+
+				@include media(1366) {
+					font-size: $textSizeSmall;
+					margin-top: 16px;
+				}
+
+				@include hover{
+					color: $secondColor;
+					text-decoration-color: $secondColor;
+				}
+			}
+		}
+	}
+}
+
+.solutionImgList {
+	position: relative;
+	display: flex;
+	overflow: clip;
+
+	.solutionImgItem {
+		position: relative;
+		width: 100%;
+		flex: 0 0 auto;
+
+        // 除了第一張圖，其他圖片先隱藏
+		&:not(:first-child) {
+			@include cover;
+			pointer-events: none;
+
+			.item {
+				clip-path: inset(100% 0 0 0);
+			}
+		}
+	}
+
+	.item {
+		position: relative;
+	}
+	
+	.Img {
+		img {
+			@include img100;
+		}
+	}
+}

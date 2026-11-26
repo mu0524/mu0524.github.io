@@ -12,6 +12,15 @@ export function postUrl(id: string): string {
 	return withBase(`/posts/${id}/`);
 }
 
+export function labUrl(id?: string): string {
+	return withBase(id ? `/lab/${id}/` : "/lab/");
+}
+
+// 展示區 iframe 載入的獨立頁面
+export function labDemoUrl(id: string): string {
+	return withBase(`/lab/${id}/demo.html`);
+}
+
 export function pageUrl(page: number): string {
 	return withBase(page <= 1 ? "/" : `/${page}/`);
 }

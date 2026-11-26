@@ -1,0 +1,367 @@
+---
+import { render } from "astro:content";
+import Markdown from "@components/Markdown.astro";
+import PostNav from "@components/PostNav.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { formatDate } from "@lib/date";
+import { getLabItems, getLabSources, type LabItem } from "@lib/lab";
+import { labDemoUrl, labUrl } from "@lib/url";
+import type { GetStaticPaths } from "astro";
+import { Code } from "astro-expressive-code/components";
+import { Icon } from "astro-icon/components";
+
+export const getStaticPaths = (async () => {
+	const items = await getLabItems();
+	return items.map((item, index) => ({
+		params: { slug: item.id },
+		props: { item, newer: items[index - 1], older: items[index + 1] },
+	}));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	item: LabItem;
+	newer?: LabItem;
+	older?: LabItem;
+}
+
+const { item, newer, older } = Astro.props;
+const { Content } = await render(item);
+const { title, description, published, tags, demoHeight } = item.data;
+const sources = getLabSources(item.id);
+const demoUrl = labDemoUrl(item.id);
+
+// 裝置寬度：桌機用滿容器，平板、手機固定寬度方便看 RWD
+const DEVICES = [
+	{
+		key: "desktop",
+		label: "桌機",
+		icon: "material-symbols:desktop-windows-rounded",
+	},
+	{ key: "tablet", label: "平板", icon: "material-symbols:tablet-rounded" },
+	{ key: "mobile", label: "手機", icon: "material-symbols:mobile-rounded" },
+];
+
+const navItem = (lab?: LabItem) =>
+	lab && { title: lab.data.title, url: labUrl(lab.id) };
+---
+
+<PageLayout title={title} description={description}>
+	<article class="labDetailArea">
+		<div class="metaBox">
+			<span class="tag">{formatDate(published)}</span>
+		</div>
+
+		<div class="titleBox">
+			<h1 class="title">{title}</h1>
+		</div>
+
+		{tags.length > 0 && (
+			<div class="tagBox">
+				{tags.map((tag) => <span># {tag}</span>)}
+			</div>
+		)}
+
+		{description && <p class="text">{description}</p>}
+
+		<Markdown class="contentBox">
+			<Content />
+		</Markdown>
+
+		<section class="demoBox" data-lab-demo aria-label="展示區">
+			<div class="toolBox">
+				<div class="btnList">
+					<button type="button" class="btn" data-lab-reload>
+						<Icon name="material-symbols:refresh-rounded" />
+						<span>重新整理</span>
+					</button>
+					<a href={demoUrl} target="_blank" rel="noopener" class="btn">
+						<Icon name="material-symbols:open-in-new-rounded" />
+						<span>新分頁開啟</span>
+					</a>
+				</div>
+				<div class="btnList deviceList" role="group" aria-label="展示寬度">
+					{DEVICES.map((device, i) => (
+						<button
+							type="button"
+							class="btn"
+							data-lab-device={device.key}
+							aria-pressed={i === 0 ? "true" : "false"}
+							title={device.label}
+						>
+							<Icon name={device.icon} />
+							<span>{device.label}</span>
+						</button>
+					))}
+				</div>
+			</div>
+
+			<div class="frameBox" data-device="desktop">
+				<iframe src={demoUrl} title={`${title} 展示`} loading="lazy" style={`height: ${demoHeight}px`}></iframe>
+			</div>
+		</section>
+
+		{sources.length > 0 && (
+			<section class="codeBox" data-lab-code aria-label="程式碼">
+				<div class="tabList" role="tablist" aria-label="程式碼語言">
+					{sources.map((source, i) => (
+						<button
+							type="button"
+							role="tab"
+							id={`lab-tab-${source.lang}`}
+							class="tab"
+							aria-selected={i === 0 ? "true" : "false"}
+							aria-controls={`lab-panel-${source.lang}`}
+							tabindex={i === 0 ? 0 : -1}
+						>
+							{source.label}
+						</button>
+					))}
+				</div>
+				<Markdown class="panelList">
+					{sources.map((source, i) => (
+						<div
+							role="tabpanel"
+							id={`lab-panel-${source.lang}`}
+							class="panel"
+							aria-labelledby={`lab-tab-${source.lang}`}
+							hidden={i !== 0}
+						>
+							<Code code={source.code} lang={source.lang} />
+						</div>
+					))}
+				</Markdown>
+			</section>
+		)}
+	</article>
+
+	<div class="backBox">
+		<a href={labUrl()} class="backBtn">
+			<Icon name="material-symbols:arrow-back-rounded" />
+			<span>回 Lab 列表</span>
+		</a>
+	</div>
+
+	<PostNav newer={navItem(newer)} older={navItem(older)} unit="個" label="上下個元件" />
+</PageLayout>
+
+<style lang="scss">
+@use '../../../styles/setting' as *;
+
+// 說明、展示區、程式碼放在同一個灰底區塊，跟文章內頁一致
+.labDetailArea {
+	position: relative;
+	@include flex();
+	flex-direction: column;
+	gap: 1.25em;
+	@include font($ls: .08em, $lh: 1.8);
+	background-color: $grayColor;
+	padding: 3em 2em 2em;
+
+	@include media($breakpointMedium) {
+		padding: 2.75em 2em 1.5em;
+	}
+	@include media($breakpointSmall) {
+		font-size: $textSizeSmall;
+		padding: 2.5em 1.25em 1.25em;
+	}
+
+	.metaBox {
+		@include positionALTRB($t: -1em, $l: 2em);
+		@include flex(wrap);
+		gap: 1em;
+
+		@include media($breakpointSmall) {
+			left: 1.25em;
+		}
+
+		.tag {
+			font-size: .85rem;
+			line-height: 1;
+			white-space: nowrap;
+			background-color: var(--surface-tag);
+			padding: .625em 1em;
+		}
+	}
+
+	.titleBox {
+		border-bottom: 2px dashed $borderColor;
+		padding-bottom: .625em;
+
+		.title {
+			position: relative;
+			@include flex(nowrap, flex-start, center);
+			gap: .625em;
+			@include font($fs: 1.5em, $fw: $fwMedium, $ls: .08em, $lh: 1.5);
+
+			@include pseudoBefore($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
+			}
+
+			@include pseudoAfter($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
+			}
+		}
+	}
+
+	.tagBox {
+		@include flex(wrap, flex-end);
+		gap: .625em;
+		color: $mainColor;
+	}
+
+	.text {
+		color: $introColor;
+	}
+
+	// 說明內文沒有寫的時候不佔空間
+	:global(.contentBox:empty) {
+		display: none;
+	}
+}
+
+.backBox {
+	@include flex(nowrap, center);
+	margin-top: 1.5rem;
+
+	.backBtn {
+		@include flex(nowrap, center, center);
+		gap: .5rem;
+		height: 3rem;
+		@include font($ls: .08em, $lh: 1, $color: $introColor);
+		background-color: $grayColor;
+		padding: 0 1.5rem;
+		@extend %ts;
+
+		@include hover {
+			color: $mainColor;
+			background-color: $borderColor;
+		}
+
+		:global(svg) {
+			flex-shrink: 0;
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+	}
+}
+
+.demoBox {
+	@include flex();
+	flex-direction: column;
+	gap: 1em;
+
+	.toolBox {
+		@include flex(wrap, space-between, center);
+		gap: .75em;
+	}
+
+	.btnList {
+		@include flex(wrap);
+		gap: .625em;
+	}
+
+	.btn {
+		@include flex(nowrap, center, center);
+		gap: .375em;
+		height: 2.25rem;
+		@include font($fs: .875em, $ls: .08em, $lh: 1, $color: $introColor);
+		white-space: nowrap;
+		background-color: $btnBgColor;
+		border: 0;
+		border-radius: 8px;
+		padding: 0 .75em;
+		cursor: pointer;
+		@extend %ts;
+
+		@include hover {
+			color: $textColor;
+			background-color: $borderColor;
+		}
+
+		&[aria-pressed="true"] {
+			color: $textColor;
+			background-color: $borderColor;
+		}
+
+		:global(svg) {
+			flex-shrink: 0;
+			width: 1.25em;
+			height: 1.25em;
+			color: $mainColor;
+		}
+	}
+
+	// 螢幕本身就是手機寬度時，切換寬度沒有意義
+	.deviceList {
+		@include media($breakpointSmall) {
+			display: none;
+		}
+	}
+
+	.frameBox {
+		@include flex(nowrap, center);
+		background-color: $btnBgColor;
+		overflow: auto;
+
+		iframe {
+			display: block;
+			width: 100%;
+			max-width: 100%;
+			background-color: #fff;
+			border: 0;
+			transition: width .3s ease;
+		}
+
+		&[data-device="tablet"] {
+			iframe {
+				width: 768px;
+			}
+		}
+
+		&[data-device="mobile"] {
+			iframe {
+				width: 375px;
+			}
+		}
+	}
+}
+
+.codeBox {
+	@include flex();
+	flex-direction: column;
+
+	.tabList {
+		@include flex(wrap);
+		gap: .25em;
+		background-color: var(--codeblock-topbar-bg);
+		padding: .5em .5em 0;
+	}
+
+	.tab {
+		@include font($fs: .875em, $fw: $fwBold, $ls: .08em, $lh: 1, $color: var(--text-muted));
+		font-family: 'JetBrains Mono Variable', monospace;
+		background-color: transparent;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		padding: .75em 1em;
+		cursor: pointer;
+		@extend %ts;
+
+		@include hover {
+			color: #fff;
+		}
+
+		&[aria-selected="true"] {
+			color: #fff;
+			border-bottom-color: $mainColor;
+		}
+	}
+
+	// markdownBox 的段落間距會讓第二個以後的分頁跟分頁列之間多一段空白
+	:global(.panelList > .panel) {
+		margin-top: 0;
+	}
+}
+</style>

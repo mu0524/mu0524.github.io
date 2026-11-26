@@ -1,0 +1,32 @@
+/*
+    ::漸層 border 說明::
+    因為 border 不支援 linear-gradient, 改用 ::before + mask 模擬
+    1. 偽元素鋪滿整個元素 (inset: 0), padding 控制 border 粗細
+    2. background 畫上漸層
+    3. mask 疊兩層 (content-box + border-box),
+       利用 mask-composite: exclude 讓中間挖空,
+       只留最外圈 padding 那一圈漸層
+*/
+
+.shape {
+	position: relative;
+	display: block;
+	width: 200px;
+	height: 200px;
+	background-color: #ddd;
+	margin: 20px;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		padding: 2px;
+		background: linear-gradient(225deg, #d86161, #491b7e);
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+	}
+}

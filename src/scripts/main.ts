@@ -5,3 +5,4 @@ import "./lightbox";
 import "./github-card";
 import "./archive";
 import "./codepen";
+import "./lab";

@@ -1,0 +1,195 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { getLabItems } from "@lib/lab";
+import { labUrl } from "@lib/url";
+
+const items = await getLabItems();
+---
+
+<PageLayout title="Lab">
+	<section class="labArea">
+		<div class="titleBox">
+			<h1 class="title">Lab</h1>
+		</div>
+
+		{items.length === 0 ? (
+			<p class="emptyText">還沒有展示</p>
+		) : (
+			<div class="labList">
+				{items.map((item, i) => (
+					<article class="labItem onloadAnimation" style={`animation-delay: ${i * 50}ms`}>
+						<div class="item">
+							<figure class="Img">
+								{item.data.preview ? (
+									// GIF 用原檔，經過 <Image> 轉檔會失去動畫
+									<img
+										src={item.data.preview.src}
+										alt=""
+										width={item.data.preview.width}
+										height={item.data.preview.height}
+										loading="lazy"
+										decoding="async"
+									/>
+								) : (
+									<span class="noImg">{item.data.title}</span>
+								)}
+							</figure>
+
+							<div class="txtBox">
+								<h2 class="name">{item.data.title}</h2>
+								{item.data.description && <p class="text">{item.data.description}</p>}
+								{item.data.tags.length > 0 && (
+									<div class="tagBox">
+										{item.data.tags.map((tag) => <span># {tag}</span>)}
+									</div>
+								)}
+							</div>
+
+							<a href={labUrl(item.id)} class="linkWrap" aria-label={item.data.title}></a>
+						</div>
+					</article>
+				))}
+			</div>
+		)}
+	</section>
+</PageLayout>
+
+<style lang="scss">
+@use '../../styles/setting' as *;
+
+.labArea {
+	@include flex();
+	flex-direction: column;
+	gap: 2rem;
+	@include font($ls: .08em, $lh: 1.8);
+
+	@include media($breakpointSmall) {
+		gap: 1.5rem;
+		font-size: $textSizeSmall;
+	}
+
+	.titleBox {
+		border-bottom: 2px dashed $borderColor;
+		padding-bottom: .625em;
+
+		.title {
+			position: relative;
+			@include flex(nowrap, center, center);
+			gap: .625em;
+			font-size: 1.75em;
+			line-height: 1.5;
+
+			@include media($breakpointSmall) {
+				font-size: 1.5em;
+			}
+
+			@include pseudoBefore($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
+			}
+
+			@include pseudoAfter($position: relative) {
+				@include pseudoShape(10px, 3px, $borderColor);
+				flex-shrink: 0;
+			}
+		}
+	}
+}
+
+.emptyText {
+	color: $introColor;
+	text-align: center;
+	background-color: $grayColor;
+	padding: 3em 1em;
+}
+
+.labList {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 2rem 1.5rem;
+
+	@include media($breakpointSmall) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+	}
+}
+
+.labItem {
+	position: relative;
+	min-width: 0;
+
+	.item {
+		position: relative;
+		@include flex();
+		flex-direction: column;
+		gap: 1.25em;
+		height: 100%;
+		background-color: $grayColor;
+		padding: 1.25em 1.25em 1.5em;
+
+		@include hover {
+			.name {
+				color: $mainColor;
+			}
+
+			.Img {
+				img {
+					scale: 1.05;
+				}
+			}
+		}
+	}
+
+	.Img {
+		@include flex(nowrap, center, center);
+		aspect-ratio: 16 / 9;
+		background-color: #fff;
+		padding: 1rem;
+		overflow: clip;
+
+		img {
+			@include imgCover;
+			will-change: scale;
+			@extend %ts;
+		}
+
+		.noImg {
+			color: $introColor;
+			padding: 0 1em;
+		}
+	}
+
+	.txtBox {
+		@include flex();
+		flex-direction: column;
+		flex: 1 1 auto;
+		gap: .625em;
+	}
+
+	.name {
+		border-bottom: 2px dashed $borderColor;
+		@include font($fs: 1.125em, $fw: $fwMedium, $ls: .05em, $lh: 1.5);
+		padding-bottom: .5em;
+		@extend %ts;
+	}
+
+	.text {
+		font-size: .875em;
+		color: $introColor;
+		@include ellipsis(2);
+	}
+
+	.tagBox {
+		@include flex(wrap);
+		gap: .625em;
+		margin-top: auto;
+		font-size: .875em;
+		color: $mainColor;
+	}
+
+	.linkWrap {
+		@include cover;
+		z-index: 2;
+	}
+}
+</style>

@@ -19,7 +19,7 @@ export const LICENSE = {
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
-export type NavIcon = "home" | "archive" | "about" | "github";
+export type NavIcon = "home" | "archive" | "lab" | "about" | "github";
 
 export interface NavLink {
 	name: string;
@@ -31,6 +31,7 @@ export interface NavLink {
 export const NAV_LINKS: NavLink[] = [
 	{ name: "首頁", href: "/", icon: "home" },
 	{ name: "彙整", href: "/archive/", icon: "archive" },
+	{ name: "Lab", href: "/lab/", icon: "lab" },
 	{ name: "關於我", href: "/about/", icon: "about" },
 	{ name: "GitHub", href: SITE.github, icon: "github", external: true },
 ];

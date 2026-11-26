@@ -10,11 +10,16 @@ import { NAV_LINKS, type NavIcon, SITE } from "@/site.config";
 import Search from "./Search.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
-// 設計稿有素材的圖示用素材，彙整沒有素材，改用同風格的實心圖示
+// 設計稿有素材的圖示用素材，彙整、Lab 沒有素材，改用同風格的實心圖示
 const ICON_SRC: Partial<Record<NavIcon, string>> = {
 	home: iconHome,
 	about: iconAbout,
 	github: iconGithub,
+};
+
+const ICON_NAME: Partial<Record<NavIcon, string>> = {
+	archive: "material-symbols:inventory-2-rounded",
+	lab: "material-symbols:science-rounded",
 };
 ---
 
@@ -32,7 +37,7 @@ const ICON_SRC: Partial<Record<NavIcon, string>> = {
 				>
 					{ICON_SRC[link.icon]
 						? <img src={ICON_SRC[link.icon]} alt="" width="24" height="24" />
-						: <Icon name="material-symbols:inventory-2-rounded" />}
+						: <Icon name={ICON_NAME[link.icon] ?? "material-symbols:inventory-2-rounded"} />}
 					<span>{link.name}</span>
 				</a>
 			))}

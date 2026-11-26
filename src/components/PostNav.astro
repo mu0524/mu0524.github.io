@@ -1,28 +1,34 @@
 ---
 import iconPrev from "@assets/images/theme/icon-angle-double-left.svg?url";
 import iconNext from "@assets/images/theme/icon-angle-double-right.svg?url";
-import type { Post } from "@lib/posts";
-import { postUrl } from "@lib/url";
 
-interface Props {
-	newer?: Post;
-	older?: Post;
+// 文章頁與 Lab 內頁共用：unit 是「篇」「個」這類量詞，用在無障礙標籤
+interface NavItem {
+	title: string;
+	url: string;
 }
 
-const { newer, older } = Astro.props;
+interface Props {
+	newer?: NavItem;
+	older?: NavItem;
+	unit?: string;
+	label?: string;
+}
+
+const { newer, older, unit = "篇", label = "上下篇文章" } = Astro.props;
 ---
 
 {(newer || older) && (
-	<nav class="pageNavBox" aria-label="上下篇文章">
+	<nav class="pageNavBox" aria-label={label}>
 		{newer ? (
-			<a href={postUrl(newer.id)} class="btn prev" aria-label={`上一篇：${newer.data.title}`}>
+			<a href={newer.url} class="btn prev" aria-label={`上一${unit}：${newer.title}`}>
 				<img src={iconPrev} alt="" width="16" height="16" />
-				<span>{newer.data.title}</span>
+				<span>{newer.title}</span>
 			</a>
 		) : <span></span>}
 		{older && (
-			<a href={postUrl(older.id)} class="btn next" aria-label={`下一篇：${older.data.title}`}>
-				<span>{older.data.title}</span>
+			<a href={older.url} class="btn next" aria-label={`下一${unit}：${older.title}`}>
+				<span>{older.title}</span>
 				<img src={iconNext} alt="" width="16" height="16" />
 			</a>
 		)}

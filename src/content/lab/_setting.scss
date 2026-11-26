@@ -1,0 +1,262 @@
+// Lab 元件共用設定：編譯展示區時接在每個元件的 SCSS 前面，程式碼分頁不顯示
+// 元件可以直接使用這裡的變數與 mixin，元件自己重新定義的會覆蓋這裡的
+
+// 主視覺顏色、次要顏色
+$mainColor: #1A73E8;
+$secondColor: #202020;
+$thirdColor: #f7f7f7;
+
+// 標題、內文顏色
+$titleColor: $mainColor;
+$textColor: #8B8B8B;
+
+// 框線顏色
+$lineColor: rgba(#000, 0.1);
+
+// 主要內容預設寬度(wrap)、rwd斷點
+$defaultWidth: 1380px;
+
+$breakpointMedium: 1180px; //平板
+$breakpointSmall: 768px; //手機板
+
+// font size
+$titleSize: 36px;
+$titleSizeMedium: 32px;
+$titleSizeSmall: 30px;
+
+$subtitleSize: 28px;
+$subtitleSizeMedium: 24px;
+$subtitleSizeSmall: 22px;
+
+$textTitleSize: 20px;
+$textTitleSizeMedium: 18px;
+$textTitleSizeSmall: 16px;
+
+$textSize: 16px;
+$textSizeMedium: 15px;
+$textSizeSmall: 14px;
+
+$dataTitleSize: 24px;
+$dataTitleSizeMedium: 22px;
+$dataTitleSizeSmall: 20px;
+
+$dataTextSize: 16px;
+$dataTextSizeMedium: 15px;
+$dataTextSizeSmall: 14px;
+
+// extend
+%ts {
+	transition: all .5s ease-in-out;
+}
+
+// mixin
+@mixin wrap($maxWidth: $defaultWidth, $paddingLeft: 50px, $paddingRight: 50px, $position: center) {
+	@if $position == center {
+		$position: 0 auto;
+	} @else if $position == left {
+		$position: 0 auto 0 0;
+	} @else if $position == right {
+		$position: 0 0 0 auto;
+	}
+
+	width: 100%;
+	max-width: $maxWidth;
+	margin: $position;
+	padding-left: $paddingLeft;
+	padding-right: $paddingRight;
+	@content;
+
+	@include media(1180) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	@include media(768) {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+@mixin pseudoBefore($content: "", $position: absolute) {
+	&::before {
+		content: $content;
+		position: $position;
+		@content;
+	}
+}
+
+@mixin pseudoAfter($content: "", $position: absolute) {
+	&::after {
+		content: $content;
+		position: $position;
+		@content;
+	}
+}
+
+@mixin img100 {
+	width: 100%;
+	height: auto;
+	display: block;
+	backface-visibility: hidden;
+}
+
+@mixin imgCover {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+}
+
+@mixin cover($width: 100%, $height: 100%) {
+	width: $width;
+	height: $height;
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+@mixin oneLine {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@mixin hover {
+	@include media(-1181) {
+		&:hover {
+			@content;
+		}
+	}
+}
+
+// media(768)：max-width 768px
+// media(-1181)：min-width 1181px
+// media(768, 1180)：768px ~ 1180px
+@mixin mmiw($width, $unit) {
+	@media (min-width: $width+$unit) {
+		@content;
+	}
+}
+
+@mixin mmaw($width, $unit) {
+	@media (max-width: $width+$unit) {
+		@content;
+	}
+}
+
+@mixin mmiaw($widthStart, $widthEnd, $unit) {
+	@media (min-width: $widthStart+$unit) and (max-width: $widthEnd+$unit) {
+		@content;
+	}
+}
+
+@mixin media($width, $widthRange: null) {
+	$unit: null;
+	$type: type-of($width);
+
+	@if ($type == number) {
+		$width: $width + '';
+
+		@if ($widthRange != null) {
+			$width: $width + '-' + $widthRange;
+		}
+
+		$type: string;
+	}
+
+	@if ($type == list) {
+		$width: nth($width, 1) + '-' + nth($width, 2);
+		$type: string;
+	}
+
+	@if ($type == string) {
+		$dashIndex: str-index($width, '-');
+		$stringLength: str-length($width);
+
+		@if ($dashIndex == 1) or ($dashIndex == $stringLength) or ($dashIndex == null) {
+			$unit: checkUnit($width);
+			$width: removeUnit($width, $unit);
+		}
+
+		@if ($dashIndex == $stringLength) or ($dashIndex == null) {
+			$max: $stringLength - 1;
+
+			@if ($dashIndex == null) {
+				$max: $stringLength;
+			}
+
+			$width: str-slice($width, 1, $max);
+
+			@include mmaw($width, $unit) {
+				@content;
+			}
+		} @else if ($dashIndex == 1) {
+			$width: str-slice($width, 2, $stringLength);
+
+			@include mmiw($width, $unit) {
+				@content;
+			}
+		} @else {
+			$firstWidth: str-slice($width, 1, $dashIndex - 1);
+			$secondWidth: str-slice($width, $dashIndex + 1, $stringLength);
+
+			$unit: checkUnit($firstWidth);
+
+			$firstWidth: removeUnit($firstWidth, $unit);
+			$secondWidth: removeUnit($secondWidth, $unit);
+
+			$widths: number($firstWidth), number($secondWidth);
+
+			@include mmiaw(min($widths...), max($widths...), $unit) {
+				@content;
+			}
+		}
+	}
+}
+
+// function
+// string to number
+@function number($string) {
+	$number: 0;
+
+	@for $i from 1 through str-length($string) {
+		$character: str-slice($string, $i, $i);
+		$index: str-index('0123456789', $character) - 1;
+		$number: $number * 10 + $index;
+	}
+
+	@return $number;
+}
+
+// 單位判斷
+@function checkUnit($string) {
+	$units: px em;
+	$unit: null;
+
+	@for $i from 1 through length($units) {
+		$hasUnit: str-index($string, nth($units, $i));
+
+		@if ($hasUnit != null) {
+			$unit: nth($units, $i);
+		}
+	}
+
+	@if ($unit == null) {
+		$unit: px;
+	}
+
+	@return $unit;
+}
+
+// remove unit
+@function removeUnit($string, $unit) {
+	$index: str-index($string, $unit);
+
+	@if ($index != null) {
+		$string: str-slice($string, 1, $index - 1);
+	}
+
+	@return $string;
+}

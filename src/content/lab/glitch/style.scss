@@ -1,0 +1,86 @@
+body {
+    background-color: #050505;
+    color: #fff;
+
+    p {
+        margin-bottom: 32px;
+    }
+}
+
+@keyframes rotate {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes glitchy {
+	0% {
+		transform: translate(-2px, 2px);
+	}
+
+	25% {
+		transform: translate(-2px, -2px);
+	}
+
+	50% {
+		transform: translate(2px, 2px);
+	}
+
+	75% {
+		transform: translate(2px, -2px);
+	}
+
+	100% {
+		transform: translate(-2px, 2px);
+	}
+}
+
+.scrollDown {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #fff;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    z-index: 2;
+
+   &:hover {
+        .icon {
+            filter: drop-shadow(-1px -1px 0 rgba(#00ffff, .6)) drop-shadow(1px 1px 0 rgba(#ff00ff, .6));
+            scale: .9;
+            rotate: 360deg;
+            animation: glitchy .5s infinite ease;
+        }
+
+        .ringText {
+            filter: drop-shadow(-1px -1px 0 rgba(#00ffff, .6)) drop-shadow(1px 1px 0 rgba(#ff00ff, .6));
+            scale: .9;
+            transition-delay: .2s;
+        }
+    }
+
+    .ringText {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        font-size: 11px;
+        fill: #fff;
+        animation: rotate 30s infinite linear;
+        transition: all .5s ease-in-out;
+        pointer-events: none;
+    }
+
+    .icon {
+        position: absolute;
+        font-size: 36px;
+        line-height: 1;
+        color: #fff;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        transition: all .5s ease-in-out;
+    }
+}

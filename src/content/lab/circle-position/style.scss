@@ -1,0 +1,37 @@
+.circleBox {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    background: $mainColor;
+    border-radius: 50%;
+
+    @include media(768) {
+        width: 100%;
+    }
+}
+
+.circleList {
+    position: absolute;
+    /* 離邊界60px避免貼邊，可以自行調整 */
+    width: calc(100% - 60px);
+    height: calc(100% - 60px);
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+
+    .circleItem {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: auto;
+        aspect-ratio: 1/1;
+        background-color: #fff;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+    }
+}

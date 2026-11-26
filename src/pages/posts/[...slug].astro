@@ -87,7 +87,10 @@ const jsonLd = {
 		<License title={title} url={url} published={published} updated={updated} />
 	</article>
 
-	<PostNav newer={newer} older={older} />
+	<PostNav
+		newer={newer && { title: newer.data.title, url: postUrl(newer.id) }}
+		older={older && { title: older.data.title, url: postUrl(older.id) }}
+	/>
 
 	<Toc slot="aside" headings={headings} />
 </PageLayout>

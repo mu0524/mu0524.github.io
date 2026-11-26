@@ -1,0 +1,173 @@
+// 主視覺顏色、次要顏色
+$mainColor: #5a5e89;
+$secondColor: #f19544;
+$thirdColor: #8a8fc5;
+
+@mixin font($fs: $textSize, $fw: $regular, $ls: .035em, $lh: 1.5, $color: $textColor) {
+    font: {
+        size: $fs;
+        weight: $fw;
+    }
+
+    letter-spacing: $ls;
+    line-height: $lh;
+    color: $color;
+}
+
+@mixin borderTriangle($direction: top, $color: $mainColor, $width: 10px) {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: $width;
+    border-color: transparent;
+    border-#{$direction}-color: $color;
+}
+
+.barChartArea {
+    position: relative;
+    padding: 80px 0;
+}
+
+//客製圖表樣式
+.barChartOuterBox {
+    position: relative;
+
+    .barChartBox {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        column-gap: 8px;
+        padding-bottom: 50px;
+
+        .leftBox {
+            position: relative;
+        }
+
+        .chartRangeBox {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            height: 100%;
+
+            .number {
+                position: relative;
+                display: block;
+                @include font(20px, 500, .015em, 1.5, $mainColor);
+
+                &:first-child {
+                    translate: 0 -50%;
+                }
+
+                &:last-child {
+                    translate: 0 50%;
+                }
+            }
+        }
+
+        .rightBox {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .decoLine {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+
+            .line {
+                position: relative;
+                display: block;
+                width: 100%;
+                height: 1px;
+                background-color: #f1f1f8;
+            }
+        }
+
+        .chartList {
+            position: relative;
+            display: flex;
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+
+            li {
+                position: relative;
+                width: calc(100% / 5);
+                flex: 1 0 auto;
+            }
+
+            .shapeLine {
+                position: relative;
+                height: 275px;
+                pointer-events: none;
+
+                .line {
+                    position: absolute;
+                    display: block;
+                    width: 20px;
+                    height: 100%;
+                    border-radius: 20px;
+                    background-color: $secondColor;
+                    bottom: 0;
+                    left: 50%;
+                    translate: -50% 0;
+                }
+
+               // 偽元素做背後100%的灰色線條
+                &::before {
+                    position: relative;
+                    content: '';
+                    display: block;
+                    width: 20px;
+                    height: 275px;
+                    background-color: #e6e6f0;
+                    border-radius: 20px;
+                    left: 50%;
+                    translate: -50% 0;
+                    pointer-events: none;
+                }
+            }
+
+            .currentText {
+                position: absolute;
+                display: inline-block;
+                @include font(17px, 500, .035em, 1.5, #fff);
+                background-color: $mainColor;
+                border-radius: 6px;
+                padding: 5px 10px;
+                bottom: 0;
+                left: 50%;
+                translate: -50% 0;
+                z-index: 1;
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    display: block;
+                    @include borderTriangle(top, $mainColor, (6px 6px 0 6px));
+                    top: 100%;
+                    left: 50%;
+                    translate: -50% 0;
+                    pointer-events: none;
+                }
+            }
+
+            .title {
+                position: absolute;
+                width: 100%;
+                @include font(17px, 400, .015em, 1.5, $mainColor);
+                text-align: center;
+                top: calc(100% + 24px);
+                left: 50%;
+                translate: -50% 0;
+            }
+        }
+    }
+}

@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
-const targets = ["src", "public", "astro.config.mjs"];
+const targets = ["src", "public", "astro.config.mjs", "ec.config.mjs"];
 // 連續存檔時等最後一次存檔後再 build
 const delay = 800;
 

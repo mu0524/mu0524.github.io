@@ -1,7 +1,5 @@
 import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
-import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
-import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
@@ -15,9 +13,6 @@ import { remarkDirectiveFallback } from "./src/plugins/remark-directive-fallback
 import { remarkGithubCard } from "./src/plugins/remark-github-card.ts";
 import { remarkWordCount } from "./src/plugins/remark-word-count.ts";
 import { SITE } from "./src/site.config.ts";
-
-const CODE_FONT =
-	"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
 export default defineConfig({
 	site: SITE.url,
@@ -44,38 +39,10 @@ export default defineConfig({
 				"material-symbols": ["*"],
 			},
 		}),
-		expressiveCode({
-			themes: ["github-dark"],
-			plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
-			defaultProps: {
-				wrap: true,
-				overridesByLang: {
-					shellsession: { showLineNumbers: false },
-				},
-			},
-			styleOverrides: {
-				borderRadius: "0",
-				borderColor: "transparent",
-				codeBackground: "var(--codeblock-bg)",
-				codeFontFamily: CODE_FONT,
-				codeFontSize: "0.875rem",
-				codeLineHeight: "1.6",
-				uiFontFamily: "inherit",
-				frames: {
-					editorBackground: "var(--codeblock-bg)",
-					terminalBackground: "var(--codeblock-bg)",
-					editorTabBarBackground: "var(--codeblock-topbar-bg)",
-					terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
-					editorActiveTabBackground: "transparent",
-					editorActiveTabIndicatorTopColor: "transparent",
-					editorActiveTabIndicatorBottomColor: "var(--accent-rose)",
-					editorTabBarBorderBottomColor: "var(--codeblock-topbar-bg)",
-					terminalTitlebarBorderBottomColor: "transparent",
-					frameBoxShadowCssValue: "none",
-				},
-			},
-		}),
-		sitemap(),
+		// 設定寫在 ec.config.mjs
+		expressiveCode(),
+		// Lab 展示區 iframe 的獨立頁面不放進 sitemap
+		sitemap({ filter: (page) => !page.endsWith("/demo.html") }),
 	],
 	markdown: {
 		processor: unified({
