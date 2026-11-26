@@ -1,6 +1,7 @@
 ---
 import bunnyWalking from "@assets/images/theme/bunny-walking.gif";
-import { DAY_MS, formatIsoDate } from "@lib/date";
+import { DAY_MS, formatIsoDate, formatTaipeiDate } from "@lib/date";
+import { getLastPushTime } from "@lib/last-push";
 import { getCategoryTree, getPosts, getSiteStats, getTags } from "@lib/posts";
 import { withBase } from "@lib/url";
 import { SITE } from "@/site.config";
@@ -13,9 +14,13 @@ const stats = await getSiteStats(posts);
 const currentYear = new Date().getFullYear();
 const startTime = stats.firstPublished?.getTime() ?? Date.now();
 const runningDays = Math.floor((Date.now() - startTime) / DAY_MS) + 1;
-const lastActivity = stats.lastActivity
-	? formatIsoDate(stats.lastActivity).replaceAll("-", "/")
-	: "-";
+// 最後活動：最後一次 push 的時間；抓不到時改用文章最新的發布、更新日期
+const lastPush = getLastPushTime();
+const lastActivity = lastPush
+	? formatTaipeiDate(lastPush).replaceAll("-", "/")
+	: stats.lastActivity
+		? formatIsoDate(stats.lastActivity).replaceAll("-", "/")
+		: "-";
 ---
 
 <footer class="footerArea">
