@@ -40,8 +40,7 @@ let cached: { value: Date | undefined } | undefined;
 export function getLastPushTime(): Date | undefined {
 	// @{u} 是遠端追蹤分支，也就是最後一次 push 上去的 commit；CI 的 checkout 沒有追蹤分支，改用 HEAD
 	cached ??= {
-		value:
-			readPushedAt() ?? readCommitTime("@{u}") ?? readCommitTime("HEAD"),
+		value: readPushedAt() ?? readCommitTime("@{u}") ?? readCommitTime("HEAD"),
 	};
 	return cached.value;
 }
