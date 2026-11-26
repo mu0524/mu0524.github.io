@@ -16,7 +16,9 @@
 			"!!**/node_modules",
 			"!!**/.husky",
 			"!!**/.astro",
-			"!!**/src/**/*.md"
+			"!!**/src/**/*.md",
+			// Lab 元件的原始碼會照原樣顯示在程式碼分頁，保留元件庫的寫法，不套部落格的規範
+			"!!**/src/content/lab"
 		]
 	},
 	"formatter": {
