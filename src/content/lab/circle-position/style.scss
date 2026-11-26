@@ -1,13 +1,41 @@
+body {
+    padding: 24px;
+    margin: 0;
+}
+
 .circleBox {
     position: relative;
     width: 100%;
+    max-width: 560px;
     height: auto;
     aspect-ratio: 1/1;
-    background: $mainColor;
+    background-color: $thirdColor;
     border-radius: 50%;
+    margin: 0 auto;
 
-    @include media(768) {
-        width: 100%;
+    // 項目排列的軌道線（示意使用，可以移除）
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 80px;
+        border: 1px dashed $lineColor;
+        border-radius: 50%;
+    }
+}
+
+// 中間的圖片（示意使用，可以移除）
+.centerImg {
+    position: absolute;
+    width: 40%;
+    aspect-ratio: 4/3;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    margin: 0;
+
+    img {
+        @include imgCover;
+        object-fit: contain;
     }
 }
 
@@ -28,10 +56,19 @@
         width: 100px;
         height: auto;
         aspect-ratio: 1/1;
+        font-size: 16px;
+        font-weight: 700;
+        color: $titleColor;
         background-color: #fff;
+        border: 1px solid $lineColor;
         border-radius: 50%;
         top: 50%;
         left: 50%;
         translate: -50% -50%;
+
+        @include media(480) {
+            width: 64px;
+            font-size: 13px;
+        }
     }
 }

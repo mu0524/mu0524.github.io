@@ -1,17 +1,25 @@
 // Lab 元件共用設定：編譯展示區時接在每個元件的 SCSS 前面，程式碼分頁不顯示
 // 元件可以直接使用這裡的變數與 mixin，元件自己重新定義的會覆蓋這裡的
 
+// 配色跟部落格一致：黑灰白為主，灰玫瑰當重點色
+// 淡粉、淡藍取自吉祥物方吉的色彩規範，只用在小面積的點綴
+
 // 主視覺顏色、次要顏色
-$mainColor: #1A73E8;
-$secondColor: #202020;
-$thirdColor: #f7f7f7;
+$mainColor: #b9a5a5;  // 灰玫瑰（部落格重點色）
+$secondColor: #53514e; // 炭灰（標題、重要資訊）
+$thirdColor: #f6f6f6;  // 霧白（區塊底色）
+
+// 方吉點綴色
+$pinkColor: #f6d6d6;
+$blueColor: #cfe6f5;
 
 // 標題、內文顏色
-$titleColor: $mainColor;
-$textColor: #8B8B8B;
+$titleColor: $secondColor;
+$textColor: #7b7b7b;
+$mutedColor: #aaa7a3;
 
 // 框線顏色
-$lineColor: rgba(#000, 0.1);
+$lineColor: #dcdbd9;
 
 // 主要內容預設寬度(wrap)、rwd斷點
 $defaultWidth: 1380px;

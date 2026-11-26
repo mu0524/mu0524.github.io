@@ -1,9 +1,15 @@
+// 跟部落格深色模式同色
+$darkBg: #1c1b1a;
+$darkText: #e2e0dd;
+
 body {
-    background-color: #050505;
-    color: #fff;
+    background-color: $darkBg;
+    color: $mutedColor;
+    padding: 24px;
+    margin: 0;
 
     p {
-        margin-bottom: 32px;
+        margin: 0 0 32px;
     }
 }
 
@@ -42,21 +48,22 @@ body {
     align-items: center;
     width: 120px;
     height: 120px;
-    border: 1px solid #fff;
+    border: 1px solid rgba($darkText, .3);
+    border-radius: 50%;
     cursor: pointer;
     transition: all .5s ease-in-out;
     z-index: 2;
 
    &:hover {
         .icon {
-            filter: drop-shadow(-1px -1px 0 rgba(#00ffff, .6)) drop-shadow(1px 1px 0 rgba(#ff00ff, .6));
+            filter: drop-shadow(-2px -2px 0 $blueColor) drop-shadow(2px 2px 0 $pinkColor);
             scale: .9;
             rotate: 360deg;
             animation: glitchy .5s infinite ease;
         }
 
         .ringText {
-            filter: drop-shadow(-1px -1px 0 rgba(#00ffff, .6)) drop-shadow(1px 1px 0 rgba(#ff00ff, .6));
+            filter: drop-shadow(-1px -1px 0 $blueColor) drop-shadow(1px 1px 0 $pinkColor);
             scale: .9;
             transition-delay: .2s;
         }
@@ -67,7 +74,7 @@ body {
         width: 100%;
         max-width: 100%;
         font-size: 11px;
-        fill: #fff;
+        fill: $darkText;
         animation: rotate 30s infinite linear;
         transition: all .5s ease-in-out;
         pointer-events: none;
@@ -75,9 +82,13 @@ body {
 
     .icon {
         position: absolute;
-        font-size: 36px;
-        line-height: 1;
-        color: #fff;
+        width: 36px;
+        height: 36px;
+        fill: none;
+        stroke: $darkText;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
         top: 50%;
         left: 50%;
         translate: -50% -50%;

@@ -1,34 +1,9 @@
-// 主視覺顏色、次要顏色
-$mainColor: #10376e;
-$secondColor: #ff9e18;
-$thirdColor: #f6f6f6;
+// 共用設定（變數、media、wrap 等 mixin）在展示區編譯時會接在前面
+// 這裡只放這個元件自己的顏色與 mixin
 
 // 標題、內文顏色
-$titleColor: $mainColor;
-$textTitleColor: #000000;
-$darkTextColor: #929292;
-$textColor: #767676;
-
-// 框線顏色
-$lineColor: #d0d0d0;
-
-// 主要內容預設寬度(wrap)、rwd斷點
-$defaultWidth: 1435px;
-
-$breakpointMedium: 1180px; //平板
-$breakpointSmall: 768px; //手機板
-
-// extend
-%ts {
-	transition: all .5s ease-in-out;
-}
-
-@mixin img100 {
-	width: 100%;
-	height: auto;
-	display: block;
-	backface-visibility: hidden;
-}
+$textTitleColor: $secondColor;
+$darkTextColor: $mutedColor;
 
 @mixin ellipsis($line) {
 	display: -webkit-box;
@@ -38,170 +13,18 @@ $breakpointSmall: 768px; //手機板
 	-webkit-box-orient: vertical;
 }
 
-@mixin cover($width: 100%, $height: 100%) {
-	width: $width;
-	height: $height;
-	margin: auto;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-
-@mixin hover {
-	@include media(-1181) {
-		&:hover {
-			@content;
-		}
-	}
-}
-
-@mixin mediaQuery($queryType, $max, $min) {
-	@if $queryType==1 {
-		@media screen and (max-width:$max) and (min-width:$min) {
-			@content;
-		}
-	}
-
-	@else if $queryType==2 {
-		@media screen and (max-width:$max) {
-			@content;
-		}
-	}
-
-	@else if $queryType==3 {
-		@media screen and (min-width:$min) {
-			@content;
-		}
-	}
-}
-
-// media
-@mixin mmiw($width, $unit) {
-	@media (min-width: $width+$unit) {
-		@content;
-	}
-}
-
-@mixin mmaw($width, $unit) {
-	@media (max-width: $width+$unit) {
-		@content;
-	}
-}
-
-@mixin mmiaw($widthStart, $widthEnd, $unit) {
-	@media (min-width: $widthStart+$unit) and (max-width: $widthEnd+$unit) {
-		@content;
-	}
-}
-
-@mixin media($width, $widthRange: null) {
-	// 判斷型態
-	$unit: null;
-	$type: type-of($width);
-
-	// number
-	@if ($type==number) {
-
-		// 轉string
-		$width: $width + '';
-
-		// 有輸入$widthRange
-		@if ($widthRange !=null) {
-			$width: $width + '-' + $widthRange;
-		}
-
-		$type: string;
-	}
-
-	// list
-	@if ($type==list) {
-
-		$width: nth($width, 1) + '-' + nth($width, 2);
-		$type: string;
-
-	}
-
-	// string 	
-	@if ($type==string) {
-
-		// 抓dash位置	
-		$dashIndex: str-index($width, '-');
-
-		// 字串長度
-		$stringLength: str-length($width);
-
-		// 整理單位和寬度
-		@if ($dashIndex==1) or ($dashIndex==$stringLength) or ($dashIndex==null) {
-			$unit: checkUnit($width);
-			$width: removeUnit($width, $unit);
-		}
-
-		@if ($dashIndex==$stringLength) or ($dashIndex==null) {
-
-			// max-width
-			$max: $stringLength - 1;
-
-			@if ($dashIndex==null) {
-				$max: $stringLength;
-			}
-
-			$width: str-slice($width, 1, $max);
-
-			// 呼叫對應mixin
-			@include mmaw($width, $unit) {
-				@content;
-			}
-
-		}
-
-		@else if ($dashIndex==1) {
-
-			// min-width
-			$width: str-slice($width, 2, $stringLength);
-
-			// 呼叫對應mixin
-			@include mmiw($width, $unit) {
-				@content;
-			}
-
-		}
-
-		@else {
-
-			// min-width and max-width
-			// 以dash切割
-			$firstWidth: str-slice($width, 1, $dashIndex - 1);
-			$secondWidth: str-slice($width, $dashIndex + 1, $stringLength);
-
-			$unit: checkUnit($firstWidth);
-
-			$firstWidth: removeUnit($firstWidth, $unit);
-			$secondWidth: removeUnit($secondWidth, $unit);
-
-			// 組成數字
-			$widths: number($firstWidth), number($secondWidth);
-
-			@include mmiaw(min($widths...), max($widths...), $unit) {
-				@content;
-			}
-		}
-	}
-}
-
-
 // ====== 以下開始 ======  //
+body {
+	margin: 0;
+}
+
 .solutionArea {
 	position: relative;
 	height: 100dvh; //固定區塊，高度需跟視窗同高避免曝光
-	background-color: #f3f3f3;
-	padding: 140px 0 80px;
+	background-color: $thirdColor;
+	padding: 60px 0 40px;
 	overflow-x: clip;
 
-	@include media(1366) {
-		padding: 120px 0 80px;
-	}
 	@include media(991) {
 		padding: 80px 0;
 		height: auto;
@@ -214,11 +37,7 @@ $breakpointSmall: 768px; //手機板
         display: flex;
         align-items: center;
 		column-gap: 24px;
-		margin-bottom: 94px;
-
-		@include media($breakpointMedium) {
-			margin-bottom: 72px;
-		}
+		margin-bottom: 48px;
 
 		@include media($breakpointSmall) {
 			flex-direction: column;
@@ -230,6 +49,9 @@ $breakpointSmall: 768px; //手機板
 		.title {
 			flex: 0 0 auto;
 			width: 290px;
+			font-size: $titleSize;
+			color: $textTitleColor;
+			margin: 0;
 
 			@include media($breakpointMedium) {
 				width: 200px;
@@ -239,11 +61,19 @@ $breakpointSmall: 768px; //手機板
 		.text {
 			flex: 1 1 auto;
 			max-width: 790px;
+			line-height: 1.75;
+			color: $textColor;
 		}
 	}
 
 	.wrap {
 		position: relative;
+	}
+
+	// 標題跟下方的 solutionBox 對齊
+	.titleBox {
+		@include wrap;
+		margin-bottom: 48px; // wrap 會把 margin 設成 0 auto，這裡補回來
 	}
 }
 
@@ -309,12 +139,12 @@ $breakpointSmall: 768px; //手機板
         // 文字樣式
 		&.show {
 			.itemTitle {
-				color: $secondColor;
+				color: $mainColor;
 			}
 
 			.Txt {
 				.title {
-					color: $mainColor;
+					color: $titleColor;
 
 					&::before {
 						width: 100%;
@@ -353,7 +183,7 @@ $breakpointSmall: 768px; //手機板
 		font-size: $textTitleSizeMedium;
 		font-weight: 500;
 		line-height: 1.5;
-		color: $mainColor;
+		color: $mutedColor;
 		@extend %ts;
 
 		@include media(1440) {
@@ -399,7 +229,7 @@ $breakpointSmall: 768px; //手機板
 				color: inherit;
 
 				@include hover{
-					color: $mainColor;
+					color: $titleColor;
 				}
 			}
 		}
@@ -413,7 +243,7 @@ $breakpointSmall: 768px; //手機板
 			.text {
 				font-size: $textSize;
 				line-height: 1.5;
-				color: $textTitleColor;
+				color: $textColor;
 				height: 72px;
 				@include ellipsis(3);
 
@@ -429,12 +259,12 @@ $breakpointSmall: 768px; //手機板
 				font-size: $textSizeMedium;
 				font-weight: 600;
 				line-height: 1.5;
-				color: #474747;
+				color: $textTitleColor;
 				text-decoration-line: underline;
 				text-decoration-style: solid;
 				text-decoration-thickness: 2px;
 				text-underline-offset: 6px;
-				text-decoration-color: #474747;
+				text-decoration-color: $mainColor;
 				text-decoration-skip-ink: none;
 				margin-top: 24px;
 				@extend %ts;
@@ -445,8 +275,7 @@ $breakpointSmall: 768px; //手機板
 				}
 
 				@include hover{
-					color: $secondColor;
-					text-decoration-color: $secondColor;
+					color: $mainColor;
 				}
 			}
 		}
@@ -474,13 +303,21 @@ $breakpointSmall: 768px; //手機板
 		}
 	}
 
+	// 圖片是透明背景，放在白色圓角卡片裡
 	.item {
 		position: relative;
+		background-color: #fff;
+		border-radius: 24px;
+		overflow: hidden;
 	}
-	
+
 	.Img {
+		aspect-ratio: 950 / 550;
+		margin: 0;
+
 		img {
-			@include img100;
+			@include imgCover;
+			object-fit: contain;
 		}
 	}
 }

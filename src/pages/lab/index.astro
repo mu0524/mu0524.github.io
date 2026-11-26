@@ -126,16 +126,22 @@ const items = await getLabItems();
 		height: 100%;
 		background-color: $grayColor;
 		padding: 1.25em 1.25em 1.5em;
+		transition:
+			translate .3s ease-out,
+			box-shadow .3s ease-out;
 
+		// 整張卡片往上浮，底下出現柔和陰影
 		@include hover {
-			.name {
-				color: $mainColor;
+			translate: 0 -6px;
+			box-shadow: 0 14px 24px -12px rgba(#000, .18);
+
+			// 深色模式底色深，陰影要加深才看得出來
+			:global(.dark) & {
+				box-shadow: 0 14px 28px -10px rgba(#000, .6);
 			}
 
-			.Img {
-				img {
-					scale: 1.05;
-				}
+			.name {
+				color: $mainColor;
 			}
 		}
 	}
@@ -143,14 +149,12 @@ const items = await getLabItems();
 	.Img {
 		@include flex(nowrap, center, center);
 		aspect-ratio: 16 / 9;
-		background-color: #fff;
+		background-color: $btnBgColor;
 		padding: 1rem;
 		overflow: clip;
 
 		img {
 			@include imgCover;
-			will-change: scale;
-			@extend %ts;
 		}
 
 		.noImg {

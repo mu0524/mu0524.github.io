@@ -1,4 +1,5 @@
-$linkColors: #FF6B6B, #6BCB77, #4D96FF, #F7B801, #d3ff6b, ; // 示意使用，可以移除
+// 每張卡片的底色（示意使用，可以移除）
+$cardColors: #f6f6f6, #ebdfdd, #e6e6e6, #e0d5d4, #d9d7d4;
 
 .linkList {
 	position: relative;
@@ -6,13 +7,12 @@ $linkColors: #FF6B6B, #6BCB77, #4D96FF, #F7B801, #d3ff6b, ; // 示意使用，�
 
 	.linkItem {
 		position: relative;
-		height: 100dvh; //每個區塊需要佔滿螢幕高度
+		height: 100dvh; // 每個區塊需要佔滿螢幕高度
 
-        // 示意使用，可以移除
-		@for $i from 1 through 5 {
+		@for $i from 1 through length($cardColors) {
 			&:nth-child(#{$i}) {
 				.innerBlock {
-					background-color: nth($linkColors, $i);
+					background-color: nth($cardColors, $i);
 				}
 			}
 		}
@@ -21,35 +21,78 @@ $linkColors: #FF6B6B, #6BCB77, #4D96FF, #F7B801, #d3ff6b, ; // 示意使用，�
 	.item {
 		width: 100%;
 		height: 100%;
-		perspective: 250vw; /* 景深，讓 rotationX 有 3D 感 */
+		perspective: 250vw; // 景深，讓 rotationX 有 3D 感
 	}
-	
+
 	.innerBlock {
 		position: absolute;
-		inset: 0;
-		padding: 80px 0;
-	}
+		inset: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		column-gap: 64px;
+		border-radius: 24px;
+		padding: 40px;
 
-	.Img {
-		width: 100%;
-		max-width: 300px;
-		margin: 0 auto;
-		overflow: hidden;
-
-		img {
-			width: 100%;
+		@include media(768) {
+			flex-direction: column;
+			row-gap: 24px;
+			padding: 24px;
 		}
 	}
 
 	.Txt {
 		position: relative;
-        margin-bottom: 20px;
+		flex: 0 1 320px;
+
+		@include media(768) {
+			flex: 0 0 auto;
+			text-align: center;
+		}
+
+		.number {
+			font-size: 14px;
+			font-weight: 700;
+			letter-spacing: .2em;
+			color: $mainColor;
+			margin-bottom: 8px;
+		}
 
 		.title {
-			font-size: 20px;
-			font-weight: 500;
-            color: #000;
-            text-align: center;
+			font-size: 36px;
+			font-weight: 700;
+			line-height: 1.3;
+			color: $titleColor;
+			margin-bottom: 12px;
+
+			@include media(768) {
+				font-size: 28px;
+			}
+		}
+
+		.text {
+			font-size: 16px;
+			line-height: 1.75;
+			color: $textColor;
+		}
+	}
+
+	.Img {
+		flex: 0 1 420px;
+		aspect-ratio: 4 / 3;
+		background-color: #fff;
+		border-radius: 20px;
+		margin: 0;
+		overflow: hidden;
+
+		@include media(768) {
+			flex: 0 0 auto;
+			width: min(100%, 320px);
+		}
+
+		img {
+			@include imgCover;
+			object-fit: contain;
 		}
 	}
 }

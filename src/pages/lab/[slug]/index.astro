@@ -61,8 +61,6 @@ const navItem = (lab?: LabItem) =>
 			</div>
 		)}
 
-		{description && <p class="text">{description}</p>}
-
 		<Markdown class="contentBox">
 			<Content />
 		</Markdown>
@@ -209,10 +207,6 @@ const navItem = (lab?: LabItem) =>
 		@include flex(wrap, flex-end);
 		gap: .625em;
 		color: $mainColor;
-	}
-
-	.text {
-		color: $introColor;
 	}
 
 	// 說明內文沒有寫的時候不佔空間

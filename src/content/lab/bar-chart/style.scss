@@ -1,7 +1,4 @@
-// 主視覺顏色、次要顏色
-$mainColor: #5a5e89;
-$secondColor: #f19544;
-$thirdColor: #8a8fc5;
+// 顏色沿用共用設定：$secondColor 炭灰、$mainColor 灰玫瑰
 
 @mixin font($fs: $textSize, $fw: $regular, $ls: .035em, $lh: 1.5, $color: $textColor) {
     font: {
@@ -25,7 +22,14 @@ $thirdColor: #8a8fc5;
 
 .barChartArea {
     position: relative;
-    padding: 80px 0;
+    max-width: 900px;
+    padding: 40px 24px 60px;
+    margin: 0 auto;
+
+    .chartTitle {
+        @include font(22px, 700, .05em, 1.5, $titleColor);
+        margin: 0 0 48px;
+    }
 }
 
 //客製圖表樣式
@@ -53,7 +57,7 @@ $thirdColor: #8a8fc5;
             .number {
                 position: relative;
                 display: block;
-                @include font(20px, 500, .015em, 1.5, $mainColor);
+                @include font(16px, 500, .015em, 1.5, $textColor);
 
                 &:first-child {
                     translate: 0 -50%;
@@ -86,7 +90,7 @@ $thirdColor: #8a8fc5;
                 display: block;
                 width: 100%;
                 height: 1px;
-                background-color: #f1f1f8;
+                background-color: $lineColor;
             }
         }
 
@@ -127,7 +131,7 @@ $thirdColor: #8a8fc5;
                     display: block;
                     width: 20px;
                     height: 275px;
-                    background-color: #e6e6f0;
+                    background-color: $thirdColor;
                     border-radius: 20px;
                     left: 50%;
                     translate: -50% 0;
@@ -138,8 +142,8 @@ $thirdColor: #8a8fc5;
             .currentText {
                 position: absolute;
                 display: inline-block;
-                @include font(17px, 500, .035em, 1.5, #fff);
-                background-color: $mainColor;
+                @include font(15px, 500, .035em, 1.5, #fff);
+                background-color: $secondColor;
                 border-radius: 6px;
                 padding: 5px 10px;
                 bottom: 0;
@@ -151,7 +155,7 @@ $thirdColor: #8a8fc5;
                     position: absolute;
                     content: '';
                     display: block;
-                    @include borderTriangle(top, $mainColor, (6px 6px 0 6px));
+                    @include borderTriangle(top, $secondColor, (6px 6px 0 6px));
                     top: 100%;
                     left: 50%;
                     translate: -50% 0;
@@ -162,7 +166,7 @@ $thirdColor: #8a8fc5;
             .title {
                 position: absolute;
                 width: 100%;
-                @include font(17px, 400, .015em, 1.5, $mainColor);
+                @include font(16px, 500, .015em, 1.5, $titleColor);
                 text-align: center;
                 top: calc(100% + 24px);
                 left: 50%;

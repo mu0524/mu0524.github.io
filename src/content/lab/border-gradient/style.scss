@@ -6,27 +6,46 @@
     3. mask 疊兩層 (content-box + border-box),
        利用 mask-composite: exclude 讓中間挖空,
        只留最外圈 padding 那一圈漸層
+    4. 偽元素用 border-radius: inherit 跟著元素的圓角
 */
-
 .shape {
 	position: relative;
-	display: block;
-	width: 200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 300px;
 	height: 200px;
-	background-color: #ddd;
-	margin: 20px;
+	background-color: #fff;
+	border-radius: 20px;
+	padding: 24px 28px;
+	margin: 32px auto;
 
 	&::before {
 		content: "";
 		position: absolute;
 		inset: 0;
-		padding: 2px;
-		background: linear-gradient(225deg, #d86161, #491b7e);
+		padding: 3px;
+		border-radius: inherit;
+		background: linear-gradient(225deg, $secondColor, $mainColor 50%, $blueColor);
 		-webkit-mask:
 			linear-gradient(#fff 0 0) content-box,
 			linear-gradient(#fff 0 0);
 		-webkit-mask-composite: xor;
 		mask-composite: exclude;
 		pointer-events: none;
+	}
+
+	.title {
+		font-size: 20px;
+		font-weight: 700;
+		color: $titleColor;
+		margin-bottom: 8px;
+	}
+
+	.text {
+		font-size: 14px;
+		line-height: 1.75;
+		color: $textColor;
 	}
 }

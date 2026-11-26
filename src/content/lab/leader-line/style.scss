@@ -5,8 +5,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #f5f3f0;
+  background: $thirdColor;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
@@ -14,24 +13,24 @@ body {
   min-height: 100vh;
 
   .wrap {
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 48px 24px 80px;
+    padding: 40px 24px 80px;
   }
 }
 
 .heroTitle {
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: $titleColor;
   margin-bottom: 8px;
 }
 
 .heroSubtitle {
   font-size: 16px;
-  color: #888;
+  color: $textColor;
   line-height: 1.5;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
 }
 
 // ====== 以下開始 ===== //
@@ -73,31 +72,35 @@ body {
   }
   
   .nodeHeader {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #666;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: $titleColor;
     margin-bottom: 12px;
   }
 
   .Img {
     position: relative;
 
+    aspect-ratio: 4 / 3;
+    background-color: $thirdColor;
+    border-radius: 8px;
+    overflow: hidden;
+
     img {
       display: block;
       width: 100%;
-      height: auto;
-      border-radius: 8px;
+      height: 100%;
+      object-fit: contain;
       pointer-events: none; // 圖片設定無法點擊，避免造成無法拖曳
     }
   }
 }
 
-// 流程：Source → Model → Output → Video，Style ↘ Output
+// 流程：讀文件 → 寫範例 → 整理成文章 → 發布上線，除錯測試 ↘ 整理成文章
 #card-source {
-  --width: 260px;
-  --top: 200px;
+  --width: 200px;
+  --top: 190px;
   --left: 0;
 
   .lineAnchor {
@@ -114,9 +117,9 @@ body {
 }
 
 #card-model {
-  --left: 320px;
-  --top: 160px;
-  --width: 280px;
+  --width: 220px;
+  --top: 150px;
+  --left: 250px;
 
   .lineAnchor {
     &.start {
@@ -132,9 +135,9 @@ body {
 }
 
 #card-style {
-  --left: 700px;
+  --width: 200px;
   --top: 0;
-  --width: 260px;
+  --left: 540px;
 
   .lineAnchor {
     &.start {
@@ -142,17 +145,18 @@ body {
       left: 50%;
       transform: translateX(-50%);
     }
-    
+
     &.end {
       top: 50%;
+      left: 0;
     }
   }
 }
 
 #card-output {
-  --left: 700px;
-  --top: 300px;
-  --width: 320px;
+  --width: 260px;
+  --top: 290px;
+  --left: 540px;
 
   .lineAnchor {
     &.start {
@@ -174,9 +178,9 @@ body {
 }
 
 #card-video {
-  --left: 1080px;
-  --top: 300px;
-  --width: 260px;
+  --width: 220px;
+  --top: 290px;
+  --left: 870px;
 
   .lineAnchor {
     &.end {

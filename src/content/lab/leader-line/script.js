@@ -3,10 +3,10 @@ const lineOptions = {
     path: 'fluid',
     startPlug: 'disc',
     endPlug: 'disc',
-    color: 'rgba(0, 0, 0, 0.12)',
-    size: 1.4,
-    startPlugColor: 'rgba(0,0,0,0.2)',
-    endPlugColor: 'rgba(0,0,0,0.2)',
+    color: '#c9b5b5',
+    size: 2,
+    startPlugColor: '#b9a5a5',
+    endPlugColor: '#b9a5a5',
     startPlugSize: 1.5,
     endPlugSize: 1.5,
     startPlugOutline: true,
@@ -20,28 +20,28 @@ const lineOptions = {
 // ── 建立連接線 ──
 const lines = [];
 
-// Source → Model
+// 讀文件 → 寫範例
 lines.push(new LeaderLine(
     document.querySelector('#card-source .lineAnchor.start'),
     document.querySelector('#card-model .lineAnchor.end'),
     lineOptions
 ));
 
-// Model → Output
+// 寫範例 → 整理成文章
 lines.push(new LeaderLine(
     document.querySelector('#card-model .lineAnchor.start'),
     document.querySelector('#card-output .lineAnchor.end'),
     lineOptions
 ));
 
-// Style → Output
+// 除錯測試 → 整理成文章
 lines.push(new LeaderLine(
     document.querySelector('#card-style .lineAnchor.start'),
     document.querySelector('#card-output .lineAnchor.end.n2'),
     lineOptions
 ));
 
-// Output → Video
+// 整理成文章 → 發布上線
 lines.push(new LeaderLine(
     document.querySelector('#card-output .lineAnchor.start'),
     document.querySelector('#card-video .lineAnchor.end'),

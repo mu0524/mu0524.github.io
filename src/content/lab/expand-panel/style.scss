@@ -1,356 +1,7 @@
-//變數
-$fa: FontAwesome;
-
-$f01: "Open Sans", "微軟正黑體", sans-serif;
-
-//設定
-//body背景色
-$defaultBg: #fff;
-$lightBg: #f9f9f9;
-
-//body字體
-@mixin defaultFont($size: 14px) {
-    font-family: "Poppins", sans-serif, Arial, "微軟正黑體", Helvetica, Heiti TC, "メイリオ", sans-serif;
-    font-size: $size;
-}
-
-$mainColor: #e51513;
-$darkColor: #9a1e16;
-$secondColor: #2f2f2f;
-$textColor: #3d3d3d;
-
-$linkColor: $secondColor;
-$linkColorHover: $mainColor;
-
-$btn01Color: #fff;
-$btn01Bg: $mainColor;
-$btn01BgHover: #000;
-
-$btn02Color: #fff;
-$btn02Bg: #454545;
-$btn02BgHover: #000;
-
-$btn03Color: #fff;
-$btn03Bg: #292929;
-$btn03BgHover: $mainColor;
-
-// list line color 列表線
-$llColor: #ccc;
-// box line color 區塊線
-$blColor: #ccc;
-// decoration line color 裝飾線
-$dlColor: #ccc;
-// input line color 欄位線
-$ilColor: #ccc;
-
-//字體下方的線
-$lineColor: #ccc;
-
-// 1180 斷點
-$breakpointMedium: 1180px; //平板
-
-//mixin
-@mixin img100 {
-    display: block;
-    width: 100%;
-    backface-visibility: hidden;
-}
-
-@mixin imgCover {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-@mixin imgContain {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
-}
-
-@mixin cover($width: 100%, $height: 100%) {
-    width: $width;
-    height: $height;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-@mixin clearfix {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-
-@mixin oneLine {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@mixin textOut {
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-@mixin placeholder($color) {
-    ::-webkit-input-placeholder {
-        /* Chrome */
-        color: $color;
-    }
-    :-ms-input-placeholder {
-        /* IE 10+ */
-        color: $color;
-    }
-    ::-moz-placeholder {
-        /* Firefox 19+ */
-        color: $color;
-        opacity: 1;
-    }
-    :-moz-placeholder {
-        /* Firefox 4 - 18 */
-        color: $color;
-        opacity: 1;
-    }
-}
-
-@mixin hover {
-    @include media(-1181) {
-        &:hover {
-            @content;
-        }
-    }
-}
-
-@mixin pseudoBefore($content: "", $position: absolute) {
-    &::before {
-        content: $content;
-        position: $position;
-        pointer-events: none;
-        @content;
-    }
-}
-
-@mixin pseudoAfter($content: "", $position: absolute) {
-    &::after {
-        content: $content;
-        position: $position;
-        pointer-events: none;
-        @content;
-    }
-}
-
-@mixin text($fz: 16, $lh: 16, $ls: 0) {
-    font-size: #{$fz}px;
-    line-height: calc($lh / $fz);
-    letter-spacing: #{calc($ls * $fz / 1000)}px;
-}
-
-@mixin flex($display: flex, $justifyContent: flex-start, $alignItems: flex-start, $flexDirection: row, $flexWrap: nowrap) {
-    display: $display;
-    justify-content: $justifyContent;
-    align-items: $alignItems;
-    flex-direction: $flexDirection;
-    flex-wrap: $flexWrap;
-}
-
-@mixin grid($display: grid, $gridTemplateColumns: 1fr, $gridTemplateRows: auto, $gap: 0, $alignItems: flex-start) {
-    display: $display;
-    grid-template-columns: $gridTemplateColumns;
-    grid-template-rows: $gridTemplateRows;
-    gap: $gap;
-    align-items: $alignItems;
-}
-
-@mixin position($position: relative, $top: unset, $left: unset, $right: unset, $bottom: unset, $translateX: 0, $translateY: 0, $zIndex: 1) {
-    position: $position;
-    top: $top;
-    left: $left;
-    right: $right;
-    bottom: $bottom;
-    transform: translate($translateX, $translateY);
-    z-index: $zIndex;
-}
-
-@mixin maxLine($line) {
-    display: -webkit-box;
-    -webkit-line-clamp: $line;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-%bx {
-    box-sizing: border-box;
-}
-
-%ts {
-    transition: all 0.5s;
-}
-
-// media
-@mixin mmiw($width, $unit) {
-    @media (min-width: $width+$unit) {
-        @content;
-    }
-}
-
-@mixin mmaw($width, $unit) {
-    @media (max-width: $width+$unit) {
-        @content;
-    }
-}
-
-@mixin mmiaw($widthStart, $widthEnd, $unit) {
-    @media (min-width: $widthStart+$unit) and (max-width: $widthEnd+$unit) {
-        @content;
-    }
-}
-
-// string to number
-@function number($string) {
-    $number: 0;
-    @for $i from 1 through str-length($string) {
-        // 切割字串
-        $character: str-slice($string, $i, $i);
-
-        // 利用index取得對應數字
-        $index: str-index("0123456789", $character) - 1;
-
-        // 組合數字
-        $number: $number * 10 + $index;
-    }
-    @return $number;
-}
-
-// 單位判斷
-@function checkUnit($string) {
-    $units: px em;
-    $unit: null;
-
-    @for $i from 1 through length($units) {
-        // 跑出對應的單位
-        $hasUnit: str-index($string, nth($units, $i));
-        @if ($hasUnit != null) {
-            $unit: nth($units, $i);
-        }
-    }
-    // 跑完還是沒有
-    @if ($unit == null) {
-        $unit: px;
-    }
-
-    @return $unit;
-}
-
-// remove unit
-@function removeUnit($string, $unit) {
-    // 找出單位index
-    $index: str-index($string, $unit);
-    @if ($index != null) {
-        // 取出對應的數字
-        $string: str-slice($string, 1, $index - 1);
-    }
-
-    @return $string;
-}
-
-// media
-@mixin media($width, $widthRange: null) {
-    // 判斷型態
-    $unit: null;
-    $type: type-of($width);
-
-    // number
-    @if ($type == number) {
-        // 轉string
-        $width: $width + "";
-
-        // 有輸入$widthRange
-        @if ($widthRange != null) {
-            $widthRange: abs($widthRange);
-            $width: $width + "-" + $widthRange;
-        }
-
-        $type: string;
-    }
-
-    // list
-    @if ($type == list) {
-        $width: nth($width, 1) + "-" + nth($width, 2);
-        $type: string;
-    }
-
-    // string
-    @if ($type == string) {
-        // 抓dash位置
-        $dashIndex: str-index($width, "-");
-
-        // 字串長度
-        $stringLength: str-length($width);
-
-        // 整理單位和寬度
-        @if ($dashIndex == 1) or ($dashIndex == $stringLength) or ($dashIndex == null) {
-            $unit: checkUnit($width);
-            $width: removeUnit($width, $unit);
-        }
-
-        @if ($dashIndex == $stringLength) or ($dashIndex == null) {
-            // max-width
-            $max: $stringLength - 1;
-            @if ($dashIndex == null) {
-                $max: $stringLength;
-            }
-            $width: str-slice($width, 1, $max);
-
-            // 呼叫對應mixin
-            @include mmaw($width, $unit) {
-                @content;
-            }
-        } @else if ($dashIndex == 1) {
-            // min-width
-            $width: str-slice($width, 2, $stringLength);
-
-            // 呼叫對應mixin
-            @include mmiw($width, $unit) {
-                @content;
-            }
-        } @else {
-            // min-width and max-width
-            // 以dash切割
-            $firstWidth: str-slice($width, 1, $dashIndex - 1);
-            $secondWidth: str-slice($width, $dashIndex + 1, $stringLength);
-
-            $unit: checkUnit($firstWidth);
-
-            $firstWidth: removeUnit($firstWidth, $unit);
-            $secondWidth: removeUnit($secondWidth, $unit);
-
-            // 組成數字
-            $widths: number($firstWidth), number($secondWidth);
-
-            @include mmiaw(min($widths...), max($widths...), $unit) {
-                @content;
-            }
-        }
-    }
-}
-
-$textTitleColor: #0a0429;
-$textColor: #464545;
+// 共用設定（顏色、media、hover、cover 等 mixin）在展示區編譯時會接在前面
+// 這裡只放這個元件自己的字級與 mixin
 
 $textTitleSize: 25px;
-$dataTitleSize: 22px;
-$textSize: 18px;
-
-$breakpointSmall: 768px;
 $breakpointXS: 480px;
 
 @mixin font($fs: $textSize, $fw: 400, $ls: .02em, $lh: 1.5, $color: $textColor) {
@@ -365,6 +16,11 @@ $breakpointXS: 480px;
 }
 
 // ======= 以下開始是樣式 =======
+
+body {
+	margin: 0;
+	padding: 24px;
+}
 
 
 .dataList {
@@ -390,6 +46,10 @@ $breakpointXS: 480px;
 
 		&.full {
 			width: 100%;
+
+			.item > .Img {
+				aspect-ratio: 1400 / 410;
+			}
 		}
 
 		&.active {
@@ -411,8 +71,8 @@ $breakpointXS: 480px;
 			display: block;
 			width: 12px;
 			height: 12px;
-			border-right: 2px solid #000;
-			border-bottom: 2px solid #000;
+			border-right: 2px solid $mainColor;
+			border-bottom: 2px solid $mainColor;
 			rotate: 45deg;
 			bottom: -36px;
 			left: 50%;
@@ -433,45 +93,16 @@ $breakpointXS: 480px;
 			}
 		}
 
-		&>.Img {
-			@include media(575) {
-				height: 300px;
-			}
-			@include media($breakpointXS) {
-				height: 250px;
-			}
-			@include media(375) {
-				height: 200px;
-			}
 
-			@include media(575) {
-				img {
-					height: 100%;
-					object-fit: cover;
-					object-position: center;
-				}
-			}
-		}
 	}
 
+	// 標題放在圖片下方，避免蓋到圖片
 	.Txt {
-		@include cover;
-		display: flex;
-		align-items: flex-end;
-		padding: 28px 40px;
-
-		@include media($breakpointMedium) {
-			padding: 20px 32px;
-		}
-		@include media($breakpointSmall) {
-			padding: 16px 20px;
-		}
-		@include media(375) {
-			padding: 10px 16px;
-		}
+		padding: 16px 4px 0;
 
 		&>.title {
-			@include font($fs:$textTitleSize, $fw:500,$color:#fff);
+			@include font($fs:$textTitleSize, $fw:700,$color:$titleColor);
+			margin: 0;
 
 			@include media($breakpointMedium) {
 				font-size: 22px;
@@ -487,6 +118,8 @@ $breakpointXS: 480px;
 
 	.Img {
 		position: relative;
+		aspect-ratio: 3 / 2;
+		background-color: $thirdColor;
 		border-radius: 20px;
 		overflow: hidden;
 
@@ -495,7 +128,8 @@ $breakpointXS: 480px;
 		}
 
 		img {
-			@include img100;
+			@include imgCover;
+			object-fit: contain;
 			@extend %ts;
 			will-change: scale;
 		}
@@ -506,7 +140,7 @@ $breakpointXS: 480px;
 		display: none;
 		width: 100dvw;
 		margin: 30px calc(-50vw + 50%) 0;
-		background-color: #f5f5f5;
+		background-color: $thirdColor;
 		padding: 80px 0;
 		z-index: 1;
 
@@ -521,6 +155,10 @@ $breakpointXS: 480px;
 		}
 		@include media($breakpointXS) {
 			padding: 20px 0;
+		}
+
+		.wrap {
+			@include wrap(1100px);
 		}
 
 		.closeBtn {
@@ -582,7 +220,7 @@ $breakpointXS: 480px;
 					content: '';
 					width: 100%;
 					height: 1px;
-					background-color: #414141;
+					background-color: $titleColor;
 					position: absolute;
 					top: 50%;
 					left: 50%;
@@ -595,7 +233,7 @@ $breakpointXS: 480px;
 					content: '';
 					width: 100%;
 					height: 1px;
-					background-color: #414141;
+					background-color: $titleColor;
 					position: absolute;
 					top: 50%;
 					left: 50%;
@@ -641,7 +279,7 @@ $breakpointXS: 480px;
 
 			.title {
 				position: relative;
-				@include font($fs:$textTitleSize,$fw:500,$color:$textTitleColor);
+				@include font($fs:$textTitleSize,$fw:700,$color:$titleColor);
 				padding-bottom: 10px;
 				margin-bottom: 20px;
 
@@ -701,7 +339,7 @@ $breakpointXS: 480px;
 		gap: 24px 16px;
 	}
 
-	.m2Item {
+	.subItem {
 		position: relative;
 		width: calc((100% - 84px) / 3);
 
@@ -727,30 +365,17 @@ $breakpointXS: 480px;
 		}
 	}
 
-	.title {
-		@include font($fs:22px,$color:#fff);
-		display: flex;
-		align-items: flex-end;
-		width: 100%;
-		height: 100%;
-		padding: 30px;
-		position: absolute;
-		bottom: 0;
-		left: 0;
+	.Img {
+		background-color: #fff;
+	}
 
-		@include media(1366) {
-			font-size: 20px;
-			padding: 20px;
-		}
-		@include media($breakpointMedium) {
-			font-size: 18px;
-		}
-		@include media($breakpointSmall) {
-			padding: 16px 20px;
-		}
+	.title {
+		@include font($fs:18px,$fw:700,$color:$titleColor);
+		padding: 12px 4px 0;
+		margin: 0;
+
 		@include media($breakpointXS) {
 			font-size: 16px;
-			padding: 12px 16px;
 		}
 	}
 }
